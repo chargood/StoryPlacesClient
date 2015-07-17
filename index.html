@@ -1,0 +1,31 @@
+<!doctype html>
+
+<html lang="en">
+
+	<head>
+		<title>StoryPlaces</title>
+	</head>
+	
+	<body>
+		<div>
+			<h1>StoryPlaces</h1>
+			<hr/>
+			<div id="page">
+			</div>
+		
+		</div>
+		
+		<script type = "text/template" id="storylisttemplate">
+			<h4>Story List</h4> 
+			<% _.each(storyList, function(story) { story.get("name") });%>			
+		</script>
+		
+		<script src="./libs/jquery-2.1.4.js"></script>
+		<script src="./libs/underscore.js"></script>
+		<script src="./libs/backbone.js"></script>
+		<script src="./model.js"></script>
+		<script src="./views.js"></script> 
+		<script src="./routers.js"></script>
+	</body>
+
+</html>
