@@ -1,1 +1,1 @@
-This is the storyplaces client
+This is the storyplaces client.
