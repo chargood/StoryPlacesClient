@@ -4,6 +4,7 @@
 
 	<head>
 		<title>StoryPlaces</title>
+		<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
 	</head>
 	
 	<body>
@@ -12,20 +13,64 @@
 			<hr/>
 			<div id="page">
 			</div>
-		
 		</div>
+		
 		
 		<script type = "text/template" id="storylisttemplate">
 			<h4>Story List</h4> 
-			<% _.each(storyList, function(story) { story.get("name") });%>			
+			<% _.each(storylist, function(story) { %>
+			
+				<p><%=story.get("name") %> <a href="#/story/<%=story.get("_id") %>"> load </a></p>
+			
+			<%});%>
+			<input class="updateList" type="button" value="Update Story List"/>
+			
+		</script>
+		
+		<script type = "text/template" id="storytemplate">
+			<h4><%=story.get("name")%></h4>
+			<input class="newReadingBtn" type="button" value="Start a new reading" />
+			
+			<h4>Readings</h4> 
+			<table>
+			<%var readingcount=0;%>
+			<% _.each(readinglist, function(reading) { %>
+				<%if(reading.get("story")==story.get("_id")) {%>
+					<%readingcount++;%>			
+					<tr>
+						<td><%=reading.get("name") %></td>
+						<td><a href="#/reading/play/<%=reading.get("id")%>"><input class="openReadingBtn" type="button" value="Open"/></a></td>
+						<!--<td><a href="#/reading/delete/<%=reading.get("id")%>"><input class="deleteReadingBtn" type="button" value="Delete"/></a></td>-->
+				<%}%>
+			
+			<%});%>
+			</table>
+			<%if(readingcount==0){%>
+				<p>no readings</p>
+			<%}%>
+			
+			<input class="newCustomReadingBtn" type="button" value="Start a new reading with custom settings" />
+			
+		</script>
+		
+		<script type = "text/template" id="readingdialog">
+		
+			<div id="readingdialog">Custom New Reading</div>
+			
 		</script>
 		
 		<script src="./libs/jquery-2.1.4.js"></script>
 		<script src="./libs/underscore.js"></script>
 		<script src="./libs/backbone.js"></script>
+		<script src="./libs/Backbone.localStorage-1.1.16/backbone.localStorage.js"></script>
 		<script src="./model.js"></script>
 		<script src="./views.js"></script> 
 		<script src="./routers.js"></script>
+		
+		<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+		
+		
+		
 	</body>
-
+	
 </html>
