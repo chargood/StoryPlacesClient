@@ -1,11 +1,21 @@
+var User = Backbone.Model.extend({
+	urlRoot: '/storyplaces/user',
+	initialize: function(){
+		//console.log("!!!"+JSON.stringify(this))
+		//localStorage.setItem("User-ID", this.id);
+    }
+})
+
 var StoryList = Backbone.Collection.extend({
-	localStorage: new Backbone.LocalStorage("Story"),
 	url: '/storyplaces/story'
 })
 
 var Story = Backbone.Model.extend({
-	localStorage: new Backbone.LocalStorage("Story"),
 	urlRoot: '/storyplaces/story',
+	
+	initialize: function(){
+       this.id=this.get("_id")
+    },
 	
 	getCard: function(id){
 		this.deck.forEach(function(card){
@@ -16,12 +26,11 @@ var Story = Backbone.Model.extend({
 })
 
 var ReadingList = Backbone.Collection.extend({
-	localStorage: new Backbone.LocalStorage("Reading"),
-	urlRoot: '/storyplaces/reading'
+	urlRoot: '/storyplaces/reading',
+	url: '/storyplaces/reading'
 })
 
 var Reading = Backbone.Model.extend({
-	localStorage: new Backbone.LocalStorage("Reading"),
 	urlRoot: '/storyplaces/reading',
 	
 	getVariable: function(key){

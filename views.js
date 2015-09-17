@@ -15,8 +15,7 @@ var StoryListView = Backbone.View.extend({
 				that.$el.html(template({
 					storylist:storylist.models
 				}))
-			},
-			ajaxSync: true
+			}
 		})
 	}/*,
 	updateList: function(){
@@ -53,12 +52,12 @@ var StoryView = Backbone.View.extend({
 			var story = new Story({id: options.id});
 			story.fetch({
 				success: function(story){
-					var localstory = new Story();
+					/*var localstory = new Story();
 					localstory.save(story,{
 						success: function(story){
 							console.log("Story Local Save")
 						}
-					})
+					})*/
 					
 					var readinglist = new ReadingList();
 					readinglist.fetch({
@@ -70,8 +69,8 @@ var StoryView = Backbone.View.extend({
 							}))
 						}
 					})
-				},
-				ajaxSync: true
+				}/*,
+				ajaxSync: true*/
 			})
 		}
 		else{
@@ -102,17 +101,28 @@ var StoryView = Backbone.View.extend({
 				reading.save(readingDetails,{
 					success: function (reading){
 						console.log("reading saved")
+						//
+						/*reading.save(readingDetails,{
+							success: function (reading){
+								console.log("reading saved to server")
+							},
+							error: function(model, response) {
+								console.log("reading server error")
+								console.log(response);
+							},
+							ajaxSync: true
+						});*/
+						//
 						router.navigate('', {trigger:true});
 					},
 					error: function(model, response) {
 						console.log("reading error")
 						console.log(response);
-					}
+					}/*,
+					ajaxSync: true*/
 				});
 			}
-		})
-		
-		
+		})		
 	},
 	newCustomReading: function(){
 		console.log("New Custom Reading")
