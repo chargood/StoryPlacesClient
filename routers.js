@@ -3,7 +3,9 @@ var Router = Backbone.Router.extend({
 	routes:{
 		'':'home',
 		'story/:id':'viewStory',
-		'reading/play/:id':'playReading'
+		'reading/:id':'playReading',
+		'deck/:id':'playReadingDeck',
+		'card/:id/:card':'playReadingCard'
 	}	
 });
 
@@ -26,6 +28,16 @@ router.on('route:viewStory', function(id){
 router.on('route:playReading', function(id){
 	console.log('Play Reading Route');
 	readingView.render({id:id});
+});
+
+router.on('route:playReadingDeck', function(id){
+	console.log('Play Reading Deck Route');
+	readingView.renderDeck({id:id});
+});
+
+router.on('route:playReadingCard', function(id, card){
+	console.log('Play Reading Card Route');
+	readingView.renderCard({id:id, card:card});
 });
 
 

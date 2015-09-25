@@ -39,7 +39,7 @@
 					<%readingcount++;%>			
 					<tr>
 						<td><%=reading.get("name") %></td>
-						<td><a href="#/reading/play/<%=reading.get("id")%>"><input class="openReadingBtn" type="button" value="Open"/></a></td>
+						<td><a href="#/reading/<%=reading.get("id")%>"><input class="openReadingBtn" type="button" value="Open"/></a></td>
 						<!--<td><a href="#/reading/delete/<%=reading.get("id")%>"><input class="deleteReadingBtn" type="button" value="Delete"/></a></td>-->
 				<%}%>
 			
@@ -53,11 +53,29 @@
 			
 		</script>
 		
+		<script type = "text/template" id="decktemplate">
+			<h4><%=story.get("name") %></h4> 
+			<% _.each(story.get("deck"), function(card) { %>
+				<%console.log(card)%>
+				<p><%=card.label %> <a href="#/card/<%=reading.get("id") %>/<%=card.id %>"> open </a></p>
+			
+			<%});%>
+		</script>
+		
+		<script type = "text/template" id="cardtemplate">
+			<h4><%=story.get("title")%></h4>
+			<%console.log("test 4 "+card)%>
+			<div><%=card.content %> </div>			
+			<input class="nextCard" type="button" value="Next"/>
+		</script>
+		
 		<script type = "text/template" id="readingdialog">
 		
 			<div id="readingdialog">Custom New Reading</div>
 			
 		</script>
+		
+		
 		
 		<script src="./libs/jquery-2.1.4.js"></script>
 		<script src="./libs/underscore.js"></script>

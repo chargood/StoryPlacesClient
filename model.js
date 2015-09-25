@@ -1,9 +1,5 @@
 var User = Backbone.Model.extend({
 	urlRoot: '/storyplaces/user',
-	initialize: function(){
-		//console.log("!!!"+JSON.stringify(this))
-		//localStorage.setItem("User-ID", this.id);
-    }
 })
 
 var StoryList = Backbone.Collection.extend({
@@ -18,10 +14,13 @@ var Story = Backbone.Model.extend({
     },
 	
 	getCard: function(id){
-		this.deck.forEach(function(card){
-			if(card._id==id)
-				return card
+		var result;
+		this.get("deck").forEach(function(card){
+			if(card._id==id){
+				result = card
+			}
 		})
+		return result
 	}
 })
 
