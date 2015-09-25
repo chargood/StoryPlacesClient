@@ -186,16 +186,11 @@ var ReadingView = Backbone.View.extend({
 		var reading = new Reading({id: options.id});
 		reading.fetch({
 			success: function(reading){
-				console.log("test0")
 				var storyId = reading.get("story")	
-				console.log("test0.1 "+storyId)
 				var story = new Story({id: storyId});
 				story.fetch({
 					success: function(story){
-						console.log("test1")
 						var card = story.getCard(options.card)
-						console.log("test3.1 "+card)
-						console.log("test3.2 "+story.getCard(options.card))
 						var template = _.template($('#cardtemplate').html())
 						that.$el.html(template({
 							story:story,
