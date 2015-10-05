@@ -56,7 +56,6 @@
 		<script type = "text/template" id="decktemplate">
 			<h4><%=story.get("name") %></h4> 
 			<% _.each(story.get("deck"), function(card) { %>
-				<%console.log(card)%>
 				<p><%=card.label %> <a href="#/card/<%=reading.get("id") %>/<%=card.id %>"> open </a></p>
 			
 			<%});%>
@@ -64,10 +63,19 @@
 		
 		<script type = "text/template" id="cardtemplate">
 			<h4><%=story.get("title")%></h4>
-			<%console.log("test 4 "+card)%>
-			<div><%=card.content %> </div>			
-			<input class="nextCard" type="button" value="Next"/>
-		</script>
+			<div><%=card.content %> </div>
+			
+			<%if(!card.footerButtonMode||card.footerButtonMode=="next"){%>
+				<input class="nextCard" type="button" value="Next" eventCheck="true" eventType="endcard"/>
+			<%}%>
+			
+			<%if(card.footerButtonMode=="end"){%>
+				<input class="nextCard" type="button" value="Finish Story" eventCheck="true" eventType="endstory"/>
+			<%}%>
+			
+			<%if(card.footerButtonMode=="none"){%>				
+			<%}%>
+		</script>		
 		
 		<script type = "text/template" id="readingdialog">
 		

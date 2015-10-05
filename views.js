@@ -81,20 +81,16 @@ var StoryView = Backbone.View.extend({
 			success: function(readinglist){
 				console.log("got reading list")
 				var readingcount = 1
-				console.log("readinglist models "+JSON.stringify(readinglist.models))
 				readinglist.each(function(reading){
-					console.log("each reading "+JSON.stringify(reading) + " "+ reading.get("story") +" "+that.storyId+" "+readingcount)
 					if(reading.get("story")==that.storyId){
 						readingcount++
 					}
 				});
 				readingDetails.name="Reading "+readingcount
-				console.log(readingDetails.name)
 				var reading = new Reading();
 				reading.save(readingDetails,{
 					success: function (reading){
-						console.log("reading saved")
-						
+						console.log("reading saved")						
 						router.navigate('', {trigger:true});
 					},
 					error: function(model, response) {
@@ -129,7 +125,6 @@ var ReadingDialog = Backbone.View.extend({
 		this.storyId=options.id
 		var template = _.template($('#readingdialog').html())
 		this.$el.append(template())
-		console.log("test")
 		$( "#readingdialog" ).dialog({
 			modal: true,
 			title: "Add Reading",
@@ -152,10 +147,10 @@ var ReadingDialog = Backbone.View.extend({
 var ReadingView = Backbone.View.extend({
 	el: $('#page'),
 	events: {
-		
+		"click" : "event"
 	},
-	initialize: function(){
-		
+	initialize: function(options){
+		this.readingId = options.id;
     },
 	render: function(options){
 		this.renderDeck(options)
@@ -163,7 +158,7 @@ var ReadingView = Backbone.View.extend({
 	renderDeck(options){
 		var that = this;
 		
-		var reading = new Reading({id: options.id});
+		var reading = new Reading({id: this.readingId});
 		reading.fetch({
 			success: function(reading){
 				var storyId = reading.get("story")
@@ -182,8 +177,7 @@ var ReadingView = Backbone.View.extend({
 	},
 	renderCard(options){
 		var that = this;
-		console.log("test")
-		var reading = new Reading({id: options.id});
+		var reading = new Reading({id: this.readingId});
 		reading.fetch({
 			success: function(reading){
 				var storyId = reading.get("story")	
@@ -201,5 +195,19 @@ var ReadingView = Backbone.View.extend({
 				})								
 			}		
 		})
+	},
+	event(e){
+		if(e.target.attributes.eventCheck&&e.target.attributes.eventCheck.value=="true"){
+			console.log("event "+e.target.attributes.eventCheck.value+" "+e.target.attributes.eventType.value)//+" "+e.target.attributes.eventData.value)
+			if(e.target.attributes.eventType.value=="endcard"){
+				router.navigate('/reading/'+this.readingId, {trigger:true});
+			}			
+			else if(e.target.attributes.eventType.value=="endstory"){
+				router.navigate('', {trigger:true});
+			}
+			else{
+				console.log("Unrecognised Event "+e.target.attributes.eventType.value)
+			}
+		}
 	}
 })
