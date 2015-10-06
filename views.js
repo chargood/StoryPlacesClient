@@ -52,8 +52,7 @@ var StoryView = Backbone.View.extend({
 			var story = new Story({id: options.id});
 			story.fetch({
 				success: function(story){
-										
-					var readinglist = new ReadingList();
+					var readinglist = new StoryReadingList(that.storyId);
 					readinglist.fetch({
 						success: function(readinglist){
 							var template = _.template($('#storytemplate').html())
