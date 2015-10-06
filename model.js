@@ -30,12 +30,12 @@ var ReadingList = Backbone.Collection.extend({
 })
 
 var StoryReadingList = Backbone.Collection.extend({
-	urlRoot: '/storyplaces/storyreading/',
-	url: '/storyplaces/storyreading/',
+	urlRoot: '/storyplaces/story',
+	url: '/storyplaces/story',
 
 	initialize: function(story){
-		this.urlRoot = '/storyplaces/storyreading/'+story
-		this.url = '/storyplaces/storyreading/'+story
+		this.urlRoot = '/storyplaces/story/'+story+'/readings'
+		this.url = '/storyplaces/story/'+story+'/readings'
     }
 })
 
