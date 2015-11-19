@@ -160,15 +160,119 @@ var ReadingView = Backbone.View.extend({
 		var reading = new Reading({id: this.readingId});
 		reading.fetch({
 			success: function(reading){
+				console.log("test2 "+JSON.stringify(reading))
 				var storyId = reading.get("story")
 				var story = new Story({id: storyId});
 				story.fetch({
 					success: function(story){
 						var template = _.template($('#decktemplate').html())
+						//
+						//reading.setVariable("var2","test")
+						//
 						that.$el.html(template({
 							story:story,
 							reading:reading
 						}))
+						
+						////////LOGIC SYSTEM TEST CODE
+						/*var comp = new ComparissonCondition({
+							name: "testcomp",
+							type: "comparisson",
+							operand: "==",
+							a: "1",
+							aType: "Integer",
+							b: "1",
+							bType: "Integer"
+						})
+						console.log("test "+reading)
+						console.log("test2 "+comp.resolveCondition(reading))
+						
+						console.log("test3 "+reading.storyObj)
+						reading.storyObj.set("conditions",[
+							{
+							name: "testcomp1",
+							type: "comparisson",
+							operand: "==",
+							a: "1",
+							aType: "Integer",
+							b: "1",
+							bType: "Integer"
+							},
+							{
+							name: "testcomp2",
+							type: "comparisson",
+							operand: "==",
+							a: "1",
+							aType: "Integer",
+							b: "2",
+							bType: "Integer"
+							},
+							{
+							name: "testcomp3",
+							type: "logical",
+							operand: "AND",
+							conditions: ["testcomp1","testcomp2"]
+							},
+							{
+							name: "testcomp4",
+							type: "comparisson",
+							operand: "!=",
+							a: "1",
+							aType: "Integer",
+							b: "2",
+							bType: "Integer"
+							},
+							{
+							name: "testcomp5",
+							type: "comparisson",
+							operand: "<",
+							a: "2",
+							aType: "Integer",
+							b: "2",
+							bType: "Integer"
+							},
+							{
+							name: "testcomp6",
+							type: "comparisson",
+							operand: "<=",
+							a: "3",
+							aType: "Integer",
+							b: "2",
+							bType: "Integer"
+							},
+							{
+							name: "testcomp7",
+							type: "comparisson",
+							operand: "==",
+							a: "var2",
+							aType: "Variable",
+							b: "test",
+							bType: "String"
+							}
+						]
+						)
+						
+						reading.set("variables",[
+						{
+						key: "var1",
+						value: "1"
+						},
+						{
+						key: "var2",
+						value: "test"
+						}
+						]
+						)
+						
+						
+						
+						console.log("test3 "+reading.storyObj.conditions)
+						
+						console.log("test5 "+reading.get("variables"))
+						console.log("test4 "+reading.checkCondition("testcomp2"))
+						*/
+						///////
+						
 					}		
 				})								
 			}		

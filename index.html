@@ -55,9 +55,10 @@
 		
 		<script type = "text/template" id="decktemplate">
 			<h4><%=story.get("name") %></h4> 
-			<% _.each(story.get("deck"), function(card) { %>
+			<% _.each(story.get("deck"), function(card) {%>
+				<%if(reading.checkCardConditions(card.id)){ %>
 				<p><%=card.label %> <a href="#/card/<%=reading.get("id") %>/<%=card.id %>"> open </a></p>
-			
+				<%}%>
 			<%});%>
 		</script>
 		

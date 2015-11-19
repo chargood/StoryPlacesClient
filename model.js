@@ -44,18 +44,30 @@ var Reading = Backbone.Model.extend({
 	
 	initialize: function(){
 		var that = this;
-		var storyId = this.get("story")
-		var story = new Story({id: storyId});
-		story.fetch({
-			success: function(story){
-				that.storyObj = story;
-			}		
-		})
+		this.on("change", function() {
+			if (this.hasChanged("story")) {
+				var storyId = that.get("story")
+				var story = new Story({id: storyId});
+				story.fetch({
+					success: function(story){
+						that.storyObj = story;						
+					}
+				})
+			}
+		})		 		
 	},
 	
+	//NOT FINISHED - NEEDS proper value replacing and object saving
+	setVariable: function(key, value){
+		var vars = this.get("variables");
+		vars.push({key:key,value:value});
+		this.set("variables", vars); 
+	},
+		
 	getVariable: function(key){
 		var result;
 		this.get("variables").forEach(function(variable){
+			console.log("test5 "+variable)
 			if(variable.key==key){
 				result = variable.value
 			}
@@ -64,7 +76,7 @@ var Reading = Backbone.Model.extend({
 	},
 	
 	getValue: function(val, type){
-		if(type=="String"||type="Integer"){
+		if(type=="String"||type=="Integer"){
 			return val;
 		}
 		else if(type="Variable"){
@@ -74,12 +86,12 @@ var Reading = Backbone.Model.extend({
 	},
 	
 	checkCardConditions: function(cardId){
+		var that = this;
 		var res = true;
 		var conditions = this.storyObj.getCard(cardId).conditions;
 		conditions.forEach(function(condition){
 			if(!that.checkCondition(condition)){
 				res=false;
-				break;
 			}
 		})
 		return res;
@@ -91,39 +103,92 @@ var Reading = Backbone.Model.extend({
 	
 	getCondition: function(conditionName){
 		var res;
-		var conditions = this.storyObj.conditions;
+		var conditions = this.storyObj.get("conditions");
 		conditions.forEach(function(condition){
-			if(condition.name==condition){
-				res=condition;
-				break;
+			if(condition.name==conditionName){
+				res=condition;				
 			}
 		})
 		
-		if(condition.type=="comparisson"){
+		if(res.type=="comparisson"){
 			return new ComparissonCondition(res)
 		}
-		else if(condition.type=="logical"){
+		else if(res.type=="logical"){
 			return new LogicalCondition(res)
 		}
 		else{
 			return null
 		}
 	}
-	
-	
 })
 
 var ComparissonCondition = Backbone.Model.extend({
 	resolveCondition: function(context){
-		var vara = context.getValue(this.a,this.aType)
-		var varb = context.getValue(this.b,this.bType)
-		//This is a bit nasty :/
-		eval("return "+vara+" "+this.operand+" "+varb)		
+		var vara = context.getValue(this.get("a"),this.get("aType"))
+		var varb = context.getValue(this.get("b"),this.get("bType"))
+		if(this.get("operand")=="=="){
+			if(vara==varb)
+				return true;
+			else
+				return false;
+		}
+		else if(this.get("operand")=="!="){
+			if(vara!=varb)
+				return true;
+			else
+				return false;
+		}
+		else if(this.get("operand")=="<"){
+			if(vara<varb)
+				return true;
+			else
+				return false;
+		}
+		else if(this.get("operand")==">"){
+			if(vara>varb)
+				return true;
+			else
+				return false;
+		}
+		else if(this.get("operand")=="<="){
+			if(vara<=varb)
+				return true;
+			else
+				return false;
+		}
+		else if(this.get("operand")==">="){
+			if(vara>=varb)
+				return true;
+			else
+				return false;
+		}
+		else
+			return false
 	}
 })
 
 var LogicalCondition = Backbone.Model.extend({
 	resolveCondition: function(context){
-		
+		var res = false;
+		if(this.get("operand")=="AND"){
+			res = true;
+			var conditions = this.get("conditions");
+			conditions.forEach(function(conditionName){
+				if(!context.getCondition(conditionName).resolveCondition(context)){
+					res = false;
+				}
+			})
+		}
+		else if(this.get("operand")=="OR"){
+			res = false;
+			var conditions = this.get("conditions");
+			conditions.forEach(function(conditionName){
+				if(context.getCondition(conditionName).resolveCondition(context)){
+					res = true;
+				}
+			})
+		}
+
+		return res;
 	}
 })
