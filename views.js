@@ -166,9 +166,27 @@ var ReadingView = Backbone.View.extend({
 				story.fetch({
 					success: function(story){
 						var template = _.template($('#decktemplate').html())
+						
+						// Function and variable test code
+						/*reading.setVariable("var1","test")
+						
+						reading.storyObj.set("functions",[
+							{
+							name: "testfunc1",
+							type: "set",
+							arguments: ["var2","test"],
+							conditions: ["testcomp1"]
+							}
+						]
+						)
+						
+						console.log("test6 "+reading.storyObj.get("functions"))
+						console.log("test6 "+reading.getVariable("var2"))
+						reading.executeFunction("testfunc1")
+						console.log("test6 "+reading.getVariable("var2"))
+						*/
 						//
-						//reading.setVariable("var2","test")
-						//
+						
 						that.$el.html(template({
 							story:story,
 							reading:reading
@@ -280,15 +298,21 @@ var ReadingView = Backbone.View.extend({
 	},
 	renderCard(options){
 		var that = this;
+		console.log("tick1")
 		var reading = new Reading({id: this.readingId});
+		console.log("tick2")
 		reading.fetch({
 			success: function(reading){
+				console.log("tick3")
 				var storyId = reading.get("story")	
 				var story = new Story({id: storyId});
+				console.log("tick4")
 				story.fetch({
 					success: function(story){
+						console.log("tick5")
 						var card = story.getCard(options.card)
 						var template = _.template($('#cardtemplate').html())
+						console.log("tick6")
 						that.$el.html(template({
 							story:story,
 							reading:reading,
@@ -298,6 +322,7 @@ var ReadingView = Backbone.View.extend({
 				})								
 			}		
 		})
+		console.log("tick7")
 	},
 	event(e){
 		if(e.target.attributes.eventCheck&&e.target.attributes.eventCheck.value=="true"){

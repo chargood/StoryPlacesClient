@@ -13,6 +13,7 @@ var Story = Backbone.Model.extend({
        //this.id=this.get("_id")
     },
 	
+	//TODO: create a proper card object and return/use that rather then just returning raw json
 	getCard: function(id){
 		var result;
 		this.get("deck").forEach(function(card){
@@ -57,17 +58,30 @@ var Reading = Backbone.Model.extend({
 		})		 		
 	},
 	
-	//NOT FINISHED - NEEDS proper value replacing and object saving
 	setVariable: function(key, value){
 		var vars = this.get("variables");
-		vars.push({key:key,value:value});
-		this.set("variables", vars); 
+		var update = false;
+		
+		this.get("variables").forEach(function(variable){
+			if(variable.key==key){
+				variable.value = value;
+				update=true
+			}
+		})
+		
+		if(!update){
+			console.log("new var")
+			vars.push({key:key,value:value});			
+		}
+		
+		this.set("variables", vars);
+		//console.log(this)
+		this.save();
 	},
 		
 	getVariable: function(key){
 		var result;
 		this.get("variables").forEach(function(variable){
-			console.log("test5 "+variable)
 			if(variable.key==key){
 				result = variable.value
 			}
@@ -96,7 +110,7 @@ var Reading = Backbone.Model.extend({
 		})
 		return res;
 	},
-	
+		
 	checkCondition: function(conditionName){
 		return this.getCondition(conditionName).resolveCondition(this)
 	},
@@ -119,6 +133,30 @@ var Reading = Backbone.Model.extend({
 		else{
 			return null
 		}
+	},
+	
+	executeCardFunctions: function(cardId){
+		var that = this;
+		var functions = this.storyObj.getCard(cardId).functions;
+		functions.forEach(function(afunction){
+			that.executeFunction(afunction)
+		})
+	},
+	
+	executeFunction: function(functionName){
+		return this.getFunction(functionName).execute(this)
+	},
+	
+	getFunction: function(functionName){
+		var res;
+		var functions = this.storyObj.get("functions");
+		functions.forEach(function(afunction){
+			if(afunction.name==functionName){
+				res=afunction;				
+			}
+		})
+		
+		return new StoryFunction(res)		
 	}
 })
 
@@ -190,5 +228,39 @@ var LogicalCondition = Backbone.Model.extend({
 		}
 
 		return res;
+	}
+})
+
+var StoryFunction = Backbone.Model.extend({
+	checkConditions: function(context){
+		var that = this;
+		var res = true;
+		var conditions = this.get("conditions");
+		conditions.forEach(function(condition){
+			if(!context.checkCondition(condition)){
+				res=false;
+			}
+		})
+		console.log("cond res "+res)
+		return res;
+	},
+	
+	execute: function(context){
+		if(this.checkConditions(context)){
+			var argumentsString="context,";
+			
+			var arguments = this.get("arguments");
+			arguments.forEach(function(argument){
+				argumentsString+="'"+argument+"',"
+			})
+			argumentsString=argumentsString.substring(0,argumentsString.length-1)
+			
+			console.log("this."+this.get("type")+"function("+argumentsString+")")
+			eval("this."+this.get("type")+"function("+argumentsString+")")
+		}
+	},
+	
+	setfunction: function(context,key,value){
+		context.setVariable(key,value)
 	}
 })
