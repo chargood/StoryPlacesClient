@@ -51,11 +51,26 @@ var Reading = Backbone.Model.extend({
 				var story = new Story({id: storyId});
 				story.fetch({
 					success: function(story){
-						that.storyObj = story;						
+						that.storyObj = story;
 					}
 				})
 			}
-		})		 		
+		})
+	},
+	
+	getStoryObj: function(){
+		if(this.storyObj){
+			return this.storyObj			
+		}
+		else{
+			var storyId = this.get("story")
+			var story = new Story({id: storyId});
+			story.fetch({
+				success: function(story){
+					return story
+				}
+			})			
+		}
 	},
 	
 	setVariable: function(key, value){
@@ -70,12 +85,10 @@ var Reading = Backbone.Model.extend({
 		})
 		
 		if(!update){
-			console.log("new var")
 			vars.push({key:key,value:value});			
 		}
 		
 		this.set("variables", vars);
-		//console.log(this)
 		this.save();
 	},
 		
@@ -102,7 +115,7 @@ var Reading = Backbone.Model.extend({
 	checkCardConditions: function(cardId){
 		var that = this;
 		var res = true;
-		var conditions = this.storyObj.getCard(cardId).conditions;
+		var conditions = this.getStoryObj().getCard(cardId).conditions;
 		conditions.forEach(function(condition){
 			if(!that.checkCondition(condition)){
 				res=false;
@@ -117,7 +130,7 @@ var Reading = Backbone.Model.extend({
 	
 	getCondition: function(conditionName){
 		var res;
-		var conditions = this.storyObj.get("conditions");
+		var conditions = this.getStoryObj().get("conditions");
 		conditions.forEach(function(condition){
 			if(condition.name==conditionName){
 				res=condition;				
@@ -137,7 +150,7 @@ var Reading = Backbone.Model.extend({
 	
 	executeCardFunctions: function(cardId){
 		var that = this;
-		var functions = this.storyObj.getCard(cardId).functions;
+		var functions = this.getStoryObj().getCard(cardId).functions;
 		functions.forEach(function(afunction){
 			that.executeFunction(afunction)
 		})
@@ -149,7 +162,7 @@ var Reading = Backbone.Model.extend({
 	
 	getFunction: function(functionName){
 		var res;
-		var functions = this.storyObj.get("functions");
+		var functions = this.getStoryObj().get("functions");
 		functions.forEach(function(afunction){
 			if(afunction.name==functionName){
 				res=afunction;				
@@ -231,6 +244,21 @@ var LogicalCondition = Backbone.Model.extend({
 	}
 })
 
+var LocationCondition = Backbone.Model.extend({
+	resolveCondition: function(context){
+		if(this.locationType=="circle"){
+			return resolveCircle(context);
+		}		
+	},
+	
+	resolveCircle: function(context){
+		var dis = getDistanceFromLatLonInKm(localStorage.getItem("GPSLat"),localStorage.getItem("GPSLon"),this.get("locationData").lat,this.get("locationData").lon)
+		console.log("circle check",dis,this.get("locationData").radius,localStorage.getItem("GPSLat"),localStorage.getItem("GPSLon"),this.get("locationData").lat,this.get("locationData").lon)
+		return (this.get("bool")&&dis<this.get("locationData").radius)
+	}
+	
+})
+
 var StoryFunction = Backbone.Model.extend({
 	checkConditions: function(context){
 		var that = this;
@@ -241,7 +269,7 @@ var StoryFunction = Backbone.Model.extend({
 				res=false;
 			}
 		})
-		console.log("cond res "+res)
+		//console.log("cond res "+res)
 		return res;
 	},
 	
@@ -255,7 +283,7 @@ var StoryFunction = Backbone.Model.extend({
 			})
 			argumentsString=argumentsString.substring(0,argumentsString.length-1)
 			
-			console.log("this."+this.get("type")+"function("+argumentsString+")")
+			//console.log("this."+this.get("type")+"function("+argumentsString+")")
 			eval("this."+this.get("type")+"function("+argumentsString+")")
 		}
 	},

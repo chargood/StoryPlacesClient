@@ -13,7 +13,7 @@ var router = new Router();
 
 var storyListView = new StoryListView();
 var storyView = new StoryView();
-var readingView;
+var readingView= new ReadingView();
 
 router.on('route:home', function(){
 	console.log('Home Route');
@@ -26,19 +26,18 @@ router.on('route:viewStory', function(id){
 });
 
 router.on('route:playReading', function(id){
-	readingView = new ReadingView({id:id});
 	console.log('Play Reading Route');
 	readingView.render({id:id});
 });
 
 router.on('route:playReadingDeck', function(id){
-	readingView = new ReadingView({id:id});
+	//readingView = new ReadingView({id:id});
 	console.log('Play Reading Deck Route');
 	readingView.renderDeck({id:id});
 });
 
 router.on('route:playReadingCard', function(id, card){
-	readingView = new ReadingView({id:id});
+	//readingView = new ReadingView({id:id});
 	console.log('Play Reading Card Route');
 	readingView.renderCard({id:id, card:card});
 });

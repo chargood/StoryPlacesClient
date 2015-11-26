@@ -67,7 +67,7 @@
 			<div><%=card.content %> </div>
 			
 			<%if(!card.footerButtonMode||card.footerButtonMode=="next"){%>
-				<input class="nextCard" type="button" value="Next" eventCheck="true" eventType="endcard"/>
+				<input class="nextCard" type="button" value="Next" eventCheck="true" eventType="endcard" eventCardId="<%=card.id%>"/>
 			<%}%>
 			
 			<%if(card.footerButtonMode=="end"){%>
@@ -85,7 +85,8 @@
 		</script>
 		
 		
-		
+		<script src="./libs/geolocator.js"></script>
+		<script src="./SPGPS.js"></script>
 		<script src="./libs/jquery-2.1.4.js"></script>
 		<script src="./libs/underscore.js"></script>
 		<script src="./libs/backbone.js"></script>

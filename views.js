@@ -138,7 +138,6 @@ var ReadingDialog = Backbone.View.extend({
 		});
 	},
 	createReading: function(){
-		
 		console.log("Create Reading "+this.storyId)
 	}
 });
@@ -146,173 +145,66 @@ var ReadingDialog = Backbone.View.extend({
 var ReadingView = Backbone.View.extend({
 	el: $('#page'),
 	events: {
-		"click" : "event"
+		"click" : "event",
+		"storage" : "gpsChange"
 	},
 	initialize: function(options){
-		this.readingId = options.id;
+		//this.readingId = options.id;
     },
 	render: function(options){
 		this.renderDeck(options)
 	},
-	renderDeck(options){
+	renderDeck: function(options){
 		var that = this;
+		this.readingId=options.id;
+		this.renderOptions = options
 		
-		var reading = new Reading({id: this.readingId});
+		var reading = new Reading({id: options.id});
 		reading.fetch({
 			success: function(reading){
-				console.log("test2 "+JSON.stringify(reading))
+				
+				that.readingObj=reading;
+				
+				/*var template = _.template($('#decktemplate').html())
+				that.$el.html(template({
+					reading:reading
+				}))*/
 				var storyId = reading.get("story")
 				var story = new Story({id: storyId});
 				story.fetch({
 					success: function(story){
 						var template = _.template($('#decktemplate').html())
-						
-						// Function and variable test code
-						/*reading.setVariable("var1","test")
-						
-						reading.storyObj.set("functions",[
-							{
-							name: "testfunc1",
-							type: "set",
-							arguments: ["var2","test"],
-							conditions: ["testcomp1"]
-							}
-						]
-						)
-						
-						console.log("test6 "+reading.storyObj.get("functions"))
-						console.log("test6 "+reading.getVariable("var2"))
-						reading.executeFunction("testfunc1")
-						console.log("test6 "+reading.getVariable("var2"))
-						*/
-						//
-						
+												
 						that.$el.html(template({
 							story:story,
 							reading:reading
 						}))
-						
-						////////LOGIC SYSTEM TEST CODE
-						/*var comp = new ComparissonCondition({
-							name: "testcomp",
-							type: "comparisson",
-							operand: "==",
-							a: "1",
-							aType: "Integer",
-							b: "1",
-							bType: "Integer"
-						})
-						console.log("test "+reading)
-						console.log("test2 "+comp.resolveCondition(reading))
-						
-						console.log("test3 "+reading.storyObj)
-						reading.storyObj.set("conditions",[
-							{
-							name: "testcomp1",
-							type: "comparisson",
-							operand: "==",
-							a: "1",
-							aType: "Integer",
-							b: "1",
-							bType: "Integer"
-							},
-							{
-							name: "testcomp2",
-							type: "comparisson",
-							operand: "==",
-							a: "1",
-							aType: "Integer",
-							b: "2",
-							bType: "Integer"
-							},
-							{
-							name: "testcomp3",
-							type: "logical",
-							operand: "AND",
-							conditions: ["testcomp1","testcomp2"]
-							},
-							{
-							name: "testcomp4",
-							type: "comparisson",
-							operand: "!=",
-							a: "1",
-							aType: "Integer",
-							b: "2",
-							bType: "Integer"
-							},
-							{
-							name: "testcomp5",
-							type: "comparisson",
-							operand: "<",
-							a: "2",
-							aType: "Integer",
-							b: "2",
-							bType: "Integer"
-							},
-							{
-							name: "testcomp6",
-							type: "comparisson",
-							operand: "<=",
-							a: "3",
-							aType: "Integer",
-							b: "2",
-							bType: "Integer"
-							},
-							{
-							name: "testcomp7",
-							type: "comparisson",
-							operand: "==",
-							a: "var2",
-							aType: "Variable",
-							b: "test",
-							bType: "String"
-							}
-						]
-						)
-						
-						reading.set("variables",[
-						{
-						key: "var1",
-						value: "1"
-						},
-						{
-						key: "var2",
-						value: "test"
-						}
-						]
-						)
-						
-						
-						
-						console.log("test3 "+reading.storyObj.conditions)
-						
-						console.log("test5 "+reading.get("variables"))
-						console.log("test4 "+reading.checkCondition("testcomp2"))
-						*/
-						///////
-						
+
+						//nasty hack to update deck view based on GPS - do this better
+						setTimeout(function(){
+							window.location.reload(1);
+						}, 5000);
 					}		
 				})								
 			}		
 		})		
-	},
-	renderCard(options){
+	},		
+	renderCard: function(options){
 		var that = this;
-		console.log("tick1")
-		var reading = new Reading({id: this.readingId});
-		console.log("tick2")
+		this.readingId=options.id;
+		this.renderOptions = options
+		
+		var reading = new Reading({id: options.id});
 		reading.fetch({
 			success: function(reading){
-				console.log("tick3")
+				that.readingObj=reading;
+				
 				var storyId = reading.get("story")	
 				var story = new Story({id: storyId});
-				console.log("tick4")
 				story.fetch({
 					success: function(story){
-						console.log("tick5")
 						var card = story.getCard(options.card)
 						var template = _.template($('#cardtemplate').html())
-						console.log("tick6")
 						that.$el.html(template({
 							story:story,
 							reading:reading,
@@ -322,20 +214,30 @@ var ReadingView = Backbone.View.extend({
 				})								
 			}		
 		})
-		console.log("tick7")
 	},
-	event(e){
+	event: function(e){
+		e.stopPropagation();
 		if(e.target.attributes.eventCheck&&e.target.attributes.eventCheck.value=="true"){
-			console.log("event "+e.target.attributes.eventCheck.value+" "+e.target.attributes.eventType.value)//+" "+e.target.attributes.eventData.value)
+			console.log("event "+e.toString()+" "+e.target.attributes.eventCheck.value+" "+e.target.attributes.eventType.value)//+" "+e.target.attributes.eventData.value)
 			if(e.target.attributes.eventType.value=="endcard"){
+				e.target.attributes.eventType.value="repeat"
+				this.readingObj.executeCardFunctions(e.target.attributes.eventCardId.value)
+				//localStorage.setItem("GPSLat", "!")
 				router.navigate('/reading/'+this.readingId, {trigger:true});
 			}			
 			else if(e.target.attributes.eventType.value=="endstory"){
 				router.navigate('', {trigger:true});
 			}
+			else if(e.target.attributes.eventType.value=="repeat"){
+				//the repeat event is a horrible work around for the backbone stacking events problem. Without it every view created, destroyed or not, will pick up the events. Hopefully so long as we only create 1 reading object this won't return.
+			}
 			else{
 				console.log("Unrecognised Event "+e.target.attributes.eventType.value)
 			}
 		}
+		return true;
+	},
+	storageChange: function(e){
+		console.log("STORAGE CHANGE")
 	}
 })
