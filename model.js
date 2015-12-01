@@ -129,6 +129,7 @@ var Reading = Backbone.Model.extend({
 	},
 	
 	getCondition: function(conditionName){
+		console.log("getCondition ",conditionName)
 		var res;
 		var conditions = this.getStoryObj().get("conditions");
 		conditions.forEach(function(condition){
@@ -181,6 +182,7 @@ var ComparissonCondition = Backbone.Model.extend({
 	resolveCondition: function(context){
 		var vara = context.getValue(this.get("a"),this.get("aType"))
 		var varb = context.getValue(this.get("b"),this.get("bType"))
+		console.log("Comparisson Cond ",this.get("operand"),vara,varb)
 		if(this.get("operand")=="=="){
 			if(vara==varb)
 				return true;

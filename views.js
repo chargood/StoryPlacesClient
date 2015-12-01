@@ -146,7 +146,7 @@ var ReadingView = Backbone.View.extend({
 	el: $('#page'),
 	events: {
 		"click" : "event",
-		"storage" : "gpsChange"
+		"gpsupdate" : "gpsChange"
 	},
 	initialize: function(options){
 		//this.readingId = options.id;
@@ -154,10 +154,17 @@ var ReadingView = Backbone.View.extend({
 	render: function(options){
 		this.renderDeck(options)
 	},
+	reRender: function(){
+		if(this.renderMode == "deck")
+			this.renderDeck(this.renderOptions)
+		else if(this.renderMode == "card")
+			this.renderCard(this.renderOptions)
+	},
 	renderDeck: function(options){
 		var that = this;
 		this.readingId=options.id;
 		this.renderOptions = options
+		this.renderMode = "deck"
 		
 		var reading = new Reading({id: options.id});
 		reading.fetch({
@@ -179,11 +186,11 @@ var ReadingView = Backbone.View.extend({
 							story:story,
 							reading:reading
 						}))
-
+						
 						//nasty hack to update deck view based on GPS - do this better
-						setTimeout(function(){
-							window.location.reload(1);
-						}, 5000);
+						//setTimeout(function(){
+						//	window.location.reload(1);
+						//}, 5000);
 					}		
 				})								
 			}		
@@ -193,6 +200,7 @@ var ReadingView = Backbone.View.extend({
 		var that = this;
 		this.readingId=options.id;
 		this.renderOptions = options
+		this.renderMode = "card"
 		
 		var reading = new Reading({id: options.id});
 		reading.fetch({
