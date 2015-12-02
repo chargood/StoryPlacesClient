@@ -123,6 +123,18 @@ var Reading = Backbone.Model.extend({
 		})
 		return res;
 	},
+	
+	checkCardNonLocConditions: function(cardId){
+		var that = this;
+		var res = true;
+		var conditions = this.getStoryObj().getCard(cardId).conditions;
+		conditions.forEach(function(condition){
+			if(!that.checkCondition(condition)&&that.getCondition(condition).get("type")!="location"){
+				res=false;
+			}
+		})
+		return res;
+	},
 		
 	checkCondition: function(conditionName){
 		return this.getCondition(conditionName).resolveCondition(this)

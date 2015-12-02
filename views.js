@@ -75,16 +75,19 @@ var StoryView = Backbone.View.extend({
 		console.log("New Reading")
 		var readingDetails = {story: this.storyId, user: localStorage.getItem("User-ID")};
 		
-		var readinglist = new ReadingList();
+		//var readinglist = new ReadingList();
+		var readinglist = new StoryReadingList(that.storyId, localStorage.getItem("User-ID"));
+		
 		readinglist.fetch({
 			success: function(readinglist){
 				console.log("got reading list")
-				var readingcount = 1
+				/*var readingcount = 1
 				readinglist.each(function(reading){
 					if(reading.get("story")==that.storyId){
 						readingcount++
 					}
-				});
+				});*/
+				var readingcount = readinglist.length + 1
 				readingDetails.name="Reading "+readingcount
 				var reading = new Reading();
 				reading.save(readingDetails,{
@@ -180,7 +183,15 @@ var ReadingView = Backbone.View.extend({
 				var story = new Story({id: storyId});
 				story.fetch({
 					success: function(story){
-						var template = _.template($('#decktemplate').html())
+						
+						var template = _.template($('#decktemplate1').html())
+						
+						if(story.get("deckviewmode")=="2")
+							var template = _.template($('#decktemplate2').html())
+						if(story.get("deckviewmode")=="3")
+							var template = _.template($('#decktemplate3').html())
+						
+							
 												
 						that.$el.html(template({
 							story:story,
