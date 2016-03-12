@@ -309,5 +309,11 @@ var StoryFunction = Backbone.Model.extend({
 	
 	setfunction: function(context,key,value){
 		context.setVariable(key,value)
+	},
+	
+	incrementfunction: function(context,key,value){
+		if(!isNaN(parseInt(context.getVariable(key)))&&!isNaN(parseInt(value)))
+			context.setVariable(key,(parseInt(context.getVariable(key))+parseInt(value)))
 	}
+	
 })
