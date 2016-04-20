@@ -1,8 +1,10 @@
 define([
 	'jquery',
 	'underscore',
-	'backbone'
-], function ($, _, Backbone) {
+	'backbone',
+	'views/storyListView',
+	'views/storyView'
+], function ($, _, Backbone, StoryListView, StoryView) {
 
 	var Router = Backbone.Router.extend({
 
