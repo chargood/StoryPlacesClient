@@ -6,9 +6,9 @@
 		<title>StoryPlaces</title>
 		<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<link rel="stylesheet" href="./libs/bootstrap-3.3.6-dist/css/bootstrap.min.css">
+		<link rel="stylesheet" href="./script/libs/bootstrap-3.3.6-dist/css/bootstrap.min.css">
 	</head>
-	
+
 	<body>
 		<div>
 			<h1>StoryPlaces</h1>
@@ -20,11 +20,11 @@
 			<h3>Debug</h3>
 			</div>
 		</div>
-		
-		
+
+
 		<script type = "text/template" id="storylisttemplate">
-			<h2>Story List</h2> 
-			
+			<h2>Story List</h2>
+
 			<table class="table table-hover">
 				<thead>
 				  <tr>
@@ -32,49 +32,49 @@
 					<th></th>
 				  </tr>
 				</thead>
-				<tbody>	
+				<tbody>
 					<% _.each(storylist, function(story) { %>
-					
+
 						<tr><td><%=story.get("name") %></td><td> <a href="#/story/<%=story.get("_id") %>"> load </a></td></tr>
-					
+
 					<%});%>
 				</tbody>
 			</table>
-			
+
 			<input class="updateList" type="button" class="btn btn-default" value="Update Story List"/>
-			
+
 		</script>
-		
+
 		<script type = "text/template" id="storytemplate">
 			<h2><%=story.get("name")%></h2>
 			<input class="newReadingBtn" type="button" class="btn btn-default" value="Start a new reading" />
-			
-			<h3>Readings</h3> 
+
+			<h3>Readings</h3>
 			<table class="table table-hover">
 			<%var readingcount=0;%>
 			<% _.each(readinglist, function(reading) { %>
 				<%if(reading.get("story")==story.get("_id")) {%>
-					<%readingcount++;%>			
+					<%readingcount++;%>
 					<tr>
 						<td><%=reading.get("name") %></td>
 						<td><a href="#/reading/<%=reading.get("id")%>"><input class="openReadingBtn" type="button" class="btn btn-default" value="Open"/></a></td>
 						<!--<td><a href="#/reading/delete/<%=reading.get("id")%>"><input class="deleteReadingBtn" type="button" value="Delete"/></a></td>-->
 				<%}%>
-			
+
 			<%});%>
 			</table>
 			<%if(readingcount==0){%>
 				<p>no readings</p>
 			<%}%>
-			
+
 			<!-- <input class="newCustomReadingBtn" type="button" class="btn btn-default" value="Start a new reading with custom settings" /> -->
-			
+
 		</script>
-		
+
 		<!--List available cards-->
 		<script type = "text/template" id="decktemplate1">
-			<h3><%=story.get("name") %></h3> 
-			
+			<h3><%=story.get("name") %></h3>
+
 			<table class="table table-hover">
 				<% _.each(story.get("deck"), function(card) {%>
 					<%if(reading.checkCardConditions(card.id)){ %>
@@ -83,11 +83,11 @@
 				<%});%>
 			</table>
 		</script>
-		
+
 		<!--List all cards, red or green based on availability-->
 		<script type = "text/template" id="decktemplate2">
-			<h3><%=story.get("name") %></h3> 
-			
+			<h3><%=story.get("name") %></h3>
+
 			<table class="table table-hover">
 				<% _.each(story.get("deck"), function(card) {%>
 					<%if(reading.checkCardConditions(card.id)){ %>
@@ -98,11 +98,11 @@
 				<%});%>
 			</table>
 		</script>
-		
+
 		<!--List all cards not failing non loc rules, red and green based on loc rules including directions -->
 		<script type = "text/template" id="decktemplate3">
-			<h3><%=story.get("name") %></h3> 
-			
+			<h3><%=story.get("name") %></h3>
+
 			<table class="table table-hover">
 				<% _.each(story.get("deck"), function(card) {%>
 					<%if(reading.checkCardConditions(card.id)){ %>
@@ -116,49 +116,47 @@
 				<%});%>
 			</table>
 		</script>
-		
+
 		<script type = "text/template" id="cardtemplate">
 			<h3><%=story.get("title")%></h3>
 			<div><%=card.content %> </div>
-			
+
 			<%if(!card.footerButtonMode||card.footerButtonMode=="next"){%>
 				<input class="nextCard" type="button" class="btn btn-default" value="Next" eventCheck="true" eventType="endcard" eventCardId="<%=card.id%>"/>
 			<%}%>
-			
+
 			<%if(card.footerButtonMode=="end"){%>
 				<input class="nextCard" type="button" class="btn btn-default" value="Finish Story" eventCheck="true" eventType="endstory"/>
 			<%}%>
-			
-			<%if(card.footerButtonMode=="none"){%>				
-			<%}%>
-		</script>		
-		
-		<script type = "text/template" id="readingdialog">
-		
-			<div id="readingdialog">Custom New Reading</div>
-			
-		</script>
-		
-		<script src="./libs/jquery-2.1.4.js"></script>
-		<script src="./libs/underscore.js"></script>
-		<script src="./libs/backbone.js"></script>
-		
-		<!--<script src="./libs/Backbone.localStorage-1.1.16/backbone.localStorage.js"></script>-->
-		<script src="./libs/Backbone.dualStorage-1.4.0/backbone.dualstorage.js"></script>
-		<script src="./model.js"></script>
-		<script src="./views.js"></script> 
-		<script src="./routers.js"></script>
-		
 
-		
+			<%if(card.footerButtonMode=="none"){%>
+			<%}%>
+		</script>
+
+		<script type = "text/template" id="readingdialog">
+
+			<div id="readingdialog">Custom New Reading</div>
+
+		</script>
+
+		<script src="./script/libs/jquery-2.1.4.js"></script>
+		<script src="./script/libs/underscore.js"></script>
+		<script src="./script/libs/backbone.js"></script>
+
+		<!--<script src="./libs/Backbone.localStorage-1.1.16/backbone.localStorage.js"></script>-->
+		<script src="./script/libs/Backbone.dualStorage-1.4.0/backbone.dualstorage.js"></script>
+		<script src="./script/models/model.js"></script>
+		<script src="./script/views/views.js"></script>
+		<script src="./script/routers.js"></script>
+
+
+
 		<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
-		
-		<script src="./libs/geolocator.js"></script>
-		<script src="./debug.js"></script>
-		<script src="./SPGPS.js"></script>
-		
-		
+
+		<script src="./script/libs/geolocator.js"></script>
+		<script src="./script/debug.js"></script>
+		<script src="./script/utils/SPGPS.js"></script>
 		
 	</body>
-	
+
 </html>
