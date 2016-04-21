@@ -64,7 +64,7 @@ define([
                     reading.save(readingDetails, {
                         success: function (reading) {
                             console.log("reading saved")
-                            router.navigate('', { trigger: true });
+                            Backbone.history.navigate('', { trigger: true });                            
                         },
                         error: function (model, response) {
                             console.log("reading error")
