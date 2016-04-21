@@ -3,8 +3,9 @@ define([
 	'underscore',
 	'backbone',
 	'views/storyListView',
-	'views/storyView'
-], function ($, _, Backbone, StoryListView, StoryView) {
+	'views/storyView',
+	'views/readingView'
+], function ($, _, Backbone, StoryListView, StoryView, ReadingView) {
 
 	var Router = Backbone.Router.extend({
 

@@ -1,7 +1,11 @@
 define([
     'underscore',
-    'backbone'
-], function (_, Backbone) {
+    'backbone',
+    'models/story',
+    'models/conditions/comparissonCondition',
+    'models/conditions/locationCondition',
+    'models/conditions/logicalCondition'
+], function (_, Backbone, Story, ComparissonCondition, LocationCondition, LogicalCondition) {
 
     var Reading = Backbone.Model.extend({
         urlRoot: '/storyplaces/reading',

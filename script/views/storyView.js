@@ -1,9 +1,10 @@
 define([
+    'jquery',
     'underscore',
     'backbone',
     'models/story',
     'models/storyReadingList'
-], function (_, Backbone, Story, StoryReadingList) {
+], function ($,_, Backbone, Story, StoryReadingList) {
 
     var StoryView = Backbone.View.extend({
         el: $('#page'),
