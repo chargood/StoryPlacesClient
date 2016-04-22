@@ -1,7 +1,7 @@
 define([
-	'views/readingView',
-	'utils/debug'
-	], function (ReadingView, Debug) {
+	'views/debugView',
+	'geolocator'
+	], function (DebugView, Geolocator) {
 
 	var onGeoSuccess = function (location) {
 		var lat = location.coords.latitude
@@ -14,7 +14,7 @@ define([
 
 		console.log("GPS " + lat + " " + lon + " " + acc)
 		//clearDebug()
-		Debug.printDebug("GPS " + lat + " " + lon + " " + acc)
+		DebugView.printDebug("GPS " + lat + " " + lon + " " + acc)
 		//alert("GPS "+lat+" "+lon+" "+acc)
 
 		var event = document.createEvent('Event')
@@ -33,6 +33,16 @@ define([
 	var deg2rad = function (deg) {
 		return deg * (Math.PI / 180)
 	};
+	
+	var readingView;
+	var getReadingView = function() {
+		if (!readingView) {
+		 var readingViewType = require(['/views/readingView']);
+		 readingView = new readingViewType();		 	
+		}
+		
+		return readingView;
+	};
 
 	var getDistanceFromLatLonInKm = function (lat1, lon1, lat2, lon2) {
 		var R = 6371; // Radius of the earth in km
@@ -50,32 +60,26 @@ define([
 
 	var locate = function () {
 		var html5Options = { enableHighAccuracy: true, timeout: 6000, maximumAge: 0 };
-		geolocator.locate(this.onGeoSuccess, this.onGeoError, true, html5Options, null, true);
+		var geolocator = new Geolocator();
+		//TODO this line raises some callback error that I don't understand
+		geolocator.locate(this.onGeoSuccess, this.onGeoError, true, html5Options, null, true);		
 	};
 
 	var addGpsUpdateListener = function () {
 		document.addEventListener('gpsupdate', function (e) {
 			console.log("UPDATE!")
-			// QUESTION - where does this reference come from???
-			//readingView.reRender();
+			var readingView = getReadingView();
+			//TODO this line fails as reading view does not have a reRender method. Not clear what readingView is. 
+			readingView.reRender();
 		}, false);
 	};
 
 	// return functions as an object
-	var gps = {
+	var GPS = {
 		getDistanceFromLatLonInKm: getDistanceFromLatLonInKm,
 		locate: locate,
 		addGpsUpdateListener: addGpsUpdateListener
 	};
 
-	return gps;
-
+	return GPS;
 });
-
-
-
-// QUESTION - ERR, HOW TO MAKE THIS CALL?
-/*
-window.onload = function () {
-
-}*/

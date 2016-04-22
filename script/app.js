@@ -4,11 +4,16 @@ define([
   'jquery',
   'underscore',
   'backbone',
-  'router'
-], function($, _, Backbone, Router){
+  'router',
+  'utils/SPGPS'
+], function($, _, Backbone, Router, GPS){
   
   var initialize = function() {
-      Router.initialize();      
+      Router.initialize();  
+      
+      // run once
+      GPS.locate();   
+      GPS.addGpsUpdateListener(); 
   };
   
   return {

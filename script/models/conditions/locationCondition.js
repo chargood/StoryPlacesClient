@@ -2,8 +2,8 @@ define([
     'underscore',
     'backbone',
     'utils/SPGPS',
-    'utils/debug'
-], function (_, Backbone, GPS, Debug) {
+    'views/debugView'
+], function (_, Backbone, GPS, DebugView) {
 
     var LocationCondition = Backbone.Model.extend({
         
@@ -16,7 +16,9 @@ define([
         resolveCircle: function (context) {
             var dis =  GPS.getDistanceFromLatLonInKm(localStorage.getItem("GPSLat"), localStorage.getItem("GPSLon"), this.get("locationData").lat, this.get("locationData").lon)
             console.log("circle check", dis, this.get("locationData").radius, localStorage.getItem("GPSLat"), localStorage.getItem("GPSLon"), this.get("locationData").lat, this.get("locationData").lon)
-            Debug.printDebug("circle check " + this.get("name") + " distance:" + dis + " radius:" + this.get("locationData").radius + " ulat:" + localStorage.getItem("GPSLat") + " ulon:" + localStorage.getItem("GPSLon") + " tlat:" + this.get("locationData").lat + " tlon:" + this.get("locationData").lon)
+            
+            var debugView = new DebugView();
+            debugView.printDebug("circle check " + this.get("name") + " distance:" + dis + " radius:" + this.get("locationData").radius + " ulat:" + localStorage.getItem("GPSLat") + " ulon:" + localStorage.getItem("GPSLon") + " tlat:" + this.get("locationData").lat + " tlon:" + this.get("locationData").lon)
             return (this.get("bool") && dis < this.get("locationData").radius)
         }
 

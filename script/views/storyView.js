@@ -3,8 +3,9 @@ define([
     'underscore',
     'backbone',
     'models/story',
-    'models/storyReadingList'
-], function ($,_, Backbone, Story, StoryReadingList) {
+    'models/storyReadingList',
+    'models/reading'
+], function ($,_, Backbone, Story, StoryReadingList, Reading) {
 
     var StoryView = Backbone.View.extend({
         el: $('#page'),

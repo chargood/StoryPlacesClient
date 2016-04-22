@@ -4,10 +4,12 @@ define([
     'models/story',
     'models/conditions/comparissonCondition',
     'models/conditions/locationCondition',
-    'models/conditions/logicalCondition'
-], function (_, Backbone, Story, ComparissonCondition, LocationCondition, LogicalCondition) {
+    'models/conditions/logicalCondition',
+    'models/storyFunction'
+], function (_, Backbone, Story, ComparissonCondition, LocationCondition, LogicalCondition, StoryFunction) {
 
     var Reading = Backbone.Model.extend({
+        
         urlRoot: '/storyplaces/reading',
 
         initialize: function () {
@@ -82,7 +84,9 @@ define([
         checkCardConditions: function (cardId) {
             var that = this;
             var res = true;
-            var conditions = this.getStoryObj().getCard(cardId).conditions;
+            var story = this.getStoryObj();
+            var card = story.getCard(cardId);
+            var conditions = card.conditions;
             conditions.forEach(function (condition) {
                 if (!that.checkCondition(condition)) {
                     res = false;

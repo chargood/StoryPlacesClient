@@ -1,10 +1,8 @@
 define([
     'jquery',
     'underscore',
-    'backbone',
-    'models/reading',
-    'models/story'
-], function ($, _, Backbone, Reading, Story) {
+    'backbone'
+], function ($, _, Backbone) {
 
     var ReadingView = Backbone.View.extend({
         el: $('#page'),
@@ -15,6 +13,18 @@ define([
         
         initialize: function (options) {
             //this.readingId = options.id;
+        },
+        
+        createReading: function(options) {
+          // reading has circular dependencies so use factory here
+          var readingType = require('models/reading');
+          return new readingType(options);  
+        },
+        
+        createStory: function(options) {
+            // story has circular dependencies so use factory here
+            var storyType = require('models/story');
+            return new storyType(options);
         },
         
         render: function (options) {
@@ -34,7 +44,7 @@ define([
             this.renderOptions = options
             this.renderMode = "deck"
 
-            var reading = new Reading({ id: options.id });
+            var reading = that.createReading({ id: options.id });
             reading.fetch({
                 success: function (reading) {
 
@@ -45,7 +55,7 @@ define([
                         reading:reading
                     }))*/
                     var storyId = reading.get("story")
-                    var story = new Story({ id: storyId });
+                    var story = that.createStory({ id: storyId });
                     story.fetch({
                         success: function (story) {
 
@@ -78,13 +88,13 @@ define([
             this.renderOptions = options
             this.renderMode = "card"
 
-            var reading = new Reading({ id: options.id });
+            var reading = that.createReading({ id: options.id });
             reading.fetch({
                 success: function (reading) {
                     that.readingObj = reading;
 
                     var storyId = reading.get("story")
-                    var story = new Story({ id: storyId });
+                    var story = that.createStory({ id: storyId });
                     story.fetch({
                         success: function (story) {
                             var card = story.getCard(options.card)

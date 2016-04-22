@@ -7,7 +7,8 @@ require.config({
         backbone: 'libs/backbone.min.amd',
         debug: 'utils/debug',
         SPGPS: 'utils/SPGPS',
-        scripts: 'utils/scripts'
+        scripts: 'utils/scripts',
+        geolocator: 'libs/geolocator.amd'
     }
 });
 
