@@ -1,0 +1,15 @@
+
+			<h3><%=story.get("title")%></h3>
+			<div><%=card.content %> </div>
+
+			<%if(!card.footerButtonMode||card.footerButtonMode=="next"){%>
+				<input class="nextCard" type="button" class="btn btn-default" value="Next" eventCheck="true" eventType="endcard" eventCardId="<%=card.id%>"/>
+			<%}%>
+
+			<%if(card.footerButtonMode=="end"){%>
+				<input class="nextCard" type="button" class="btn btn-default" value="Finish Story" eventCheck="true" eventType="endstory"/>
+			<%}%>
+
+			<%if(card.footerButtonMode=="none"){%>
+			<%}%>
+

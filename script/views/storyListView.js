@@ -2,8 +2,9 @@ define([
     'jquery', 
     'underscore', 
     'backbone',
-    'models/storyList'
-    ], function($, _, Backbone, StoryList) {
+    'models/storyList',
+    'text!templates/storyListTemplate.html'
+    ], function($, _, Backbone, StoryList, StoryListTemplate) {
 
     var StoryListView = Backbone.View.extend({
         el: $('#page'),
@@ -19,7 +20,7 @@ define([
             var storylist = new StoryList();
             storylist.fetch({
                 success: function(storylist){
-                    var template = _.template($('#storylisttemplate').html())
+                    var template = _.template(StoryListTemplate);
                     that.$el.html(template({
                         storylist:storylist.models
                     }))

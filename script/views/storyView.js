@@ -4,8 +4,9 @@ define([
     'backbone',
     'models/story',
     'models/storyReadingList',
-    'models/reading'
-], function ($,_, Backbone, Story, StoryReadingList, Reading) {
+    'models/reading',
+    'text!templates/storyTemplate.html'
+], function ($,_, Backbone, Story, StoryReadingList, Reading, StoryTemplate) {
 
     var StoryView = Backbone.View.extend({
         el: $('#page'),
@@ -27,7 +28,7 @@ define([
                         var readinglist = new StoryReadingList(that.storyId, localStorage.getItem("User-ID"));
                         readinglist.fetch({
                             success: function (readinglist) {
-                                var template = _.template($('#storytemplate').html())
+                                var template = _.template(StoryTemplate)
                                 that.$el.html(template({
                                     story: story,
                                     readinglist: readinglist.models

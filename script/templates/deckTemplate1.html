@@ -1,0 +1,12 @@
+<!--List available cards-->
+		
+			<h3><%=story.get("name") %></h3>
+
+			<table class="table table-hover">
+				<% _.each(story.get("deck"), function(card) {%>
+					<%if(reading.checkCardConditions(card.id)){ %>
+						<tr><td><a href="#/card/<%=reading.get("id") %>/<%=card.id %>"> <%=card.label %> </a></td></tr>
+					<%}%>
+				<%});%>
+			</table>
+		
