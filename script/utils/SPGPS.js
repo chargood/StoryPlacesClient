@@ -1,7 +1,8 @@
 define([
 	'views/debugView',
-	'geolocator'
-	], function (DebugView, Geolocator) {
+	'geolocator',
+	'views/readingView'
+	], function (DebugView, Geolocator, ReadingView) {
 
 	var onGeoSuccess = function (location) {
 		var lat = location.coords.latitude
@@ -35,15 +36,7 @@ define([
 	};
 	
 	var readingView;
-	var getReadingView = function() {
-		if (!readingView) {
-		 var readingViewType = require(['/views/readingView']);
-		 readingView = new readingViewType();		 	
-		}
-		
-		return readingView;
-	};
-
+	
 	var getDistanceFromLatLonInKm = function (lat1, lon1, lat2, lon2) {
 		var R = 6371; // Radius of the earth in km
 		var dLat = deg2rad(lat2 - lat1);  // deg2rad below
@@ -65,12 +58,10 @@ define([
 		geolocator.locate(this.onGeoSuccess, this.onGeoError, true, html5Options, null, true);		
 	};
 
-	var addGpsUpdateListener = function () {
+	var addGpsUpdateListener = function (ReadingView) {
 		document.addEventListener('gpsupdate', function (e) {
-			console.log("UPDATE!")
-			var readingView = getReadingView();
-			//TODO this line fails as reading view does not have a reRender method. Not clear what readingView is. 
-			readingView.reRender();
+			console.log("UPDATE!");
+			ReadingView.reRender();
 		}, false);
 	};
 

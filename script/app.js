@@ -5,15 +5,12 @@ define([
   'underscore',
   'backbone',
   'router',
-  'utils/SPGPS'
-], function($, _, Backbone, Router, GPS){
+  'utils/SPGPS',
+  'views/readingView'
+], function($, _, Backbone, Router, GPS, ReadingView){
   
   var initialize = function() {
-      Router.initialize();  
-      
-      // run once
-      GPS.locate();   
-      GPS.addGpsUpdateListener(); 
+      var router = Router.initialize();
   };
   
   return {

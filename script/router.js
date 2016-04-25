@@ -6,8 +6,9 @@ define([
 	'views/storyView',
 	'views/readingView',
 	'views/debugView',
-	'models/user'
-], function ($, _, Backbone, StoryListView, StoryView, ReadingView, DebugView, User) {
+	'models/user',
+	'utils/SPGPS'
+], function ($, _, Backbone, StoryListView, StoryView, ReadingView, DebugView, User, GPS) {
 
 	var Router = Backbone.Router.extend({
 
@@ -23,7 +24,12 @@ define([
 	var initialize = function () {
 
 		var router = new Router();
-		var debugView = new DebugView();
+		var debugView = DebugView.getDebug();
+		var readingView = new ReadingView();
+
+		// run once
+		GPS.locate();
+		GPS.addGpsUpdateListener(readingView);
 
 		// add handlers
 		router.on('route:home', function () {
@@ -42,7 +48,6 @@ define([
 
 		router.on('route:playReading', function (id) {
 			console.log('Play Reading Route');
-			var readingView = new ReadingView();
 			readingView.render({ id: id });
 			debugView.render();
 		});
@@ -50,7 +55,6 @@ define([
 		router.on('route:playReadingDeck', function (id) {
 			//readingView = new ReadingView({id:id});
 			console.log('Play Reading Deck Route');
-			var readingView = new ReadingView();
 			readingView.renderDeck({ id: id });
 			debugView.render();
 		});
@@ -58,7 +62,6 @@ define([
 		router.on('route:playReadingCard', function (id, card) {
 			//readingView = new ReadingView({id:id});
 			console.log('Play Reading Card Route');
-			var readingView = new ReadingView();
 			readingView.renderCard({ id: id, card: card });
 			debugView.render();
 		});

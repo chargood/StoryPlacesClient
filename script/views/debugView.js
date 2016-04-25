@@ -7,9 +7,15 @@ define([
     var DebugView = Backbone.View.extend({
 
         el: $('#debug'),
-        
+        debug: null,
+        initialize: function () {
+            console.log("debugView init");
+            //getDebug();
+        },
+
+
         events: {
-            'click .geo-button' : 'clickDebugLocButton'
+            'click .geo-button': 'clickDebugLocButton'
         },
 
         render: function (options) {
@@ -17,7 +23,7 @@ define([
             this.debugOn()
 
             if (this.$el.find('#buttons').html() === '') {
-                
+
                 this.addDebugLocButton(50.93679, -1.396202, "32north");
                 this.addDebugLocButton(50.937385, -1.397039, "gower");
                 this.addDebugLocButton(50.936195, -1.396707, "interchange");
@@ -28,6 +34,7 @@ define([
                 this.addDebugLocButton(50.934558, -1.397104, "susu");
                 this.addDebugLocButton(50.934707, -1.398295, "garden");
                 this.addDebugLocButton(50.935633, -1.399089, "health");
+
             }
         },
 
@@ -41,7 +48,7 @@ define([
         },
 
         printDebug: function (msg) {
-           this.$el.append("<p>" + msg + "</p>");
+            this.$el.append("<p>" + msg + "</p>");
         },
 
         clearDebug: function () {
@@ -51,11 +58,11 @@ define([
         addDebugLocButton: function (lat, lon, label) {
             this.$el.find('#buttons').append('<button class="geo-button" data-lat="' + lat + '" data-lon="' + lon + '">' + label + "</button>");
         },
-        
+
         clickDebugLocButton: function (e) {
             var lat = $(e.currentTarget).data('lat');
-            var lon = $(e.currentTarget).data('lon'); 
-            
+            var lon = $(e.currentTarget).data('lon');
+
             localStorage.setItem("GPSLat", lat)
             localStorage.setItem("GPSLon", lon)
 
@@ -66,6 +73,15 @@ define([
 
     });
 
+    DebugView.getDebug = function () {
+        if (DebugView.debug == null) {
+            DebugView.debug = new DebugView();
+        }
+        return DebugView.debug;
+    }
+
     return DebugView;
 
 });
+
+
