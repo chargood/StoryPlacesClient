@@ -13,7 +13,7 @@ define([
                     if (!context.getCondition(conditionName).resolveCondition(context)) {
                         res = false;
                     }
-                })
+                });
             }
             else if (this.get("operand") == "OR") {
                 res = false;
@@ -22,7 +22,7 @@ define([
                     if (context.getCondition(conditionName).resolveCondition(context)) {
                         res = true;
                     }
-                })
+                });
             }
 
             return res;

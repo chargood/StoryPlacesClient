@@ -9,36 +9,36 @@ define([
 ], function (_, Backbone, Story, ComparissonCondition, LocationCondition, LogicalCondition, StoryFunction) {
 
     var Reading = Backbone.Model.extend({
-        
+
         urlRoot: '/storyplaces/reading',
 
         initialize: function () {
             var that = this;
             this.on("change", function () {
                 if (this.hasChanged("story")) {
-                    var storyId = that.get("story")
+                    var storyId = that.get("story");
                     var story = new Story({ id: storyId });
                     story.fetch({
                         success: function (story) {
                             that.storyObj = story;
                         }
-                    })
+                    });
                 }
-            })
+            });
         },
 
         getStoryObj: function () {
             if (this.storyObj) {
-                return this.storyObj
+                return this.storyObj;
             }
             else {
-                var storyId = this.get("story")
+                var storyId = this.get("story");
                 var story = new Story({ id: storyId });
                 story.fetch({
                     success: function (story) {
-                        return story
+                        return story;
                     }
-                })
+                });
             }
         },
 
@@ -49,9 +49,9 @@ define([
             this.get("variables").forEach(function (variable) {
                 if (variable.key == key) {
                     variable.value = value;
-                    update = true
+                    update = true;
                 }
-            })
+            });
 
             if (!update) {
                 vars.push({ key: key, value: value });
@@ -65,18 +65,18 @@ define([
             var result;
             this.get("variables").forEach(function (variable) {
                 if (variable.key == key) {
-                    result = variable.value
+                    result = variable.value;
                 }
-            })
-            return result
+            });
+            return result;
         },
 
         getValue: function (val, type) {
             if (type == "String" || type == "Integer") {
                 return val;
             }
-            else if (type = "Variable") {
-                return this.getVariable(val)
+            else if (type == "Variable") {
+                return this.getVariable(val);
             }
 
         },
@@ -91,7 +91,7 @@ define([
                 if (!that.checkCondition(condition)) {
                     res = false;
                 }
-            })
+            });
             return res;
         },
 
@@ -103,16 +103,16 @@ define([
                 if (!that.checkCondition(condition) && that.getCondition(condition).get("type") != "location") {
                     res = false;
                 }
-            })
+            });
             return res;
         },
 
         checkCondition: function (conditionName) {
-            return this.getCondition(conditionName).resolveCondition(this)
+            return this.getCondition(conditionName).resolveCondition(this);
         },
 
         getCondition: function (conditionName) {
-            console.log("getCondition ", conditionName)
+            console.log("getCondition ", conditionName);
             var res;
             var conditions = this.getStoryObj().get("conditions");
             conditions.forEach(function (condition) {
@@ -120,19 +120,19 @@ define([
                 if (condition.name == conditionName) {
                     res = condition;
                 }
-            })
+            });
 
             if (res.type == "comparisson") {
-                return new ComparissonCondition(res)
+                return new ComparissonCondition(res);
             }
             else if (res.type == "logical") {
-                return new LogicalCondition(res)
+                return new LogicalCondition(res);
             }
             else if (res.type == "location") {
-                return new LocationCondition(res)
+                return new LocationCondition(res);
             }
             else {
-                return null
+                return null;
             }
         },
 
@@ -140,12 +140,12 @@ define([
             var that = this;
             var functions = this.getStoryObj().getCard(cardId).functions;
             functions.forEach(function (afunction) {
-                that.executeFunction(afunction)
-            })
+                that.executeFunction(afunction);
+            });
         },
 
         executeFunction: function (functionName) {
-            return this.getFunction(functionName).execute(this)
+            return this.getFunction(functionName).execute(this);
         },
 
         getFunction: function (functionName) {
@@ -155,9 +155,9 @@ define([
                 if (afunction.name == functionName) {
                     res = afunction;
                 }
-            })
+            });
 
-            return new StoryFunction(res)
+            return new StoryFunction(res);
         }
     });
 

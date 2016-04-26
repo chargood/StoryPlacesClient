@@ -1,0 +1,29 @@
+{
+  "name": "storyplacesclient",
+  "version": "1.0.0",
+  "description": "This is the storyplaces client.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@sourcekettle.ecs.soton.ac.uk:projects/StoryPlaces.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "jshintConfig": {
+    "mocha":true,
+    "strict":true,
+    "node":true,
+    "noempty":true,
+    "noarg":true,
+    "eqeqeq":true,
+    "browser":true,
+    "bitwise":true,
+    "curly":true,
+    "undef":true,
+    "nonew":true,
+    "forin":true
+  }
+}

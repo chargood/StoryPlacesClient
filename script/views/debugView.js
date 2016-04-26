@@ -20,7 +20,7 @@ define([
 
         render: function (options) {
 
-            this.debugOn()
+            this.debugOn();
 
             if (this.$el.find('#buttons').html() === '') {
 
@@ -63,25 +63,23 @@ define([
             var lat = $(e.currentTarget).data('lat');
             var lon = $(e.currentTarget).data('lon');
 
-            localStorage.setItem("GPSLat", lat)
-            localStorage.setItem("GPSLon", lon)
+            localStorage.setItem("GPSLat", lat);
+            localStorage.setItem("GPSLon", lon);
 
-            var event = document.createEvent('Event')
-            event.initEvent('gpsupdate', true, true)
+            var event = document.createEvent('Event');
+            event.initEvent('gpsupdate', true, true);
             document.getElementById("page").dispatchEvent(event);
         }
 
     });
 
     DebugView.getDebug = function () {
-        if (DebugView.debug == null) {
+        if (DebugView.debug === null) {
             DebugView.debug = new DebugView();
         }
         return DebugView.debug;
-    }
+    };
 
     return DebugView;
 
 });
-
-

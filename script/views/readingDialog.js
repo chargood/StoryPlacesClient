@@ -17,9 +17,9 @@ define([
         },
         render: function (options) {
             var that = this;
-            this.storyId = options.id
-            var template = _.template($('#readingdialog').html())
-            this.$el.append(template())
+            this.storyId = options.id;
+            var template = _.template($('#readingdialog').html());
+            this.$el.append(template());
             $("#readingdialog").dialog({
                 modal: true,
                 title: "Add Reading",
@@ -27,14 +27,14 @@ define([
                 buttons: [{
                     text: "Add Reading",
                     click: function () {
-                        that.trigger('createReading')
+                        that.trigger('createReading');
                         $(this).dialog("close");
                     }
                 }]
             });
         },
         createReading: function () {
-            console.log("Create Reading " + this.storyId)
+            console.log("Create Reading " + this.storyId);
         }
     });
 

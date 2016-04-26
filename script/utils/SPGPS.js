@@ -5,21 +5,21 @@ define([
 	], function (DebugView, Geolocator, ReadingView) {
 
 	var onGeoSuccess = function (location) {
-		var lat = location.coords.latitude
-		var lon = location.coords.longitude
-		var acc = location.coords.accuracy
+		var lat = location.coords.latitude;
+		var lon = location.coords.longitude;
+		var acc = location.coords.accuracy;
 
-		localStorage.setItem("GPSLat", lat)
-		localStorage.setItem("GPSLon", lon)
-		localStorage.setItem("GPSAcc", acc)
+		localStorage.setItem("GPSLat", lat);
+		localStorage.setItem("GPSLon", lon);
+		localStorage.setItem("GPSAcc", acc);
 
-		console.log("GPS " + lat + " " + lon + " " + acc)
+		console.log("GPS " + lat + " " + lon + " " + acc);
 		//clearDebug()
-		DebugView.printDebug("GPS " + lat + " " + lon + " " + acc)
+		DebugView.printDebug("GPS " + lat + " " + lon + " " + acc);
 		//alert("GPS "+lat+" "+lon+" "+acc)
 
-		var event = document.createEvent('Event')
-		event.initEvent('gpsupdate', true, true)
+		var event = document.createEvent('Event');
+		event.initEvent('gpsupdate', true, true);
 		document.dispatchEvent(event);
 
 		//document.getElementById("console").innerHTML += getDistanceFromLatLonInKm(50.936195,-1.396707,lat,lon)+"km from interchange <br/>"
@@ -32,11 +32,11 @@ define([
 	};
 
 	var deg2rad = function (deg) {
-		return deg * (Math.PI / 180)
+		return deg * (Math.PI / 180);
 	};
-	
+
 	var readingView;
-	
+
 	var getDistanceFromLatLonInKm = function (lat1, lon1, lat2, lon2) {
 		var R = 6371; // Radius of the earth in km
 		var dLat = deg2rad(lat2 - lat1);  // deg2rad below
@@ -55,7 +55,7 @@ define([
 		var html5Options = { enableHighAccuracy: true, timeout: 6000, maximumAge: 0 };
 		var geolocator = new Geolocator();
 		//TODO this line raises some callback error that I don't understand
-		geolocator.locate(this.onGeoSuccess, this.onGeoError, true, html5Options, null, true);		
+		geolocator.locate(this.onGeoSuccess, this.onGeoError, true, html5Options, null, true);
 	};
 
 	var addGpsUpdateListener = function (ReadingView) {

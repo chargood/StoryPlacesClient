@@ -12,8 +12,8 @@ define([
                 if (!context.checkCondition(condition)) {
                     res = false;
                 }
-            })
-            
+            });
+
             return res;
         },
 
@@ -21,22 +21,22 @@ define([
             if (this.checkConditions(context)) {
                 var argumentsString = "context,";
 
-                var arguments = this.get("arguments");
-                arguments.forEach(function (argument) {
-                    argumentsString += "'" + argument + "',"
-                })
-                argumentsString = argumentsString.substring(0, argumentsString.length - 1)
-                eval("this." + this.get("type") + "function(" + argumentsString + ")")
+                var args = this.get("arguments");
+                args.forEach(function (argument) {
+                    argumentsString += "'" + argument + "',";
+                });
+                argumentsString = argumentsString.substring(0, argumentsString.length - 1);
+                eval("this." + this.get("type") + "function(" + argumentsString + ")");
             }
         },
 
         setfunction: function (context, key, value) {
-            context.setVariable(key, value)
+            context.setVariable(key, value);
         },
 
         incrementfunction: function (context, key, value) {
             if (!isNaN(parseInt(context.getVariable(key))) && !isNaN(parseInt(value)))
-                context.setVariable(key, (parseInt(context.getVariable(key)) + parseInt(value)))
+                context.setVariable(key, (parseInt(context.getVariable(key)) + parseInt(value)));
         }
 
     });

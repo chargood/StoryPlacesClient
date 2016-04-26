@@ -13,15 +13,13 @@ define([
             var result;
             this.get("deck").forEach(function (card) {
                 if (card._id == id) {
-                    result = card
+                    result = card;
                 }
-            })
-            return result
+            });
+            return result;
         }
     });
-    
+
     return Story;
 
 });
-
-

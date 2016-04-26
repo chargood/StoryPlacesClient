@@ -67,13 +67,13 @@ define([
 		});
 
 
-		if (localStorage.getItem("User-ID") == null) {
+		if (localStorage.getItem("User-ID") === null) {
 			var user = new User();
 			user.save({}, {
 				success: function (user) {
 					localStorage.setItem("User-ID", user.id);
 				}
-			})
+			});
 		}
 
 		Backbone.history.start();

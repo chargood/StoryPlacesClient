@@ -1,6 +1,6 @@
 define([
-    'jquery', 
-    'underscore', 
+    'jquery',
+    'underscore',
     'backbone',
     'models/storyList',
     'text!templates/storyListTemplate.html'
@@ -8,13 +8,13 @@ define([
 
     var StoryListView = Backbone.View.extend({
         el: $('#page'),
-        
+
         events: {},
-        
+
         initialize: function(){
             console.log("Create new story list view");
         },
-        
+
         render: function(){
             var that = this;
             var storylist = new StoryList();
@@ -23,14 +23,13 @@ define([
                     var template = _.template(StoryListTemplate);
                     that.$el.html(template({
                         storylist:storylist.models
-                    }))
+                    }));
                 }
-            })
+            });
         }
-        
+
     });
     
     return StoryListView;
-       
-});
 
+});
