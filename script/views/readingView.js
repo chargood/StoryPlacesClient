@@ -1,12 +1,8 @@
 define([
     'jquery',
     'underscore',
-    'backbone',
-    'text!templates/decktemplate1.html',
-    'text!templates/decktemplate2.html',
-    'text!templates/decktemplate3.html',
-    'text!templates/cardTemplate.html',
-], function ($, _, Backbone, DeckTemplate1, DeckTemplate2, DeckTemplate3, CardTemplate) {
+    'backbone'
+], function ($, _, Backbone) {
 
     var ReadingView = Backbone.View.extend({
         el: $('#page'),
@@ -63,12 +59,12 @@ define([
                     story.fetch({
                         success: function (story) {
 
-                            var template = _.template(DeckTemplate1);
+                            var template = _.template($('#decktemplate1').html());
 
                             if (story.get("deckviewmode") == "2")
-                                var template = _.template(DeckTemplate2);
+                                var template = _.template($('#decktemplate2').html());
                             if (story.get("deckviewmode") == "3")
-                                var template = _.template(DeckTemplate3);
+                                var template = _.template($('#decktemplate3').html());
 
 
 
@@ -102,7 +98,7 @@ define([
                     story.fetch({
                         success: function (story) {
                             var card = story.getCard(options.card);
-                            var template = _.template(CardTemplate);
+                            var template = _.template($('#cardtemplate').html())
                             that.$el.html(template({
                                 story: story,
                                 reading: reading,

@@ -22,6 +22,118 @@
 			</div>
 		</div>
 		
+		<script type = "text/template" id="storylisttemplate">
+			<h2>Story List</h2>
+
+			<table class="table table-hover">
+				<thead>
+				  <tr>
+					<th>Story</th>
+					<th></th>
+				  </tr>
+				</thead>
+				<tbody>
+					<% _.each(storylist, function(story) { %>
+
+						<tr><td><%=story.get("name") %></td><td> <a href="#/story/<%=story.get("_id") %>"> load </a></td></tr>
+
+					<%});%>
+				</tbody>
+			</table>
+
+			<input class="updateList" type="button" class="btn btn-default" value="Update Story List"/>
+
+		</script>
+
+		<script type = "text/template" id="storytemplate">
+			<h2><%=story.get("name")%></h2>
+			<input class="newReadingBtn" type="button" class="btn btn-default" value="Start a new reading" />
+
+			<h3>Readings</h3>
+			<table class="table table-hover">
+			<%var readingcount=0;%>
+			<% _.each(readinglist, function(reading) { %>
+				<%if(reading.get("story")==story.get("_id")) {%>
+					<%readingcount++;%>
+					<tr>
+						<td><%=reading.get("name") %></td>
+						<td><a href="#/reading/<%=reading.get("id")%>"><input class="openReadingBtn" type="button" class="btn btn-default" value="Open"/></a></td>
+						<!--<td><a href="#/reading/delete/<%=reading.get("id")%>"><input class="deleteReadingBtn" type="button" value="Delete"/></a></td>-->
+				<%}%>
+
+			<%});%>
+			</table>
+			<%if(readingcount==0){%>
+				<p>no readings</p>
+			<%}%>
+
+			<!-- <input class="newCustomReadingBtn" type="button" class="btn btn-default" value="Start a new reading with custom settings" /> -->
+
+		</script>
+
+		<!--List available cards-->
+		<script type = "text/template" id="decktemplate1">
+			<h3><%=story.get("name") %></h3>
+
+			<table class="table table-hover">
+				<% _.each(story.get("deck"), function(card) {%>
+					<%if(reading.checkCardConditions(card.id)){ %>
+						<tr><td><a href="#/card/<%=reading.get("id") %>/<%=card.id %>"> <%=card.label %> </a></td></tr>
+					<%}%>
+				<%});%>
+			</table>
+		</script>
+
+		<!--List all cards, red or green based on availability-->
+		<script type = "text/template" id="decktemplate2">
+			<h3><%=story.get("name") %></h3>
+
+			<table class="table table-hover">
+				<% _.each(story.get("deck"), function(card) {%>
+					<%if(reading.checkCardConditions(card.id)){ %>
+						<tr class="success"><td><a href="#/card/<%=reading.get("id") %>/<%=card.id %>"> <%=card.label %> </a></td></tr>
+					<%} else{%>
+						<tr class="danger"><td><%=card.label %></td></tr>
+					<%}%>
+				<%});%>
+			</table>
+		</script>
+
+		<!--List all cards not failing non loc rules, red and green based on loc rules including directions -->
+		<script type = "text/template" id="decktemplate3">
+			<h3><%=story.get("name") %></h3>
+
+			<table class="table table-hover">
+				<% _.each(story.get("deck"), function(card) {%>
+					<%if(reading.checkCardConditions(card.id)){ %>
+						<tr class="success"><td><a href="#/card/<%=reading.get("id") %>/<%=card.id %>"> <%=card.label %> </a></td></tr>
+					<%} else{%>
+						<% console.log("temp check ",card.direction) %>
+						<%if(card.direction&&reading.checkCardNonLocConditions(card.id)){ %>
+							<tr class="danger"><td><%=card.label %> - <i><%=card.direction %></i></td></tr>
+						<%}%>
+					<%}%>
+				<%});%>
+			</table>
+		</script>
+
+		<script type = "text/template" id="cardtemplate">
+			<h3><%=story.get("title")%></h3>
+			<div><%=card.content %> </div>
+
+			<%if(!card.footerButtonMode||card.footerButtonMode=="next"){%>
+				<input class="nextCard" type="button" class="btn btn-default" value="Next" eventCheck="true" eventType="endcard" eventCardId="<%=card.id%>"/>
+			<%}%>
+
+			<%if(card.footerButtonMode=="end"){%>
+				<input class="nextCard" type="button" class="btn btn-default" value="Finish Story" eventCheck="true" eventType="endstory"/>
+			<%}%>
+
+			<%if(card.footerButtonMode=="none"){%>
+			<%}%>
+		</script>
+		
+		
 		<script type = "text/template" id="readingdialog">
 			<div id="readingdialog">Custom New Reading</div>
 		</script>

@@ -2,7 +2,7 @@ define([
     'underscore',
     'backbone'
 ], function (_, Backbone) {
-
+    'use strict';
     var Story = Backbone.Model.extend({
         urlRoot: '/storyplaces/story',
 
