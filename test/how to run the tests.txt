@@ -1,0 +1,1 @@
+To run the tests, execute the command 'mocha' from the command line within the StoryPlacesClient directory.
