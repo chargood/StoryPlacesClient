@@ -74,7 +74,7 @@ define([
     });
 
     DebugView.getDebug = function () {
-        if (DebugView.debug === null) {
+        if (DebugView.debug === null || DebugView.debug === undefined) {
             DebugView.debug = new DebugView();
         }
         return DebugView.debug;
