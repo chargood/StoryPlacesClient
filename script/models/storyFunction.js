@@ -1,7 +1,8 @@
 define([
     'underscore',
-    'backbone'
-], function (_, Backbone) {
+    'backbone',
+    'moment'
+], function (_, Backbone, Moment) {
 
     var StoryFunction = Backbone.Model.extend({
         checkConditions: function (context) {
@@ -32,6 +33,11 @@ define([
 
         setfunction: function (context, key, value) {
             context.setVariable(key, value);
+        },
+        
+        settimestampfunction: function(context, key) {
+            var now = Moment().format();
+            context.setVariable(key, now);
         },
 
         incrementfunction: function (context, key, value) {

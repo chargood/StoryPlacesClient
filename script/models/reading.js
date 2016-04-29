@@ -6,8 +6,18 @@ define([
     'models/conditions/locationCondition',
     'models/conditions/logicalCondition',
     'models/conditions/timeRangeCondition',
+    'models/conditions/timePassedCondition',
     'models/storyFunction'
-], function (_, Backbone, Story, ComparissonCondition, LocationCondition, LogicalCondition, TimeRangeCondition, StoryFunction) {
+], function (
+    _, 
+    Backbone, 
+    Story, 
+    ComparissonCondition, 
+    LocationCondition, 
+    LogicalCondition, 
+    TimeRangeCondition,
+    TimePassedCondition, 
+    StoryFunction) {
 
     var Reading = Backbone.Model.extend({
 
@@ -134,6 +144,9 @@ define([
             }
             else if (res.type == "timerange") {
                 return new TimeRangeCondition(res);
+            } 
+            else if (res.type == "timepassed") {
+                return new TimePassedCondition(res);
             }
             else {
                 return null;
