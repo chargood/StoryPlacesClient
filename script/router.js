@@ -7,7 +7,8 @@ define([
 	'views/readingView',
 	'views/debugView',
 	'models/user',
-	'utils/SPGPS'
+	'utils/SPGPS',
+	'backbone_dual'
 ], function ($, _, Backbone, StoryListView, StoryView, ReadingView, DebugView, User, GPS) {
 
 	var Router = Backbone.Router.extend({
