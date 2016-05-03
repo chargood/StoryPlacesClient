@@ -9,7 +9,8 @@ require.config({
         debug: 'utils/debug',
         SPGPS: 'utils/SPGPS',
         scripts: 'utils/scripts',
-        geolocator: 'libs/geolocator.amd'
+        geolocator: 'libs/geolocator.amd',
+        moment: 'libs/moment.min'
     }
 });
 
