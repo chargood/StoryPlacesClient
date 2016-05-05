@@ -1,8 +1,9 @@
 define([
     'jquery',
     'underscore',
-    'backbone'
-], function ($, _, Backbone) {
+    'backbone',
+    'leaflet'
+], function ($, _, Backbone, L) {
 
     var ReadingView = Backbone.View.extend({
         el: $('#page'),
@@ -13,6 +14,12 @@ define([
 
         initialize: function (options) {
             //this.readingId = options.id;
+            this.mapObject = null;
+            this.markers = [];
+            this.currentReading = null;
+
+            this.greenIcon = null;
+            this.redIcon = null;
         },
 
         createReading: function(options) {
@@ -32,10 +39,157 @@ define([
         },
 
         reRender: function () {
-            if (this.renderMode == "deck")
+            if (this.renderMode == "deck") {
                 this.renderDeck(this.renderOptions);
-            else if (this.renderMode == "card")
+            } else if (this.renderMode == "card") {
                 this.renderCard(this.renderOptions);
+            }
+        },
+
+        findOrCreateMarkerForCard: function (card) {
+            var currentCardsMarker = _.findWhere(this.markers, {id: card.id});
+
+            // Create the current card's pin if it doesn't exist
+            if (currentCardsMarker == undefined) {
+                currentCardsMarker = {
+                    id: card.id,
+                    state: "unsuitable",
+                    previousState: "unsuitable",
+                    label: card.label,
+                    marker: null
+                }
+
+                if (card.hint.direction) {
+                    currentCardsMarker['direction'] = card.hint.direction;
+                }
+
+                if (card.hint.location && card.hint.location.length != 0) {
+                    if (card.hint.location[0].type == "point") {
+                        currentCardsMarker['lat'] = card.hint.location[0].lat;
+                        currentCardsMarker['lon'] = card.hint.location[0].lon;
+                    }
+                }
+
+                this.markers.push(currentCardsMarker);
+            }
+
+            return currentCardsMarker;
+        },
+
+        markerIconFromMarkerState: function (currentCardsMarker) {
+            if (this.greenIcon == null) {
+                this.greenIcon = L.icon({
+                    iconUrl: '../images/green/marker-icon.png',
+                    iconRetinaUrl: '../images/green/marker-icon-2x.png',
+                    iconSize: [25, 41],
+                    iconAnchor: [12, 41],
+                });
+            }
+
+            if (this.redIcon == null) {
+                this.redIcon = L.icon({
+                    iconUrl: '../images/red/marker-icon.png',
+                    iconRetinaUrl: '../images/red/marker-icon-2x.png',
+                    iconSize: [25, 41],
+                    iconAnchor: [12, 41],
+                });
+            }
+
+            if (currentCardsMarker.state == "suitable") {
+                return this.greenIcon;
+            }
+
+            if (currentCardsMarker.state == "suitable-nolocation") {
+                return this.redIcon;
+            }
+
+            return undefined;
+        },
+
+        getMarkerStateFromCard: function (reading, card) {
+
+            if (reading.checkCardConditions(card.id)) {
+                return "suitable";
+            }
+
+            //TODO: Should this be filtered on hint/direction/teaser as well?
+            if (reading.checkCardNonLocConditions(card.id)) {
+                return "suitable-nolocation";
+            }
+
+            return "unsuitable";
+        },
+
+        renderMapView: function (story, reading) {
+            var that = this;
+            var template;
+
+            var changedMarkers = [];
+            var visableMarkers = [];
+
+            if (that.currentReading != null && that.currentReading != that.readingId) {
+                that.markers = [];
+            }
+
+            _.each(story.get("deck"), function (card) {
+                var currentCardsMarker = that.findOrCreateMarkerForCard(card);
+
+                currentCardsMarker.previousState = currentCardsMarker.state;
+                currentCardsMarker.state = that.getMarkerStateFromCard(reading, card);
+                console.log(currentCardsMarker);
+
+                if (currentCardsMarker.previousState != currentCardsMarker.state) {
+                    changedMarkers.push(currentCardsMarker);
+                }
+
+                if (currentCardsMarker.state != "unsuitable") {
+                    visableMarkers.push(currentCardsMarker);
+                }
+            });
+
+            template = _.template($('#deckMapTemplate').html());
+
+            that.$el.html(template({
+                story: story,
+                reading: reading,
+            }));
+
+            if (that.mapObject == null) {
+                console.log("**  Initialising Map");
+                that.mapObject = L.map('mapDiv', {zoomControl: false}).setView([50.935360, -1.396226], 16);
+
+                L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png?', {
+                    attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
+                }).addTo(that.mapObject);
+
+                that.mapObject.locate({setView: true, maxZoom: 16, watch: true, maximumAge: 10000});
+
+
+            } else {
+                console.log("** Reattaching Map");
+                that.$el.find("#mapDiv").replaceWith(that.mapObject.getContainer());
+            }
+
+            _.each(changedMarkers, function (currentMarker) {
+
+                if (currentMarker.state == "unsuitable") {
+                    if (currentMarker.marker) {
+                        that.mapObject.removeLayer(currentMarker.marker);
+                    }
+                } else if (currentMarker.previousState == "unsuitable") {
+                    var icon = that.markerIconFromMarkerState(currentMarker);
+                    if (currentMarker.lat && currentMarker.lon && icon) {
+                        currentMarker.marker = L.marker([currentMarker.lat, currentMarker.lon], {icon: icon});
+                        currentMarker.marker.addTo(that.mapObject);
+                    }
+                } else {
+                    var icon = that.markerIconFromMarkerState(currentMarker);
+                    if (currentMarker.marker) {
+                        currentMarker.marker.setIcon(icon);
+                    }
+                }
+            });
+
         },
 
         renderDeck: function (options) {
@@ -58,15 +212,25 @@ define([
                     var story = that.createStory({ id: storyId });
                     story.fetch({
                         success: function (story) {
+                            var deckViewMode = story.get("deckviewmode");
+                            var template;
 
-                            var template = _.template($('#decktemplate1').html());
+                            if (deckViewMode == "map") {
+                                that.renderMapView(story, reading);
+                                return;
+                            }
 
-                            if (story.get("deckviewmode") == "2")
-                                var template = _.template($('#decktemplate2').html());
-                            if (story.get("deckviewmode") == "3")
-                                var template = _.template($('#decktemplate3').html());
-
-
+                            switch (deckViewMode) {
+                                case "2":
+                                    template = _.template($('#decktemplate2').html());
+                                    break;
+                                case "3":
+                                    template = _.template($('#decktemplate3').html());
+                                    break;
+                                default:
+                                    template = _.template($('#decktemplate1').html());
+                                    break;
+                            }
 
                             that.$el.html(template({
                                 story: story,
@@ -82,6 +246,7 @@ define([
                 }
             });
         },
+
         renderCard: function (options) {
             var that = this;
             this.readingId = options.id;

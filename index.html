@@ -7,6 +7,8 @@
 		<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<link rel="stylesheet" href="./script/libs/bootstrap-3.3.6-dist/css/bootstrap.min.css">
+		<link rel="stylesheet" href="css/leaflet.css">
+		<link rel="stylesheet" href="css/app.css">
 	</head>
 
 	<body>
@@ -117,6 +119,30 @@
 			</table>
 		</script>
 
+		<!--List all cards not failing non loc rules, red and green based on loc rules including directions -->
+		<script type="text/template" id="deckMapTemplate">
+			<div class="container">
+				<h3><%= story.get("name") %></h3>
+			</div>
+
+			<div class="container">
+				<div id="mapDiv" class="mapContainer"></div>
+
+				<ul class="list-group">
+					<% _.each(story.get("deck"), function(card) { %>
+						<% if (reading.checkCardConditions(card.id)) { %>
+							<a class='list-group-item' href='#/card/<%= reading.get("id") %>/<%=card.id %>'><%= card.label %></a>
+						<% } else{ %>
+							<% console.log("temp check ",card.direction) %>
+							<% if (reading.checkCardNonLocConditions(card.id)) { %>
+								<ul class='list-group-item danger'><%=card.label %> - <i><%=card.direction %></i></ul>
+							<% } %>
+						<% } %>
+					<%});%>
+				</ul>
+			</div>
+		</script>
+
 		<script type = "text/template" id="cardtemplate">
 			<h3><%=story.get("title")%></h3>
 			<div><%=card.content %> </div>
@@ -139,7 +165,8 @@
 		</script>
 		
 		<script data-main="script/requireConfig" src="script/libs/require.js"></script>
-		
+		<script src="script/libs/leaflet.js"></script>
+
 	</body>
 
 </html>
