@@ -122,21 +122,18 @@
 		<!--List all cards not failing non loc rules, red and green based on loc rules including directions -->
 		<script type="text/template" id="deckMapTemplate">
 			<div class="container">
-				<h3><%= story.get("name") %></h3>
+				<h3><%= storyName %></h3>
 			</div>
 
 			<div class="container">
 				<div id="mapDiv" class="mapContainer"></div>
 
 				<ul class="list-group">
-					<% _.each(story.get("deck"), function(card) { %>
-						<% if (reading.checkCardConditions(card.id)) { %>
-							<a class='list-group-item' href='#/card/<%= reading.get("id") %>/<%=card.id %>'><%= card.label %></a>
+					<% _.each(visibleMarkers, function(marker) { %>
+						<% if (marker.state == "suitable") { %>
+							<a class='list-group-item' href='#/card/<%= readingId %>/<%=marker.id %>'><%= marker.label %></a>
 						<% } else{ %>
-							<% console.log("temp check ",card.direction) %>
-							<% if (reading.checkCardNonLocConditions(card.id)) { %>
-								<ul class='list-group-item danger'><%=card.label %> - <i><%=card.direction %></i></ul>
-							<% } %>
+						   <ul class='list-group-item danger'><%= marker.label %> - <i><%= marker.direction %></i></ul>
 						<% } %>
 					<%});%>
 				</ul>

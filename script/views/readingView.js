@@ -15,7 +15,7 @@ define([
         initialize: function (options) {
             //this.readingId = options.id;
             this.mapObject = null;
-            this.markers = [];
+            this.deckMarkerCache = [];
             this.currentReading = null;
 
             this.greenIcon = null;
@@ -46,37 +46,44 @@ define([
             }
         },
 
-        findOrCreateMarkerForCard: function (card) {
-            var currentCardsMarker = _.findWhere(this.markers, {id: card.id});
-
-            // Create the current card's pin if it doesn't exist
-            if (currentCardsMarker == undefined) {
-                currentCardsMarker = {
-                    id: card.id,
-                    state: "unsuitable",
-                    previousState: "unsuitable",
-                    label: card.label,
-                    marker: null
-                }
-
-                if (card.hint.direction) {
-                    currentCardsMarker['direction'] = card.hint.direction;
-                }
-
-                if (card.hint.location && card.hint.location.length != 0) {
-                    if (card.hint.location[0].type == "point") {
-                        currentCardsMarker['lat'] = card.hint.location[0].lat;
-                        currentCardsMarker['lon'] = card.hint.location[0].lon;
-                    }
-                }
-
-                this.markers.push(currentCardsMarker);
+        makeMarker: function (card) {
+            var newMarker = {
+                id: card.id,
+                state: "unsuitable",
+                previousState: "unsuitable",
+                label: card.label,
+                marker: null,
+                direction: ""
             }
 
-            return currentCardsMarker;
+            if (card.hint.direction) {
+                newMarker['direction'] = card.hint.direction;
+            }
+
+            if (card.hint.location && card.hint.location.length != 0) {
+                if (card.hint.location[0].type == "point") {
+                    newMarker['lat'] = card.hint.location[0].lat;
+                    newMarker['lon'] = card.hint.location[0].lon;
+                }
+            }
+
+            return newMarker;
         },
 
-        markerIconFromMarkerState: function (currentCardsMarker) {
+        findOrCreateMarkerForCard: function (card) {
+            var currentCardsMarker = _.findWhere(this.deckMarkerCache, {id: card.id});
+
+            if (currentCardsMarker) {
+                return currentCardsMarker;
+            }
+
+            var newMarker = this.makeMarker(card);
+            this.deckMarkerCache.push(newMarker);
+
+            return newMarker;
+        },
+
+        getMarkerIconFromMarkerState: function (currentCardsMarker) {
             if (this.greenIcon == null) {
                 this.greenIcon = L.icon({
                     iconUrl: '../images/green/marker-icon.png',
@@ -120,15 +127,48 @@ define([
             return "unsuitable";
         },
 
+        createMapObject: function () {
+            console.log("**  Initialising Map");
+            this.mapObject = L.map('mapDiv', {zoomControl: false}).setView([50.935360, -1.396226], 16);
+
+            L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png?', {
+                attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
+            }).addTo(this.mapObject);
+
+            this.mapObject.locate({setView: true, maxZoom: 16, watch: true, maximumAge: 10000});
+        },
+
+        reattachMapObject: function () {
+            console.log("** Reattaching Map");
+            this.$el.find("#mapDiv").replaceWith(this.mapObject.getContainer());
+        },
+
+        bindMapIntoDOM: function () {
+            if (this.mapObject == null) {
+                this.createMapObject();
+            } else {
+                this.reattachMapObject();
+            }
+        },
+
+        renderMapTemplate: function (visibleMarkers, story, reading) {
+            var template = _.template($('#deckMapTemplate').html());
+
+            this.$el.html(template({
+                visibleMarkers: visibleMarkers,
+                readingId: reading.id,
+                storyName: story.name
+            }));
+        },
+
         renderMapView: function (story, reading) {
             var that = this;
-            var template;
 
             var changedMarkers = [];
-            var visableMarkers = [];
+            var visibleMarkers = [];
 
-            if (that.currentReading != null && that.currentReading != that.readingId) {
-                that.markers = [];
+            if (this.currentReading != null && this.currentReading != this.readingId) {
+                this.deckMarkerCache = [];
             }
 
             _.each(story.get("deck"), function (card) {
@@ -143,53 +183,40 @@ define([
                 }
 
                 if (currentCardsMarker.state != "unsuitable") {
-                    visableMarkers.push(currentCardsMarker);
+                    visibleMarkers.push(currentCardsMarker);
                 }
             });
 
-            template = _.template($('#deckMapTemplate').html());
+            this.renderMapTemplate(visibleMarkers, story, reading);
+            this.bindMapIntoDOM();
 
-            that.$el.html(template({
-                story: story,
-                reading: reading,
-            }));
+            for (var i = 0; i < changedMarkers.length; i++ ) {
+                this.updateMarker(changedMarkers[i]);
+            }
+        },
 
-            if (that.mapObject == null) {
-                console.log("**  Initialising Map");
-                that.mapObject = L.map('mapDiv', {zoomControl: false}).setView([50.935360, -1.396226], 16);
-
-                L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png?', {
-                    attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
-                }).addTo(that.mapObject);
-
-                that.mapObject.locate({setView: true, maxZoom: 16, watch: true, maximumAge: 10000});
-
-
-            } else {
-                console.log("** Reattaching Map");
-                that.$el.find("#mapDiv").replaceWith(that.mapObject.getContainer());
+        updateMarker: function (currentMarker) {
+            if (currentMarker.state == "unsuitable") {
+                if (currentMarker.marker) {
+                    this.mapObject.removeLayer(currentMarker.marker);
+                    currentMarker.marker = null;
+                }
+                return;
             }
 
-            _.each(changedMarkers, function (currentMarker) {
+            var icon = this.getMarkerIconFromMarkerState(currentMarker);
 
-                if (currentMarker.state == "unsuitable") {
-                    if (currentMarker.marker) {
-                        that.mapObject.removeLayer(currentMarker.marker);
-                    }
-                } else if (currentMarker.previousState == "unsuitable") {
-                    var icon = that.markerIconFromMarkerState(currentMarker);
-                    if (currentMarker.lat && currentMarker.lon && icon) {
-                        currentMarker.marker = L.marker([currentMarker.lat, currentMarker.lon], {icon: icon});
-                        currentMarker.marker.addTo(that.mapObject);
-                    }
-                } else {
-                    var icon = that.markerIconFromMarkerState(currentMarker);
-                    if (currentMarker.marker) {
-                        currentMarker.marker.setIcon(icon);
-                    }
+            if (currentMarker.previousState == "unsuitable") {
+                if (currentMarker.lat && currentMarker.lon && icon) {
+                    currentMarker.marker = L.marker([currentMarker.lat, currentMarker.lon], {icon: icon});
+                    currentMarker.marker.addTo(this.mapObject);
                 }
-            });
+                return;
+            }
 
+            if (currentMarker.marker && icon) {
+                currentMarker.marker.setIcon(icon);
+            }
         },
 
         renderDeck: function (options) {
