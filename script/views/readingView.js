@@ -2,8 +2,9 @@ define([
     'jquery',
     'underscore',
     'backbone',
-    'leaflet'
-], function ($, _, Backbone, L) {
+    'iconFactory',
+    'map',
+], function ($, _, Backbone, iconFactory, map) {
 
     var ReadingView = Backbone.View.extend({
         el: $('#page'),
@@ -14,12 +15,8 @@ define([
 
         initialize: function (options) {
             //this.readingId = options.id;
-            this.mapObject = null;
-            this.deckMarkerCache = [];
+            this.deckCardCache = [];
             this.currentReading = null;
-
-            this.greenIcon = null;
-            this.redIcon = null;
         },
 
         createReading: function(options) {
@@ -46,7 +43,7 @@ define([
             }
         },
 
-        makeMarker: function (card) {
+        makePin: function (card) {
             var newMarker = {
                 id: card.id,
                 state: "unsuitable",
@@ -67,51 +64,27 @@ define([
                 }
             }
 
+            if (newMarker.lat && newMarker.lon) {
+                newMarker.marker = L.marker([newMarker.lat, newMarker.lon], {icon: iconFactory.redIcon});
+            }
+
             return newMarker;
         },
 
         findOrCreateMarkerForCard: function (card) {
-            var currentCardsMarker = _.findWhere(this.deckMarkerCache, {id: card.id});
+            var currentCardsMarker = _.findWhere(this.deckCardCache, {id: card.id});
 
             if (currentCardsMarker) {
                 return currentCardsMarker;
             }
 
-            var newMarker = this.makeMarker(card);
-            this.deckMarkerCache.push(newMarker);
+            var newMarker = this.makePin(card);
+            this.deckCardCache.push(newMarker);
 
             return newMarker;
         },
 
-        getMarkerIconFromMarkerState: function (currentCardsMarker) {
-            if (this.greenIcon == null) {
-                this.greenIcon = L.icon({
-                    iconUrl: '../images/green/marker-icon.png',
-                    iconRetinaUrl: '../images/green/marker-icon-2x.png',
-                    iconSize: [25, 41],
-                    iconAnchor: [12, 41],
-                });
-            }
 
-            if (this.redIcon == null) {
-                this.redIcon = L.icon({
-                    iconUrl: '../images/red/marker-icon.png',
-                    iconRetinaUrl: '../images/red/marker-icon-2x.png',
-                    iconSize: [25, 41],
-                    iconAnchor: [12, 41],
-                });
-            }
-
-            if (currentCardsMarker.state == "suitable") {
-                return this.greenIcon;
-            }
-
-            if (currentCardsMarker.state == "suitable-nolocation") {
-                return this.redIcon;
-            }
-
-            return undefined;
-        },
 
         getMarkerStateFromCard: function (reading, card) {
 
@@ -127,29 +100,7 @@ define([
             return "unsuitable";
         },
 
-        createMapObject: function () {
-            console.log("**  Initialising Map");
-            this.mapObject = L.map('mapDiv', {zoomControl: false}).setView([50.935360, -1.396226], 16);
 
-            L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png?', {
-                attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
-            }).addTo(this.mapObject);
-
-            this.mapObject.locate({setView: true, maxZoom: 16, watch: true, maximumAge: 10000});
-        },
-
-        reattachMapObject: function () {
-            console.log("** Reattaching Map");
-            this.$el.find("#mapDiv").replaceWith(this.mapObject.getContainer());
-        },
-
-        bindMapIntoDOM: function () {
-            if (this.mapObject == null) {
-                this.createMapObject();
-            } else {
-                this.reattachMapObject();
-            }
-        },
 
         renderMapTemplate: function (visibleMarkers, story, reading) {
             var template = _.template($('#deckMapTemplate').html());
@@ -168,11 +119,14 @@ define([
             var visibleMarkers = [];
 
             if (this.currentReading != null && this.currentReading != this.readingId) {
-                this.deckMarkerCache = [];
+                this.deckCardCache = [];
             }
 
             _.each(story.get("deck"), function (card) {
                 var currentCardsMarker = that.findOrCreateMarkerForCard(card);
+
+                console.log("*******" + card.test);
+                card.test="testing";
 
                 currentCardsMarker.previousState = currentCardsMarker.state;
                 currentCardsMarker.state = that.getMarkerStateFromCard(reading, card);
@@ -188,7 +142,7 @@ define([
             });
 
             this.renderMapTemplate(visibleMarkers, story, reading);
-            this.bindMapIntoDOM();
+            map.bindMapIntoDOM($('#mapDiv').get(0));
 
             for (var i = 0; i < changedMarkers.length; i++ ) {
                 this.updateMarker(changedMarkers[i]);
@@ -196,26 +150,18 @@ define([
         },
 
         updateMarker: function (currentMarker) {
-            if (currentMarker.state == "unsuitable") {
-                if (currentMarker.marker) {
-                    this.mapObject.removeLayer(currentMarker.marker);
-                    currentMarker.marker = null;
+            if (currentMarker.marker) {
+                if (currentMarker.state == "unsuitable") {
+                    map.removeMarkerFromMap(currentMarker.marker);
+                    return;
                 }
-                return;
-            }
 
-            var icon = this.getMarkerIconFromMarkerState(currentMarker);
+                var icon = iconFactory.getIconFromMarkerState(currentMarker);
+                map.updateMarkerIcon(currentMarker.marker, icon);
 
-            if (currentMarker.previousState == "unsuitable") {
-                if (currentMarker.lat && currentMarker.lon && icon) {
-                    currentMarker.marker = L.marker([currentMarker.lat, currentMarker.lon], {icon: icon});
-                    currentMarker.marker.addTo(this.mapObject);
+                if (currentMarker.previousState == "unsuitable") {
+                    map.addMarkerToMap(currentMarker.marker);
                 }
-                return;
-            }
-
-            if (currentMarker.marker && icon) {
-                currentMarker.marker.setIcon(icon);
             }
         },
 

@@ -10,7 +10,10 @@ require.config({
         SPGPS: 'utils/SPGPS',
         scripts: 'utils/scripts',
         geolocator: 'libs/geolocator.amd',
-        leaflet: 'libs/leaflet'
+        leaflet: 'libs/leaflet',
+        iconRepository: 'map/icons/iconRepository',
+        iconFactory: 'map/icons/iconFactory',
+        map: 'map/map'
     }
 });
 
