@@ -2,9 +2,8 @@ define([
     'jquery',
     'underscore',
     'backbone',
-    'iconFactory',
-    'map',
-], function ($, _, Backbone, iconFactory, map) {
+    'mapComponents'
+], function ($, _, Backbone, mapComponents) {
 
     var ReadingView = Backbone.View.extend({
         el: $('#page'),
@@ -15,7 +14,6 @@ define([
 
         initialize: function (options) {
             //this.readingId = options.id;
-            this.deckCardCache = [];
             this.currentReading = null;
         },
 
@@ -43,128 +41,6 @@ define([
             }
         },
 
-        makePin: function (card) {
-            var newMarker = {
-                id: card.id,
-                state: "unsuitable",
-                previousState: "unsuitable",
-                label: card.label,
-                marker: null,
-                direction: ""
-            }
-
-            if (card.hint.direction) {
-                newMarker['direction'] = card.hint.direction;
-            }
-
-            if (card.hint.location && card.hint.location.length != 0) {
-                if (card.hint.location[0].type == "point") {
-                    newMarker['lat'] = card.hint.location[0].lat;
-                    newMarker['lon'] = card.hint.location[0].lon;
-                }
-            }
-
-            if (newMarker.lat && newMarker.lon) {
-                newMarker.marker = L.marker([newMarker.lat, newMarker.lon], {icon: iconFactory.redIcon});
-            }
-
-            return newMarker;
-        },
-
-        findOrCreateMarkerForCard: function (card) {
-            var currentCardsMarker = _.findWhere(this.deckCardCache, {id: card.id});
-
-            if (currentCardsMarker) {
-                return currentCardsMarker;
-            }
-
-            var newMarker = this.makePin(card);
-            this.deckCardCache.push(newMarker);
-
-            return newMarker;
-        },
-
-
-
-        getMarkerStateFromCard: function (reading, card) {
-
-            if (reading.checkCardConditions(card.id)) {
-                return "suitable";
-            }
-
-            //TODO: Should this be filtered on hint/direction/teaser as well?
-            if (reading.checkCardNonLocConditions(card.id)) {
-                return "suitable-nolocation";
-            }
-
-            return "unsuitable";
-        },
-
-
-
-        renderMapTemplate: function (visibleMarkers, story, reading) {
-            var template = _.template($('#deckMapTemplate').html());
-
-            this.$el.html(template({
-                visibleMarkers: visibleMarkers,
-                readingId: reading.id,
-                storyName: story.name
-            }));
-        },
-
-        renderMapView: function (story, reading) {
-            var that = this;
-
-            var changedMarkers = [];
-            var visibleMarkers = [];
-
-            if (this.currentReading != null && this.currentReading != this.readingId) {
-                this.deckCardCache = [];
-            }
-
-            _.each(story.get("deck"), function (card) {
-                var currentCardsMarker = that.findOrCreateMarkerForCard(card);
-
-                console.log("*******" + card.test);
-                card.test="testing";
-
-                currentCardsMarker.previousState = currentCardsMarker.state;
-                currentCardsMarker.state = that.getMarkerStateFromCard(reading, card);
-                console.log(currentCardsMarker);
-
-                if (currentCardsMarker.previousState != currentCardsMarker.state) {
-                    changedMarkers.push(currentCardsMarker);
-                }
-
-                if (currentCardsMarker.state != "unsuitable") {
-                    visibleMarkers.push(currentCardsMarker);
-                }
-            });
-
-            this.renderMapTemplate(visibleMarkers, story, reading);
-            map.bindMapIntoDOM($('#mapDiv').get(0));
-
-            for (var i = 0; i < changedMarkers.length; i++ ) {
-                this.updateMarker(changedMarkers[i]);
-            }
-        },
-
-        updateMarker: function (currentMarker) {
-            if (currentMarker.marker) {
-                if (currentMarker.state == "unsuitable") {
-                    map.removeMarkerFromMap(currentMarker.marker);
-                    return;
-                }
-
-                var icon = iconFactory.getIconFromMarkerState(currentMarker);
-                map.updateMarkerIcon(currentMarker.marker, icon);
-
-                if (currentMarker.previousState == "unsuitable") {
-                    map.addMarkerToMap(currentMarker.marker);
-                }
-            }
-        },
-
         renderDeck: function (options) {
             var that = this;
             this.readingId = options.id;
@@ -189,7 +65,7 @@ define([
                             var template;
 
                             if (deckViewMode == "map") {
-                                that.renderMapView(story, reading);
+                                mapComponents.render(this.$el, reading);
                                 return;
                             }
 

@@ -129,11 +129,11 @@
 				<div id="mapDiv" class="mapContainer"></div>
 
 				<ul class="list-group">
-					<% _.each(visibleMarkers, function(marker) { %>
-						<% if (marker.state == "suitable") { %>
-							<a class='list-group-item' href='#/card/<%= readingId %>/<%=marker.id %>'><%= marker.label %></a>
+					<% _.each(visibleCards, function(card) { %>
+						<% if (card.get('suitable')) { %>
+							<a class='list-group-item' href='#/card/<%= readingId %>/<%=card.id %>'><%= card.escape('label') %></a>
 						<% } else{ %>
-						   <ul class='list-group-item danger'><%= marker.label %> - <i><%= marker.direction %></i></ul>
+						   <ul class='list-group-item danger'><%= card.escape('label') %> - <i><%= card.escape('hint').direction %></i></ul>
 						<% } %>
 					<%});%>
 				</ul>

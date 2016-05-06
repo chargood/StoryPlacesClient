@@ -2,10 +2,12 @@
  * Created by kep1u13 on 05/05/2016.
  */
 
+"use strict";
+
 define([
     'leaflet'
 ], function (L) {
-    return {
+    var Map = {
         leafletMapObject: null,
         defaultLocation: [50.935360, -1.396226],
         defaultZoom: 16,
@@ -57,6 +59,14 @@ define([
             if (marker && icon) {
                 marker.setIcon(icon);
             }
+        },
+
+        createMarker: function(lat, long, icon) {
+            if (lat && long && icon) {
+                return L.marker([lat, long], {icon: icon})
+            }
         }
     }
+
+    return Map;
 });

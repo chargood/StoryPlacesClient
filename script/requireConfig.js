@@ -13,7 +13,11 @@ require.config({
         leaflet: 'libs/leaflet',
         iconRepository: 'map/icons/iconRepository',
         iconFactory: 'map/icons/iconFactory',
-        map: 'map/map'
+        map: 'map/map',
+        mapComponents: 'views/components/mapComponents',
+        mapMarkers: 'views/components/mapMarkers',
+        cachedCard: 'models/cachedCard',
+        cachedCardWithMarker: 'models/cachedCardWithMarker'
     }
 });
 

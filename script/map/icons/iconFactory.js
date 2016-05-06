@@ -5,17 +5,23 @@
 define([
     'iconRepository'
 ], function (iconRepository) {
-    return {
-        getIconFromMarkerState: function (marker) {
-            if (marker.state == "suitable") {
-                return iconRepository.greenIcon;
-            }
-
-            if (marker.state == "suitable-nolocation") {
+    var IconFactory = {
+        getIconForCard: function(card) {
+            if (! card.get('visible')) {
                 return iconRepository.redIcon;
             }
 
-            return undefined;
-        },
+            if (card.get('selected')) {
+                return iconRepository.blueIcon;
+            }
+
+            if (card.get('suitable')) {
+                return iconRepository.greenIcon;
+            }
+
+            return iconRepository.redIcon;
+        }
     }
+
+    return IconFactory;
 });
