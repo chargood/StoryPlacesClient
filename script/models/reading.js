@@ -1,45 +1,20 @@
 define([
     'underscore',
     'backbone',
-    'models/story',
+    'StoryRepository',
     'models/conditions/comparissonCondition',
     'models/conditions/locationCondition',
     'models/conditions/logicalCondition',
     'models/storyFunction'
-], function (_, Backbone, Story, ComparissonCondition, LocationCondition, LogicalCondition, StoryFunction) {
+], function (_, Backbone, StoryRepository, ComparissonCondition, LocationCondition, LogicalCondition, StoryFunction) {
 
     var Reading = Backbone.Model.extend({
 
         urlRoot: '/storyplaces/reading',
-
-        initialize: function () {
-            var that = this;
-            this.on("change", function () {
-                if (this.hasChanged("story")) {
-                    var storyId = that.get("story");
-                    var story = new Story({ id: storyId });
-                    story.fetch({
-                        success: function (story) {
-                            that.storyObj = story;
-                        }
-                    });
-                }
-            });
-        },
+        storyObj: undefined,
 
         getStoryObj: function () {
-            if (this.storyObj) {
-                return this.storyObj;
-            }
-            else {
-                var storyId = this.get("story");
-                var story = new Story({ id: storyId });
-                story.fetch({
-                    success: function (story) {
-                        return story;
-                    }
-                });
-            }
+            return this.storyObj;
         },
 
         setVariable: function (key, value) {
@@ -86,7 +61,7 @@ define([
             var res = true;
             var story = this.getStoryObj();
             var card = story.getCard(cardId);
-            var conditions = card.conditions;
+            var conditions = card.get('conditions');
             conditions.forEach(function (condition) {
                 if (!that.checkCondition(condition)) {
                     res = false;
@@ -98,7 +73,7 @@ define([
         checkCardNonLocConditions: function (cardId) {
             var that = this;
             var res = true;
-            var conditions = this.getStoryObj().getCard(cardId).conditions;
+            var conditions = this.getStoryObj().getCard(cardId).get('conditions');
             conditions.forEach(function (condition) {
                 if (!that.checkCondition(condition) && that.getCondition(condition).get("type") != "location") {
                     res = false;

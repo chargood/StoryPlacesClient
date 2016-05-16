@@ -2,8 +2,9 @@ define([
     'jquery',
     'underscore',
     'backbone',
-    'mapComponents'
-], function ($, _, Backbone, mapComponents) {
+    'Story',
+    'Reading'
+], function ($, _, Backbone, Story, Reading) {
 
     var ReadingView = Backbone.View.extend({
         el: $('#page'),
@@ -19,14 +20,12 @@ define([
 
         createReading: function(options) {
           // reading has circular dependencies so use factory here
-          var readingType = require('models/reading');
-          return new readingType(options);
+          return new Reading(options);
         },
 
         createStory: function(options) {
             // story has circular dependencies so use factory here
-            var storyType = require('models/story');
-            return new storyType(options);
+            return new Story(options);
         },
 
         render: function (options) {
@@ -65,7 +64,7 @@ define([
                             var template;
 
                             if (deckViewMode == "map") {
-                                mapComponents.render(this.$el, reading);
+                                //mapComponents.render(this.$el, reading);
                                 return;
                             }
 

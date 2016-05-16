@@ -5,9 +5,8 @@ define([
   'underscore',
   'backbone',
   'router',
-  'utils/SPGPS',
-  'views/readingView'
-], function($, _, Backbone, Router, GPS, ReadingView){
+
+], function($, _, Backbone, Router){
   
   var initialize = function() {
       var router = Router.initialize();

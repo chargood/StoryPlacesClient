@@ -11,20 +11,23 @@ define([
             iconRetinaUrl: '../images/green/marker-icon-2x.png',
             iconSize: [25, 41],
             iconAnchor: [12, 41],
+            popupAnchor: [0, -25]
         }),
 
         blueIcon: L.icon({
             iconUrl: '../images/blue/marker-icon.png',
             iconRetinaUrl: '../images/blue/marker-icon-2x.png',
             iconSize: [25, 41],
-            iconAnchor: [12, 41],
+            iconAnchor: [13, 41],
+            popupAnchor: [0, -25]
         }),
 
         redIcon: L.icon({
             iconUrl: '../images/red/marker-icon.png',
             iconRetinaUrl: '../images/red/marker-icon-2x.png',
             iconSize: [25, 41],
-            iconAnchor: [12, 41],
+            iconAnchor: [13, 41],
+            popupAnchor: [0, -25]
         })
     }
 });

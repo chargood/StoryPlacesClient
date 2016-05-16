@@ -36,7 +36,7 @@ define([
         },
 
         bindMapIntoDOM: function (mapDomElement) {
-            if (this.leafletMapObject == null) {
+            if (!this.leafletMapObject) {
                 this.createMapObject(mapDomElement);
             } else {
                 this.reattachMapObject(mapDomElement);
@@ -65,6 +65,19 @@ define([
             if (lat && long && icon) {
                 return L.marker([lat, long], {icon: icon})
             }
+
+            return undefined;
+        },
+
+        createMarkerWithPopUp: function(lat, long, icon, text, eventHandler) {
+            var marker = this.createMarker(lat, long, icon);
+
+            if (!marker) {
+                return undefined;
+            }
+
+            marker.bindPopup(text, eventHandler);
+            return marker;
         }
     }
 

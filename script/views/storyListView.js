@@ -2,8 +2,8 @@ define([
     'jquery',
     'underscore',
     'backbone',
-    'models/storyList'
-    ], function($, _, Backbone, StoryList) {
+    'StoryCollection'
+    ], function($, _, Backbone, StoryCollection) {
 
     var StoryListView = Backbone.View.extend({
         el: $('#page'),
@@ -19,19 +19,18 @@ define([
             
             // storyList is now injected to enable testing, so hasn't been injected then create it.
             if (storyList === undefined) {
-                storyList = new StoryList();    
+                storyList = new StoryCollection();
             }
             
             storyList.fetch({
-                success: function(storylist){
+                success: function(storyList){
                     var template = _.template($('#storylisttemplate').html());
                     that.$el.html(template({
-                        storylist:storylist.models
+                        storyList:storyList
                     }));
                 }
             });
-        }        
-
+        }
     });
     
     return StoryListView;

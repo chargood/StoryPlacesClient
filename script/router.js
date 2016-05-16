@@ -4,33 +4,43 @@ define([
 	'backbone',
 	'views/storyListView',
 	'views/storyView',
-	'views/readingView',
+	'newReadingView',
 	'views/debugView',
 	'models/user',
 	'utils/SPGPS',
+	'StoryRepository',
+	'ReadingRepository',
 	'backbone_dual'
-], function ($, _, Backbone, StoryListView, StoryView, ReadingView, DebugView, User, GPS) {
+], function ($, _, Backbone, StoryListView, StoryView, ReadingView, DebugView, User, GPS, StoryRepository, ReadingRepository) {
 
 	var Router = Backbone.Router.extend({
 
 		routes: {
 			'': 'home',
-			'story/:id': 'viewStory',
-			'reading/:id': 'playReading',
-			'deck/:id': 'playReadingDeck',
-			'card/:id/:card': 'playReadingCard'
+			'story/:storyId': 'viewStory',
+			'reading/:readingId': 'playReading',
+			//'deck/:id': 'playReadingDeck',
+			'card/:readingId/:cardId': 'playReadingCard'
 		}
 	});
+
 
 	var initialize = function () {
 
 		var router = new Router();
 		var debugView = DebugView.getDebug();
-		var readingView = new ReadingView();
+		readingView = new ReadingView();
+
+		var CurrentStory;
+		var CurrentReading;
+
+		var storyView = new StoryView();
+
+		var that = this;
 
 		// run once
 		GPS.locate();
-		GPS.addGpsUpdateListener(readingView);
+		//GPS.addGpsUpdateListener(readingView);
 
 		// add handlers
 		router.on('route:home', function () {
@@ -40,30 +50,35 @@ define([
 			debugView.render();
 		});
 
-		router.on('route:viewStory', function (id) {
-			console.log('View Story Route');
-			var storyView = new StoryView();
-			storyView.render({ id: id });
+		router.on('route:viewStory', function (storyId) {
+			StoryRepository.getStory(storyId, function(story) {
+				console.log('View Story Route');
+				storyView.render(story);
+			});
+
 			debugView.render();
 		});
 
-		router.on('route:playReading', function (id) {
+		router.on('route:playReading', function (readingId) {
 			console.log('Play Reading Route');
-			readingView.render({ id: id });
+			ReadingRepository.getReading(readingId, function(reading) {
+				readingView.renderDeck(reading);
+			});
+
 			debugView.render();
 		});
 
-		router.on('route:playReadingDeck', function (id) {
+		router.on('route:playReadingDeck', function (readingId) {
 			//readingView = new ReadingView({id:id});
 			console.log('Play Reading Deck Route');
-			readingView.renderDeck({ id: id });
+			//readingView.renderDeck({ id: id });
 			debugView.render();
 		});
 
-		router.on('route:playReadingCard', function (id, card) {
+		router.on('route:playReadingCard', function (readingId, cardId) {
 			//readingView = new ReadingView({id:id});
 			console.log('Play Reading Card Route');
-			readingView.renderCard({ id: id, card: card });
+			//readingView.renderCard({ id: id, card: card });
 			debugView.render();
 		});
 

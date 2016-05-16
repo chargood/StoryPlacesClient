@@ -35,10 +35,8 @@
 				  </tr>
 				</thead>
 				<tbody>
-					<% _.each(storylist, function(story) { %>
-
+					<% storyList.each(function(story) { %>
 						<tr><td><%=story.get("name") %></td><td> <a href="#/story/<%=story.get("_id") %>"> load </a></td></tr>
-
 					<%});%>
 				</tbody>
 			</table>
@@ -119,10 +117,9 @@
 			</table>
 		</script>
 
-		<!--List all cards not failing non loc rules, red and green based on loc rules including directions -->
 		<script type="text/template" id="deckMapTemplate">
 			<div class="container">
-				<h3><%= storyName %></h3>
+				<h3><%= _.escape(storyName) %></h3>
 			</div>
 
 			<div class="container">
@@ -130,10 +127,10 @@
 
 				<ul class="list-group">
 					<% _.each(visibleCards, function(card) { %>
-						<% if (card.get('suitable')) { %>
-							<a class='list-group-item' href='#/card/<%= readingId %>/<%=card.id %>'><%= card.escape('label') %></a>
+						<% if (card.isSuitable()) { %>
+							<a class='list-group-item list-group-item-success' href='#/card/<%= _.escape(readingId) %>/<%=_.escape(card.id) %>'><%= _.escape(card.getLabel()) %></a>
 						<% } else{ %>
-						   <ul class='list-group-item danger'><%= card.escape('label') %> - <i><%= card.escape('hint').direction %></i></ul>
+						   <ul class='list-group-item list-group-item-danger'><%= _.escape(card.getLabel()) %> - <i><%= _.escape(card.getHintDirection()) %></i></ul>
 						<% } %>
 					<%});%>
 				</ul>
@@ -158,7 +155,7 @@
 		
 		
 		<script type = "text/template" id="readingdialog">
-			<div id="readingdialog">Custom New Reading</div>
+			<div>Custom New Reading</div>
 		</script>
 		
 		<script data-main="script/requireConfig" src="script/libs/require.js"></script>

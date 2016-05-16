@@ -14,10 +14,15 @@ require.config({
         iconRepository: 'map/icons/iconRepository',
         iconFactory: 'map/icons/iconFactory',
         map: 'map/map',
-        mapComponents: 'views/components/mapComponents',
-        mapMarkers: 'views/components/mapMarkers',
-        cachedCard: 'models/cachedCard',
-        cachedCardWithMarker: 'models/cachedCardWithMarker'
+        mapReadingView: 'views/mapReadingView',
+        Card: 'models/card',
+        Story: 'models/story',
+        StoryRepository: 'repositories/storyRepository',
+        Reading: 'models/reading',
+        ReadingRepository: 'repositories/readingRepository',
+        CardCollection: 'collections/cardCollection',
+        StoryCollection: 'collections/StoryCollection',
+        newReadingView: 'views/newReadingView'
     }
 });
 
