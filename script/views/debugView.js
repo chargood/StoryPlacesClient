@@ -66,6 +66,8 @@ define([
             localStorage.setItem("GPSLat", lat);
             localStorage.setItem("GPSLon", lon);
 
+            console.log("firing gps change");
+
             var event = document.createEvent('Event');
             event.initEvent('gpsupdate', true, true);
             document.getElementById("page").dispatchEvent(event);

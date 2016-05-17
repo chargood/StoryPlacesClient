@@ -2,165 +2,119 @@
 
 <html lang="en">
 
-	<head>
-		<title>StoryPlaces</title>
-		<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<link rel="stylesheet" href="./script/libs/bootstrap-3.3.6-dist/css/bootstrap.min.css">
-		<link rel="stylesheet" href="css/leaflet.css">
-		<link rel="stylesheet" href="css/app.css">
-	</head>
+<head>
+    <title>StoryPlaces</title>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="./script/libs/bootstrap-3.3.6-dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/leaflet.css">
+    <link rel="stylesheet" href="css/app.css">
+</head>
 
-	<body>
-		<div>
-			<h1>StoryPlaces</h1>
-			<hr/>
-			<div id="page" class="container">
-			</div>
-			<hr/>
-			<div id="debug" class="container" style="background-color:lightcoral;padding:5px;margin:5px;">
-			<h3>Debug</h3>
-			<div id="buttons"></div>
-			</div>
-		</div>
-		
-		<script type = "text/template" id="storylisttemplate">
-			<h2>Story List</h2>
+<body>
+<div>
+    <h1>StoryPlaces</h1>
+    <hr/>
+    <div id="page" class="container view">
+    </div>
+    <div id="cardView" class="container view"></div>
+    <div id="storyView" class="container view"></div>
+    <div id="readingView" class="container view"></div>
+    <hr/>
+    <div id="debug" class="container" style="background-color:lightcoral;padding:5px;margin:5px;">
+        <h3>Debug</h3>
+        <div id="buttons"></div>
+    </div>
+</div>
 
-			<table class="table table-hover">
-				<thead>
-				  <tr>
-					<th>Story</th>
-					<th></th>
-				  </tr>
-				</thead>
-				<tbody>
-					<% storyList.each(function(story) { %>
-						<tr><td><%=story.get("name") %></td><td> <a href="#/story/<%=story.get("_id") %>"> load </a></td></tr>
-					<%});%>
-				</tbody>
-			</table>
 
-			<input class="updateList" type="button" class="btn btn-default" value="Update Story List"/>
+<script type="text/template" id="storytemplate">
+    <h2><%=story.get("name")%></h2>
+    <input class="newReadingBtn" type="button" class="btn btn-default" value="Start a new reading"/>
 
-		</script>
+    <h3>Readings</h3>
+    <table class="table table-hover">
+        <% readingList.each(function(reading) { %>
+        <tr>
+            <td><%=reading.get("name") %></td>
+            <td><a href="#/reading/<%=reading.id%>"><input class="openReadingBtn" type="button" class="btn btn-default" value="Open"/></a></td>
+            <!--<td><a href="#/reading/delete/<%=reading.get("id")%>"><input class="deleteReadingBtn" type="button" value="Delete"/></a></td>-->
 
-		<script type = "text/template" id="storytemplate">
-			<h2><%=story.get("name")%></h2>
-			<input class="newReadingBtn" type="button" class="btn btn-default" value="Start a new reading" />
+            <%});%>
+    </table>
+    <%if(readingList.size()==0){%>
+    <p>no readings</p>
+    <%}%>
 
-			<h3>Readings</h3>
-			<table class="table table-hover">
-			<%var readingcount=0;%>
-			<% _.each(readinglist, function(reading) { %>
-				<%if(reading.get("story")==story.get("_id")) {%>
-					<%readingcount++;%>
-					<tr>
-						<td><%=reading.get("name") %></td>
-						<td><a href="#/reading/<%=reading.get("id")%>"><input class="openReadingBtn" type="button" class="btn btn-default" value="Open"/></a></td>
-						<!--<td><a href="#/reading/delete/<%=reading.get("id")%>"><input class="deleteReadingBtn" type="button" value="Delete"/></a></td>-->
-				<%}%>
+    <!-- <input class="newCustomReadingBtn" type="button" class="btn btn-default" value="Start a new reading with custom settings" /> -->
 
-			<%});%>
-			</table>
-			<%if(readingcount==0){%>
-				<p>no readings</p>
-			<%}%>
+</script>
 
-			<!-- <input class="newCustomReadingBtn" type="button" class="btn btn-default" value="Start a new reading with custom settings" /> -->
+<!--List available cards-->
+<script type="text/template" id="decktemplate1">
+    <h3><%=story.get("name") %></h3>
 
-		</script>
+    <table class="table table-hover">
+        <% _.each(story.get("deck"), function(card) {%>
+        <%if(reading.checkCardConditions(card.id)){ %>
+        <tr>
+            <td><a href="#/card/<%=reading.get("id") %>/<%=card.id %>"> <%=card.label %> </a></td>
+        </tr>
+        <%}%>
+        <%});%>
+    </table>
+</script>
 
-		<!--List available cards-->
-		<script type = "text/template" id="decktemplate1">
-			<h3><%=story.get("name") %></h3>
+<!--List all cards, red or green based on availability-->
+<script type="text/template" id="decktemplate2">
+    <h3><%=story.get("name") %></h3>
 
-			<table class="table table-hover">
-				<% _.each(story.get("deck"), function(card) {%>
-					<%if(reading.checkCardConditions(card.id)){ %>
-						<tr><td><a href="#/card/<%=reading.get("id") %>/<%=card.id %>"> <%=card.label %> </a></td></tr>
-					<%}%>
-				<%});%>
-			</table>
-		</script>
+    <table class="table table-hover">
+        <% _.each(story.get("deck"), function(card) {%>
+        <%if(reading.checkCardConditions(card.id)){ %>
+        <tr class="success">
+            <td><a href="#/card/<%=reading.get(" id") %>/<%=card.id %>"> <%=card.label %> </a></td>
+        </tr>
+        <%} else{%>
+        <tr class="danger">
+            <td><%=card.label %></td>
+        </tr>
+        <%}%>
+        <%});%>
+    </table>
+</script>
 
-		<!--List all cards, red or green based on availability-->
-		<script type = "text/template" id="decktemplate2">
-			<h3><%=story.get("name") %></h3>
+<!--List all cards not failing non loc rules, red and green based on loc rules including directions -->
+<script type="text/template" id="decktemplate3">
+    <h3><%=story.get("name") %></h3>
 
-			<table class="table table-hover">
-				<% _.each(story.get("deck"), function(card) {%>
-					<%if(reading.checkCardConditions(card.id)){ %>
-						<tr class="success"><td><a href="#/card/<%=reading.get("id") %>/<%=card.id %>"> <%=card.label %> </a></td></tr>
-					<%} else{%>
-						<tr class="danger"><td><%=card.label %></td></tr>
-					<%}%>
-				<%});%>
-			</table>
-		</script>
+    <table class="table table-hover">
+        <% _.each(story.get("deck"), function(card) {%>
+        <%if(reading.checkCardConditions(card.id)){ %>
+        <tr class="success">
+            <td><a href="#/card/<%=reading.get(" id") %>/<%=card.id %>"> <%=card.label %> </a></td>
+        </tr>
+        <%} else{%>
+        <% console.log("temp check ",card.direction) %>
+        <%if(card.direction&&reading.checkCardNonLocConditions(card.id)){ %>
+        <tr class="danger">
+            <td><%=card.label %> - <i><%=card.direction %></i></td>
+        </tr>
+        <%}%>
+        <%}%>
+        <%});%>
+    </table>
+</script>
 
-		<!--List all cards not failing non loc rules, red and green based on loc rules including directions -->
-		<script type = "text/template" id="decktemplate3">
-			<h3><%=story.get("name") %></h3>
 
-			<table class="table table-hover">
-				<% _.each(story.get("deck"), function(card) {%>
-					<%if(reading.checkCardConditions(card.id)){ %>
-						<tr class="success"><td><a href="#/card/<%=reading.get("id") %>/<%=card.id %>"> <%=card.label %> </a></td></tr>
-					<%} else{%>
-						<% console.log("temp check ",card.direction) %>
-						<%if(card.direction&&reading.checkCardNonLocConditions(card.id)){ %>
-							<tr class="danger"><td><%=card.label %> - <i><%=card.direction %></i></td></tr>
-						<%}%>
-					<%}%>
-				<%});%>
-			</table>
-		</script>
 
-		<script type="text/template" id="deckMapTemplate">
-			<div class="container">
-				<h3><%= _.escape(storyName) %></h3>
-			</div>
+<script type="text/template" id="readingdialog">
+    <div>Custom New Reading</div>
+</script>
 
-			<div class="container">
-				<div id="mapDiv" class="mapContainer"></div>
+<script data-main="script/requireConfig" src="script/libs/require.js"></script>
+<script src="script/libs/leaflet.js"></script>
 
-				<ul class="list-group">
-					<% _.each(visibleCards, function(card) { %>
-						<% if (card.isSuitable()) { %>
-							<a class='list-group-item list-group-item-success' href='#/card/<%= _.escape(readingId) %>/<%=_.escape(card.id) %>'><%= _.escape(card.getLabel()) %></a>
-						<% } else{ %>
-						   <ul class='list-group-item list-group-item-danger'><%= _.escape(card.getLabel()) %> - <i><%= _.escape(card.getHintDirection()) %></i></ul>
-						<% } %>
-					<%});%>
-				</ul>
-			</div>
-		</script>
-
-		<script type = "text/template" id="cardtemplate">
-			<h3><%=story.get("title")%></h3>
-			<div><%=card.content %> </div>
-
-			<%if(!card.footerButtonMode||card.footerButtonMode=="next"){%>
-				<input class="nextCard" type="button" class="btn btn-default" value="Next" eventCheck="true" eventType="endcard" eventCardId="<%=card.id%>"/>
-			<%}%>
-
-			<%if(card.footerButtonMode=="end"){%>
-				<input class="nextCard" type="button" class="btn btn-default" value="Finish Story" eventCheck="true" eventType="endstory"/>
-			<%}%>
-
-			<%if(card.footerButtonMode=="none"){%>
-			<%}%>
-		</script>
-		
-		
-		<script type = "text/template" id="readingdialog">
-			<div>Custom New Reading</div>
-		</script>
-		
-		<script data-main="script/requireConfig" src="script/libs/require.js"></script>
-		<script src="script/libs/leaflet.js"></script>
-
-	</body>
+</body>
 
 </html>

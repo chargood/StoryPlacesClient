@@ -12,30 +12,26 @@ define([
     'jquery',
     'CardCollection'
 ], function (Backbone, map, iconFactory, _, $, CachedCardCollection) {
+    var MapReadingView;
 
-    var ReadingMapView = Backbone.View.extend({
-        mapDivId: '#mapDiv',
+    MapReadingView = Backbone.View.extend({
+        mapDivId: 'mapDiv',
         templateId: '#deckMapTemplate',
         currentReadingId: null,
 
-        renderView: function (el, reading) {
-            this.updateCardStates(reading);
-            var template = _.template($(this.templateId).html());
+        initialize: function () {
+            this.$el.append("<div id='" + this.mapDivId + "' class='mapContainer'></div>");
+        },
 
-            $('#page').html(template({
-                visibleCards: reading.storyObj.deck().visibleCards(),
-                readingId: reading.id,
-                storyName: reading.storyObj.name
-            }));
-
-            map.bindMapIntoDOM($(this.mapDivId).get(0))
+        render: function (reading) {
+            map.bindMapIntoDOM($('#' + this.mapDivId).get(0))
 
             _.each(reading.storyObj.deck().changedCards(), function (cachedCard) {
-                cachedCard.updateMarkerOnMap();
+                //cachedCard.updateMarkerOnMap();
             });
         },
 
-        updateCardStates: function(reading) {
+        updateCardStates: function (reading) {
             reading.storyObj.get('deck').each(function (cachedCard) {
                 cachedCard.updateStatus(reading);
             });
@@ -65,7 +61,7 @@ define([
             }
         },
 
-        createPointMarkerOnMap: function() {
+        createPointMarkerOnMap: function () {
             var lat = this.get('hint').location[0].lat;
             var long = this.get('hint').location[0].lon;
 
@@ -77,7 +73,7 @@ define([
             this.set({marker: map.createMarkerWithPopUp(lat, long, iconFactory.getIconForCard(this), this.getPopUpText(), null)});
         },
 
-        updatePointMarkerOnMap: function() {
+        updatePointMarkerOnMap: function () {
             if (!this.get('visible')) {
                 map.removeMarkerFromMap(this.get('marker'));
                 return;
@@ -91,8 +87,7 @@ define([
         },
 
 
-
-        getPopUpText: function() {
+        getPopUpText: function () {
             return "<p><b>" + _.escape(this.getLabel()) + "</b></p>"
                 + "<p>" + _.escape(this.getTeaser()) + "</p>"
                 + "<p>" + _.escape(this.getHintDirection()) + "</p>";
@@ -100,5 +95,5 @@ define([
 
     });
 
-    return ReadingMapView;
+    return MapReadingView;
 });

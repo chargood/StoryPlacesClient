@@ -113,7 +113,7 @@ define([
 
         executeCardFunctions: function (cardId) {
             var that = this;
-            var functions = this.getStoryObj().getCard(cardId).functions;
+            var functions = this.getStoryObj().getCard(cardId).get('functions');
             functions.forEach(function (afunction) {
                 that.executeFunction(afunction);
             });

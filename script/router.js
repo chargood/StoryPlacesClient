@@ -5,16 +5,15 @@ define([
 	'views/storyListView',
 	'views/storyView',
 	'newReadingView',
+	'cardView',
 	'views/debugView',
 	'models/user',
 	'utils/SPGPS',
 	'StoryRepository',
-	'ReadingRepository',
-	'backbone_dual'
-], function ($, _, Backbone, StoryListView, StoryView, ReadingView, DebugView, User, GPS, StoryRepository, ReadingRepository) {
+	'ReadingRepository'
+], function ($, _, Backbone, StoryListView, StoryView, ReadingView, CardView, DebugView, User, GPS, StoryRepository, ReadingRepository) {
 
 	var Router = Backbone.Router.extend({
-
 		routes: {
 			'': 'home',
 			'story/:storyId': 'viewStory',
@@ -29,12 +28,11 @@ define([
 
 		var router = new Router();
 		var debugView = DebugView.getDebug();
-		readingView = new ReadingView();
+		var readingView = new ReadingView({el: document.getElementById('readingView')});
+		var cardView = new CardView({el: document.getElementById('cardView')});
+		var storyView = new StoryView({el: document.getElementById('storyView')});
+		var storyListView = new StoryListView({el: document.getElementById('storyListView')});
 
-		var CurrentStory;
-		var CurrentReading;
-
-		var storyView = new StoryView();
 
 		var that = this;
 
@@ -45,7 +43,6 @@ define([
 		// add handlers
 		router.on('route:home', function () {
 			console.log('Home Route');
-			var storyListView = new StoryListView();
 			storyListView.render();
 			debugView.render();
 		});
@@ -60,9 +57,9 @@ define([
 		});
 
 		router.on('route:playReading', function (readingId) {
-			console.log('Play Reading Route');
 			ReadingRepository.getReading(readingId, function(reading) {
-				readingView.renderDeck(reading);
+				console.log('Play Reading Route');
+				readingView.render(reading);
 			});
 
 			debugView.render();
@@ -76,12 +73,15 @@ define([
 		});
 
 		router.on('route:playReadingCard', function (readingId, cardId) {
+			ReadingRepository.getReading(readingId, function(reading) {
+				cardView.render(reading, cardId);
+			});
+
 			//readingView = new ReadingView({id:id});
 			console.log('Play Reading Card Route');
 			//readingView.renderCard({ id: id, card: card });
 			debugView.render();
 		});
-
 
 		if (localStorage.getItem("User-ID") == null) {
 			var user = new User();

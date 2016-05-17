@@ -9,7 +9,6 @@ define([
     var StoryView;
 
     StoryView = Backbone.View.extend({
-        el: $('#page'),
         events: {
             'click .newReadingBtn': 'newReading',
             'click .newCustomReadingBtn': 'newCustomReading',
@@ -28,12 +27,19 @@ define([
 
             var readingList = new StoryReadingList(story.id, localStorage.getItem("User-ID"));
             readingList.fetch({
-                success: function (readinglist) {
+                success: function (readingList) {
                     var template = _.template($('#storytemplate').html());
+
+                    $('.view').hide();
+
                     that.$el.html(template({
                         story: story,
-                        readinglist: readinglist.models
-                    }));
+                        readingList: readingList
+                    })).show();;
+                },
+
+                failure: function() {
+                    console.error("Can not fetch readinglist");
                 }
             });
         },

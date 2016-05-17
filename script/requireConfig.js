@@ -15,6 +15,8 @@ require.config({
         iconFactory: 'map/icons/iconFactory',
         map: 'map/map',
         mapReadingView: 'views/mapReadingView',
+        listReadingView: 'views/listReadingView',
+        cardView: 'views/cardView',
         Card: 'models/card',
         Story: 'models/story',
         StoryRepository: 'repositories/storyRepository',

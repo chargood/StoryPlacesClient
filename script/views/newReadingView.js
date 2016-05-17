@@ -3,74 +3,61 @@ define([
     'underscore',
     'backbone',
     'mapReadingView',
-    'Story'
-], function ($, _, Backbone, MapReadingView, Story) {
+    'listReadingView'
+], function ($, _, Backbone, MapReadingView, ListReadingView) {
 
     var ReadingView = Backbone.View.extend({
-        el: $('#page'),
         events: {
-            "click": "event",
-            //"gpsupdate": "gpsChange"
+            "gpsupdate": "gpsChange"
         },
 
+        mapReadingView: undefined,
+        listReadingView: undefined,
 
-        renderDeck: function (reading) {
-            var mapReadingView = new MapReadingView;
-            mapReadingView.renderView(null, reading);
+        mapComponent: 'mapComponent',
+        listComponent: 'listComponent',
+        compassComponent: 'compassComponent',
+
+        // REMOVE!!!  This is just a kludge to get round not having a full event setup yet!
+        reading: undefined,
+
+
+        initialize: function () {
+            this.buildDom();
+            this.mapReadingView = new MapReadingView({el: document.getElementById(this.mapComponent)});
+            this.listReadingView = new ListReadingView({el: document.getElementById(this.listComponent)});
         },
 
-        renderCard: function (reading) {
-            var that = this;
-            this.readingId = options.id;
-            this.renderOptions = options;
-            this.renderMode = "card";
+        buildDom: function() {
+            if (this.$el.children().length == 0) {
+                this.$el.append("<div id='" + this.mapComponent + "' class='container'></div>");
+                this.$el.append("<div id='" + this.listComponent + "' class='container'></div>");
+                this.$el.append("<div id='" + this.compassComponent + "' class='container'></div>");
+            }
+        },
 
-            var reading = that.createReading({ id: options.id });
-            reading.fetch({
-                success: function (reading) {
-                    that.readingObj = reading;
+        render: function (reading) {
+            this.updateCardStates(reading);
+            this.reading = reading;
+            $('.view').hide();
+            this.mapReadingView.render(reading);
+            this.listReadingView.render(reading);
+            this.$el.show();
+        },
 
-                    var storyId = reading.get("story");
-                    var story = that.createStory({ id: storyId });
-                    story.fetch({
-                        success: function (story) {
-                            var card = story.getCard(options.card);
-                            var template = _.template($('#cardtemplate').html())
-                            that.$el.html(template({
-                                story: story,
-                                reading: reading,
-                                card: card
-                            }));
-                        }
-                    });
-                }
+        gpsChange: function () {
+            console.log("gps update in reading view");
+            if (this.reading) {
+                this.render(this.reading)
+            }
+        },
+
+        updateCardStates: function (reading) {
+            reading.storyObj.get('deck').each(function (cachedCard) {
+                cachedCard.updateStatus(reading);
             });
         },
-        event: function (e) {
-            e.stopPropagation();
-            if (e.target.attributes.eventCheck && e.target.attributes.eventCheck.value == "true") {
-                console.log("event " + e.toString() + " " + e.target.attributes.eventCheck.value + " " + e.target.attributes.eventType.value); //+" "+e.target.attributes.eventData.value)
-                if (e.target.attributes.eventType.value == "endcard") {
-                    e.target.attributes.eventType.value = "repeat";
-                    this.readingObj.executeCardFunctions(e.target.attributes.eventCardId.value);
-                    //localStorage.setItem("GPSLat", "!");
-                    Backbone.history.navigate('/reading/' + this.readingId, { trigger: true });
-                }
-                else if (e.target.attributes.eventType.value == "endstory") {
-                    Backbone.history.navigate('', { trigger: true });
-                }
-                else if (e.target.attributes.eventType.value == "repeat") {
-                    //the repeat event is a horrible work around for the backbone stacking events problem. Without it every view created, destroyed or not, will pick up the events. Hopefully so long as we only create 1 reading object this won't return.
-                }
-                else {
-                    console.log("Unrecognised Event " + e.target.attributes.eventType.value);
-                }
-            }
-            return true;
-        },
-        storageChange: function (e) {
-            console.log("STORAGE CHANGE");
-        }
+
     });
 
     return ReadingView;
