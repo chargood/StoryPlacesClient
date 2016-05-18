@@ -3,12 +3,12 @@ define([
     'underscore',
     'backbone',
     'mapReadingView',
-    'listReadingView'
-], function ($, _, Backbone, MapReadingView, ListReadingView) {
+    'listReadingView',
+    'CardCollection'
+], function ($, _, Backbone, MapReadingView, ListReadingView, CardCollection) {
 
     var ReadingView = Backbone.View.extend({
         events: {
-            "gpsupdate": "gpsChange"
         },
 
         mapReadingView: undefined,
@@ -37,28 +37,23 @@ define([
         },
 
         render: function (reading) {
-            this.updateCardStates(reading);
-            this.reading = reading;
+            if (!this.reading || this.reading.id != reading.id) {
+                this.reading = reading;
+                this.setup();
+            }
+
+            //this.reading.updateCardStates();
             $('.view').hide();
-            this.mapReadingView.render(reading);
-            this.listReadingView.render(reading);
             this.$el.show();
         },
 
-        gpsChange: function () {
-            console.log("gps update in reading view");
-            if (this.reading) {
-                this.render(this.reading)
-            }
-        },
-
-        updateCardStates: function (reading) {
-            reading.storyObj.get('deck').each(function (cachedCard) {
-                cachedCard.updateStatus(reading);
-            });
-        },
-
+        setup: function() {
+            this.listReadingView.setup(this.reading);
+            this.mapReadingView.setup(this.reading);
+        }
+            
     });
+
 
     return ReadingView;
 

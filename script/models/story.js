@@ -8,17 +8,7 @@ define([
     var Story;
 
     Story = Backbone.Model.extend({
-
         urlRoot: '/storyplaces/story',
-
-        //TODO: create a proper card object and return/use that rather then just returning raw json
-        getCard: function (id) {
-            return this.deck().get(id);
-        },
-
-        deck: function() {
-            return this.get('deck');
-        },
 
         parse: function (data) {
             if (!data.deck.models) {
@@ -26,6 +16,14 @@ define([
             }
 
             return data;
+        },
+
+        getCard: function (cardId) {
+            return this.deck().get(cardId);
+        },
+
+        deck: function() {
+            return this.get('deck');
         },
 
         save: function () {

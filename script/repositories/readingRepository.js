@@ -11,7 +11,8 @@ define([
     var ReadingRepository;
 
     ReadingRepository = {
-        currentReading: null,
+        currentReading: undefined,
+        currentStory: undefined,
 
         getReading: function (readingId, callback) {
             if (this.currentReading && this.currentReading.id === readingId) {
@@ -23,10 +24,7 @@ define([
             this.currentReading = new Reading({id: readingId});
             this.currentReading.fetch({
                 success: function() {
-                    StoryRepository.getStory(that.currentReading.get('story'), function (story) {
-                        that.currentReading.storyObj = story;
-                        callback(that.currentReading);
-                    });
+                    callback(that.currentReading);
                 }
             });
             return false;

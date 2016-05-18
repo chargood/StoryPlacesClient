@@ -13,13 +13,6 @@ define([
     cardCollection = Backbone.Collection.extend({
         model: Card,
 
-        changedCards: function () {
-            return this.where({changed: true});
-        },
-
-        visibleCards: function () {
-            return this.where({visible: true});
-        }
     });
 
     return cardCollection;

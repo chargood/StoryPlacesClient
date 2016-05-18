@@ -12,12 +12,12 @@ define([
             "click": "event",
         },
 
-        readingObj: undefined,
+        reading: undefined,
 
         render: function (reading, cardId) {
-            this.readingObj = reading;
+            this.reading = reading;
 
-            var story = reading.getStoryObj();
+            var story = reading.getStory();
             var card = story.getCard(cardId);
 
             $('.view').hide();
@@ -48,9 +48,9 @@ define([
                 console.log("event " + e.toString() + " " + e.target.attributes.eventCheck.value + " " + e.target.attributes.eventType.value); //+" "+e.target.attributes.eventData.value)
                 if (e.target.attributes.eventType.value == "endcard") {
                     e.target.attributes.eventType.value = "repeat";
-                    this.readingObj.executeCardFunctions(e.target.attributes.eventCardId.value);
+                    this.reading.executeCardFunctions(e.target.attributes.eventCardId.value);
                     //localStorage.setItem("GPSLat", "!");
-                    Backbone.history.navigate('/reading/' + this.readingObj.id, {trigger: true});
+                    Backbone.history.navigate('/reading/' + this.reading.id, {trigger: true});
                 }
                 else if (e.target.attributes.eventType.value == "endstory") {
                     Backbone.history.navigate('', {trigger: true});

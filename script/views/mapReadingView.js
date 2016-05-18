@@ -10,88 +10,78 @@ define([
     'iconFactory',
     'underscore',
     'jquery',
-    'CardCollection'
-], function (Backbone, map, iconFactory, _, $, CachedCardCollection) {
+    'MarkerCollection'
+], function (Backbone, map, iconFactory, _, $, MarkerCollection) {
     var MapReadingView;
 
     MapReadingView = Backbone.View.extend({
         mapDivId: 'mapDiv',
         templateId: '#deckMapTemplate',
-        currentReadingId: null,
+
+        reading: undefined,
+        markers: undefined,
 
         initialize: function () {
             this.$el.append("<div id='" + this.mapDivId + "' class='mapContainer'></div>");
-        },
-
-        render: function (reading) {
             map.bindMapIntoDOM($('#' + this.mapDivId).get(0))
+        },
 
-            _.each(reading.storyObj.deck().changedCards(), function (cachedCard) {
-                //cachedCard.updateMarkerOnMap();
+        setup: function (reading) {
+            if (!this.reading || this.reading.id != reading.id) {
+                if (this.reading) {
+                    this.reading.cardStates.off(this.reading.cardStates.eventCardStatesModified, this.render, this);
+                    this.markers = undefined;
+                }
+
+                this.markers = new MarkerCollection;
+                this.reading = reading;
+                this.reading.cardStates.on(this.reading.cardStates.eventCardStatesModified, this.cardStatesModifiedEvent, this);
+            }
+            this.render();
+        },
+
+        render: function () {
+            var that = this;
+            this.reading.cardStates.each(function (cardState) {
+                that.updateMarkerFromCardState(cardState);
             });
         },
 
-        updateCardStates: function (reading) {
-            reading.storyObj.get('deck').each(function (cachedCard) {
-                cachedCard.updateStatus(reading);
+        cardStatesModifiedEvent: function (modifiedCardStates) {
+            var that = this;
+            _.each(modifiedCardStates, function (cardState) {
+                that.updateMarkerFromCardState(cardState);
             });
         },
 
-        createMarker: function () {
-            if (!this.get('hint').location || this.get('hint').location.length == 0) {
-                this.set({marker: null});
-                return;
+        getMarkerFromCardState: function(cardState) {
+            var marker = this.markers.get(cardState.id);
+
+            if (marker !== undefined) {
+                return marker;
             }
 
-            if (this.get('hint').location[0].type == "point") {
-                this.createPointMarkerOnMap();
-                return;
-            }
-
-            this.set({marker: null});
+            return this.createMarkerFromCardState(cardState);
         },
 
-        updateMarkerOnMap: function () {
-            if (!this.get('changed') || !this.get('marker')) {
-                return;
-            }
+        createMarkerFromCardState: function (cardState) {
+            var card = this.reading.getStory().deck().get(cardState.id);
+            var marker = this.markers.add({id: card.id});
+            marker.buildMakerFromCard(card);
 
-            if (this.get('hint').location[0].type == "point") {
-                this.updatePointMarkerOnMap()
-            }
+            return marker;
+
         },
 
-        createPointMarkerOnMap: function () {
-            var lat = this.get('hint').location[0].lat;
-            var long = this.get('hint').location[0].lon;
+        updateMarkerFromCardState: function(cardState) {
+            var marker = this.getMarkerFromCardState(cardState);
 
-            if (!lat || !long) {
-                this.set({marker: null});
-                return;
+            if (marker) {
+                marker.updateMarkerFromCardState(cardState);
             }
-
-            this.set({marker: map.createMarkerWithPopUp(lat, long, iconFactory.getIconForCard(this), this.getPopUpText(), null)});
-        },
-
-        updatePointMarkerOnMap: function () {
-            if (!this.get('visible')) {
-                map.removeMarkerFromMap(this.get('marker'));
-                return;
-            }
-
-            map.updateMarkerIcon(this.get('marker'), iconFactory.getIconForCard(this))
-
-            if (!this.get('previousVisible')) {
-                map.addMarkerToMap(this.get('marker'));
-            }
-        },
-
-
-        getPopUpText: function () {
-            return "<p><b>" + _.escape(this.getLabel()) + "</b></p>"
-                + "<p>" + _.escape(this.getTeaser()) + "</p>"
-                + "<p>" + _.escape(this.getHintDirection()) + "</p>";
         }
+
+
 
     });
 

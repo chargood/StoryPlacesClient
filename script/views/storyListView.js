@@ -6,8 +6,6 @@ define([
 ], function ($, _, Backbone, StoryCollection) {
 
     var StoryListView = Backbone.View.extend({
-        el: $('#page'),
-
         events: {},
 
         initialize: function () {
@@ -25,10 +23,13 @@ define([
             storyList.fetch({
                 success: function (storyList) {
                     $('.view').hide();
+                    that.$el.show();
 
                     that.$el.html(that.template({
                         storyList: storyList
-                    })).show();
+                    }));
+
+                    console.log("story list view rendered");
                 }
             });
         },

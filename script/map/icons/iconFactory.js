@@ -6,16 +6,16 @@ define([
     'iconRepository'
 ], function (iconRepository) {
     var IconFactory = {
-        getIconForCard: function(card) {
-            if (! card.get('visible')) {
+        getIconForCardState: function(cardState) {
+            if (! cardState.get('visible')) {
                 return iconRepository.redIcon;
             }
 
-            if (card.get('selected')) {
+            if (cardState.get('selected')) {
                 return iconRepository.blueIcon;
             }
 
-            if (card.get('suitable')) {
+            if (cardState.get('suitable')) {
                 return iconRepository.greenIcon;
             }
 

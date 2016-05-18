@@ -2,19 +2,69 @@ define([
     'underscore',
     'backbone',
     'StoryRepository',
+    'CardStateCollection',
     'models/conditions/comparissonCondition',
     'models/conditions/locationCondition',
     'models/conditions/logicalCondition',
     'models/storyFunction'
-], function (_, Backbone, StoryRepository, ComparissonCondition, LocationCondition, LogicalCondition, StoryFunction) {
+], function (_, Backbone, StoryRepository, CardStateCollection, ComparissonCondition, LocationCondition, LogicalCondition, StoryFunction) {
 
     var Reading = Backbone.Model.extend({
 
-        urlRoot: '/storyplaces/reading',
-        storyObj: undefined,
+        // These are stored here as then they are not real properties of
+        // the reading so we shouldn't end up passing them back up to the server
 
-        getStoryObj: function () {
-            return this.storyObj;
+        urlRoot: '/storyplaces/reading',
+        storyObject: undefined,
+        cardStates: undefined,
+        fish: "wibble",
+
+        events: {
+           'gpsupdate' : this.updateCardStates,
+        },
+
+        initialize: function () {
+            var that = this;
+            this.cardStates = new CardStateCollection;
+
+            this.on('cardFunctionsExecuted', this.updateCardStates, this);
+            this.on('change:story', this.afterStoryIdUpdateEvent, this);
+
+            document.addEventListener('gpsupdate', function() {that.updateCardStates()});
+        },
+
+        afterStoryIdUpdateEvent: function () {
+            var that = this;
+
+            StoryRepository.getStory(this.get('story'), function (story) {
+                that.attachSubModels(story);
+                that.cardStates.updateCardStates(that);
+            });
+        },
+
+        attachSubModels: function (story) {
+            var that = this;
+
+            this.storyObject = story;
+            this.storyObject.deck().each(function (card) {
+                that.cardStates.add({id: card.id});
+            });
+        },
+
+        getCardFromStory: function (cardId) {
+            return this.getStory().getCard(cardId);
+        },
+
+        getCardState: function (cardId) {
+            return this.cardStates.get(cardId);
+        },
+
+        updateCardStates: function () {
+            this.cardStates.updateCardStates(this);
+        },
+
+        getStory: function () {
+            return this.storyObject;
         },
 
         setVariable: function (key, value) {
@@ -29,7 +79,7 @@ define([
             });
 
             if (!update) {
-                vars.push({ key: key, value: value });
+                vars.push({key: key, value: value});
             }
 
             this.set("variables", vars);
@@ -59,8 +109,7 @@ define([
         checkCardConditions: function (cardId) {
             var that = this;
             var res = true;
-            var story = this.getStoryObj();
-            var card = story.getCard(cardId);
+            var card = this.getCardFromStory(cardId);
             var conditions = card.get('conditions');
             conditions.forEach(function (condition) {
                 if (!that.checkCondition(condition)) {
@@ -73,7 +122,7 @@ define([
         checkCardNonLocConditions: function (cardId) {
             var that = this;
             var res = true;
-            var conditions = this.getStoryObj().getCard(cardId).get('conditions');
+            var conditions = this.getCardFromStory(cardId).get('conditions');
             conditions.forEach(function (condition) {
                 if (!that.checkCondition(condition) && that.getCondition(condition).get("type") != "location") {
                     res = false;
@@ -89,7 +138,7 @@ define([
         getCondition: function (conditionName) {
             console.log("getCondition ", conditionName);
             var res;
-            var conditions = this.getStoryObj().get("conditions");
+            var conditions = this.getStory().get("conditions");
             conditions.forEach(function (condition) {
 
                 if (condition.name == conditionName) {
@@ -113,10 +162,12 @@ define([
 
         executeCardFunctions: function (cardId) {
             var that = this;
-            var functions = this.getStoryObj().getCard(cardId).get('functions');
+            var functions = this.getCardFromStory(cardId).get('functions');
             functions.forEach(function (afunction) {
                 that.executeFunction(afunction);
             });
+
+            this.trigger('cardFunctionsExecuted');
         },
 
         executeFunction: function (functionName) {
@@ -125,7 +176,7 @@ define([
 
         getFunction: function (functionName) {
             var res;
-            var functions = this.getStoryObj().get("functions");
+            var functions = this.getStory().get("functions");
             functions.forEach(function (afunction) {
                 if (afunction.name == functionName) {
                     res = afunction;

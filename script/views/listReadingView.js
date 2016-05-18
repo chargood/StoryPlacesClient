@@ -12,18 +12,38 @@ define([
 
     ListReadingView = Backbone.View.extend({
 
-        render: function (reading) {
-            this.$el.html(this.template({
-                visibleCards: reading.storyObj.deck().visibleCards(),
-                readingId: reading.id,
-                storyName: reading.storyObj.name
-            }));
+        reading: undefined,
+
+        setup: function (reading) {
+            if (!this.reading || this.reading.id != reading.id) {
+                if (this.reading) {
+                    this.reading.cardStates.off(this.reading.cardStates.eventCardStatesUpdated, this.render, this);
+                }
+
+                this.reading = reading;
+                this.reading.cardStates.on(this.reading.cardStates.eventCardStatesUpdated, this.render, this);
+            }
+            this.render();
+        },
+
+        render: function () {
+            var that = this;
+
+            if (this.reading.storyObject) {
+                this.$el.html(this.template({
+                    visibleCards: that.reading.cardStates.visibleCards(),
+                    deck: that.reading.storyObject.deck(),
+                    readingId: that.reading.id,
+                    storyName: that.reading.storyObject.name
+                }));
+            }
         },
 
         template: _.template(
             "<ul class='list-group'>"
-            + "<% _.each(visibleCards, function(card) { %>"
-            + "<% if (card.isSuitable()) { %>"
+            + "<% _.each(visibleCards, function(cardState) { %>"
+            + "<% var card = deck.get(cardState.id) %>"
+            + "<% if (cardState.isSuitable()) { %>"
             + "<a class='list-group-item list-group-item-success' href='#/card/<%= _.escape(readingId) %>/<%=_.escape(card.id) %>'><%= _.escape(card.getLabel()) %></a>"
             + "<% } else{ %>"
             + "<ul class='list-group-item list-group-item-danger'><%= _.escape(card.getLabel()) %> - <i><%= _.escape(card.getHintDirection()) %></i></ul>"
