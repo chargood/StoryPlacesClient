@@ -34,7 +34,7 @@ define([
 
             if (this.modifiedCards().length != 0) {
                 console.log("***Firing cards modified event");
-                this.trigger('cardStatesModified', this.modifiedCards());
+                this.trigger(this.eventCardStatesModified, this.modifiedCards());
             }
 
             console.log("***Firing cards updated event");
