@@ -29,6 +29,8 @@ define([
             var that = this;
             this.cardStates = new CardStateCollection;
 
+            this.set({variables: []});
+
             this.on('cardFunctionsExecuted', this.updateCardStates, this);
             this.on('change:story', this.afterStoryIdUpdateEvent, this);
 
