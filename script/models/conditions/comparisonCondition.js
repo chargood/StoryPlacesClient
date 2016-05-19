@@ -3,11 +3,11 @@ define([
     'backbone'
 ], function (_, Backbone) {
 
-    var ComparissonCondition = Backbone.Model.extend({
+    var ComparisonCondition = Backbone.Model.extend({
         resolveCondition: function (context) {
             var vara = context.getValue(this.get("a"), this.get("aType"));
             var varb = context.getValue(this.get("b"), this.get("bType"));
-            console.log("Comparisson Cond ", this.get("operand"), vara, varb);
+            console.log("Comparison Cond ", this.get("operand"), vara, varb);
             if (this.get("operand") == "==") {
                 if (vara == varb)
                     return true;
@@ -49,6 +49,6 @@ define([
         }
     });
 
-    return ComparissonCondition;
+    return ComparisonCondition;
 
 });

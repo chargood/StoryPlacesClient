@@ -3,13 +3,22 @@ define([
     'backbone',
     'StoryRepository',
     'CardStateCollection',
-    'models/conditions/comparissonCondition',
+    'models/conditions/comparisonCondition',
     'models/conditions/locationCondition',
     'models/conditions/logicalCondition',
     'models/conditions/timeRangeCondition',
     'models/conditions/timePassedCondition',
     'models/storyFunction'
-], function (_, Backbone, StoryRepository, CardStateCollection, ComparissonCondition, LocationCondition, LogicalCondition, StoryFunction) {
+], function (_,
+             Backbone,
+             StoryRepository,
+             CardStateCollection,
+             ComparisonCondition,
+             LocationCondition,
+             LogicalCondition,
+             TimeRangeCondition,
+             TimePassedCondition,
+             StoryFunction) {
 
     var Reading = Backbone.Model.extend({
 
@@ -19,11 +28,6 @@ define([
         urlRoot: '/storyplaces/reading',
         storyObject: undefined,
         cardStates: undefined,
-        fish: "wibble",
-
-        events: {
-           'gpsupdate' : this.updateCardStates,
-        },
 
         eventStoryLoaded: 'readingEventStoryLoaded',
 
@@ -36,7 +40,9 @@ define([
             this.on('cardFunctionsExecuted', this.updateCardStates, this);
             this.on('change:story', this.afterStoryIdUpdateEvent, this);
 
-            document.addEventListener('gpsupdate', function() {that.updateCardStates()});
+            document.addEventListener('gpsupdate', function () {
+                that.updateCardStates()
+            });
         },
 
         afterStoryIdUpdateEvent: function () {
@@ -154,7 +160,7 @@ define([
             });
 
             if (res.type == "comparisson") {
-                return new ComparissonCondition(res);
+                return new ComparisonCondition(res);
             }
             else if (res.type == "logical") {
                 return new LogicalCondition(res);
