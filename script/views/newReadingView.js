@@ -38,8 +38,7 @@ define([
 
         render: function (reading) {
             if (!this.reading || this.reading.id != reading.id) {
-                this.reading = reading;
-                this.setup();
+                this.setup(reading);
             }
 
             //this.reading.updateCardStates();
@@ -47,7 +46,8 @@ define([
             this.$el.show();
         },
 
-        setup: function() {
+        setup: function(reading) {
+            this.reading = reading;
             this.listReadingView.setup(this.reading);
             this.mapReadingView.setup(this.reading);
         }

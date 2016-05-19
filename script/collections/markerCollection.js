@@ -12,6 +12,13 @@ define([
 
     markerCollection = Backbone.Collection.extend({
         model: Marker,
+
+        destroy: function() {
+            this.each(function(marker) {
+                marker.destroy();
+            })
+        }
+
     });
 
     return markerCollection;

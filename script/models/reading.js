@@ -23,6 +23,8 @@ define([
            'gpsupdate' : this.updateCardStates,
         },
 
+        eventStoryLoaded: 'readingEventStoryLoaded',
+
         initialize: function () {
             var that = this;
             this.cardStates = new CardStateCollection;
@@ -39,6 +41,7 @@ define([
             StoryRepository.getStory(this.get('story'), function (story) {
                 that.attachSubModels(story);
                 that.cardStates.updateCardStates(that);
+                that.trigger(that.eventStoryLoaded);
             });
         },
 

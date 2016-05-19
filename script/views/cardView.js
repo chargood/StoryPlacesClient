@@ -13,22 +13,35 @@ define([
         },
 
         reading: undefined,
+        cardId: undefined,
 
         render: function (reading, cardId) {
             this.reading = reading;
+            this.cardId = cardId;
 
-            var story = reading.getStory();
-            var card = story.getCard(cardId);
+            var that = this;
 
             $('.view').hide();
+            this.$el.show();
+
+            if (this.reading.getStory()) {
+                this.renderCard();
+            }
+
+            this.reading.on(this.reading.eventStoryLoaded, function() {
+                that.renderCard();
+            })
+        },
+
+        renderCard: function() {
+            var story = this.reading.getStory();
+            var card = story.getCard(this.cardId);
 
             this.$el.html(this.template({
                 story: story,
-                reading: reading,
+                reading: this.reading,
                 card: card
             }));
-
-            this.$el.show();
         },
 
         template: _.template(

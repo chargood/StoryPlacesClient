@@ -30,7 +30,7 @@ define([
             if (!this.reading || this.reading.id != reading.id) {
                 if (this.reading) {
                     this.reading.cardStates.off(this.reading.cardStates.eventCardStatesModified, this.render, this);
-                    this.markers = undefined;
+                    this.markers.destroy();
                 }
 
                 this.markers = new MarkerCollection;

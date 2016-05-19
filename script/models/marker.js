@@ -87,7 +87,7 @@ define([
             }
 
             if (!cardState.get('visible')) {
-                map.removeMarkerFromMap(this.get('marker'));
+                this.removeFromMap();
                 return;
             }
 
@@ -96,7 +96,20 @@ define([
             if (!cardState.get('previousVisible')) {
                 map.addMarkerToMap(this.get('marker'));
             }
+        },
+
+        removeFromMap: function () {
+            map.removeMarkerFromMap(this.get('marker'));
+        },
+
+        destroy: function() {
+            this.removeFromMap();
+            if (this.get('marker')) {
+                this.get('marker').unbindPopup();
+            }
+            this.set({marker: undefined});
         }
+
     });
 
     return Marker;
