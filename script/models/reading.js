@@ -6,6 +6,8 @@ define([
     'models/conditions/comparissonCondition',
     'models/conditions/locationCondition',
     'models/conditions/logicalCondition',
+    'models/conditions/timeRangeCondition',
+    'models/conditions/timePassedCondition',
     'models/storyFunction'
 ], function (_, Backbone, StoryRepository, CardStateCollection, ComparissonCondition, LocationCondition, LogicalCondition, StoryFunction) {
 
@@ -159,6 +161,12 @@ define([
             }
             else if (res.type == "location") {
                 return new LocationCondition(res);
+            }
+            else if (res.type == "timerange") {
+                return new TimeRangeCondition(res);
+            }
+            else if (res.type == "timepassed") {
+                return new TimePassedCondition(res);
             }
             else {
                 return null;
