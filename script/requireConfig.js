@@ -6,28 +6,28 @@ require.config({
         underscore: 'libs/underscore-1.8.3.min',
         backbone: 'libs/backbone-1.3.3.min',
         backbone_dual: 'libs/Backbone.dualStorage-1.4.0/backbone.dualstorage.amd',
-        SPGPS: 'utils/SPGPS',
-        moment: 'libs/moment.min',
         geolocator: 'libs/geolocator.amd',
+        moment: 'libs/moment.min',
         leaflet: 'libs/leaflet',
+        SPGPS: 'utils/SPGPS',
         iconRepository: 'map/icons/iconRepository',
         iconFactory: 'map/icons/iconFactory',
         map: 'map/map',
         mapReadingView: 'views/mapReadingView',
         listReadingView: 'views/listReadingView',
         cardView: 'views/cardView',
+        newReadingView: 'views/newReadingView',
         Card: 'models/card',
         CardState: 'models/cardState',
         Story: 'models/story',
-        StoryRepository: 'repositories/storyRepository',
         Reading: 'models/reading',
         Marker: 'models/marker',
+        StoryRepository: 'repositories/storyRepository',
         ReadingRepository: 'repositories/readingRepository',
         CardCollection: 'collections/cardCollection',
         CardStateCollection: 'collections/cardStateCollection',
         StoryCollection: 'collections/StoryCollection',
-        MarkerCollection: 'collections/MarkerCollection',
-        newReadingView: 'views/newReadingView'
+        MarkerCollection: 'collections/MarkerCollection'
     }
 });
 
