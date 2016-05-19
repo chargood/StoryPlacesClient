@@ -1,8 +1,7 @@
 define([
 	'views/debugView',
 	'geolocator',
-	'views/readingView'
-	], function (DebugView, Geolocator, ReadingView) {
+	], function (DebugView, Geolocator) {
 
 	var onGeoSuccess = function (location) {
 		var lat = location.coords.latitude;

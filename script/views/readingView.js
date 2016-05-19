@@ -3,9 +3,8 @@ define([
     'underscore',
     'backbone',
     'mapReadingView',
-    'listReadingView',
-    'CardCollection'
-], function ($, _, Backbone, MapReadingView, ListReadingView, CardCollection) {
+    'listReadingView'
+], function ($, _, Backbone, MapReadingView, ListReadingView) {
 
     var ReadingView = Backbone.View.extend({
         events: {
@@ -18,9 +17,7 @@ define([
         listComponent: 'listComponent',
         compassComponent: 'compassComponent',
 
-        // REMOVE!!!  This is just a kludge to get round not having a full event setup yet!
         reading: undefined,
-
 
         initialize: function () {
             this.buildDom();
