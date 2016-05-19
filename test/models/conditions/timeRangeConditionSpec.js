@@ -3,15 +3,7 @@ var chai = require('chai');
 var expect = require('chai').expect;
 var sinon = require('sinon');
 
-requirejs.config({
-    baseUrl: 'script',
-    nodeRequire: require,
-    paths: {
-        underscore: 'libs/underscore.min.amd',
-        backbone: 'libs/backbone.min.amd',
-        moment: 'libs/moment.min'        
-    }
-});
+
 
 describe('TimeRangeCondition model', function(){
     'use strict';

@@ -1,1 +1,1 @@
---recursive
+--recursive --require ./test/requireConfig.js

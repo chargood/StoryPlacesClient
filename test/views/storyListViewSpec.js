@@ -4,14 +4,7 @@ var expect = require('chai').expect;
 var jsdom = require('node-jsdom');
 var sinon = require('sinon');
 
-// define require.js stuff
-requirejs.config({
-    baseUrl: 'script',
-    nodeRequire: require,
-    paths: {
-        underscore: 'libs/underscore.min.amd',
-    }
-});
+
 
 describe('Story List View', function () {
     'use strict';
