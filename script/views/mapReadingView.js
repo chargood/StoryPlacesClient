@@ -26,21 +26,19 @@ define([
             map.bindMapIntoDOM($('#' + this.mapDivId).get(0))
         },
 
-        setup: function (reading) {
-            if (!this.reading || this.reading.id != reading.id) {
-                if (this.reading) {
-                    this.reading.cardStates.off(this.reading.cardStates.eventCardStatesModified, this.render, this);
-                    this.markers.destroy();
-                }
-
-                this.markers = new MarkerCollection;
-                this.reading = reading;
-                this.reading.cardStates.on(this.reading.cardStates.eventCardStatesModified, this.cardStatesModifiedEvent, this);
-            }
-            this.render();
+        newReading: function (reading) {
+            this.markers = new MarkerCollection;
+            this.reading = reading;
+            this.reading.cardStates.on(this.reading.cardStates.eventCardStatesModified, this.cardStatesModifiedEvent, this);
+            this.renderAllMarkers();
         },
 
-        render: function () {
+        tearDown: function () {
+            this.reading.cardStates.off(this.reading.cardStates.eventCardStatesModified, this.renderAllMarkers, this);
+            this.markers.destroy();
+        },
+
+        renderAllMarkers: function () {
             var that = this;
             this.reading.cardStates.each(function (cardState) {
                 that.updateMarkerFromCardState(cardState);
@@ -54,7 +52,7 @@ define([
             });
         },
 
-        getMarkerFromCardState: function(cardState) {
+        getMarkerFromCardState: function (cardState) {
             var marker = this.markers.get(cardState.id);
 
             if (marker !== undefined) {
@@ -73,14 +71,13 @@ define([
 
         },
 
-        updateMarkerFromCardState: function(cardState) {
+        updateMarkerFromCardState: function (cardState) {
             var marker = this.getMarkerFromCardState(cardState);
 
             if (marker) {
                 marker.updateMarkerFromCardState(cardState);
             }
         }
-
 
 
     });

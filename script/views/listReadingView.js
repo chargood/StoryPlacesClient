@@ -14,19 +14,17 @@ define([
 
         reading: undefined,
 
-        setup: function (reading) {
-            if (!this.reading || this.reading.id != reading.id) {
-                if (this.reading) {
-                    this.reading.cardStates.off(this.reading.cardStates.eventCardStatesUpdated, this.render, this);
-                }
-
-                this.reading = reading;
-                this.reading.cardStates.on(this.reading.cardStates.eventCardStatesUpdated, this.render, this);
-            }
-            this.render();
+        newReading: function (reading) {
+            this.reading = reading;
+            this.reading.cardStates.on(this.reading.cardStates.eventCardStatesUpdated, this.renderList, this);
+            this.renderList();
         },
 
-        render: function () {
+        tearDown: function () {
+            this.reading.cardStates.off(this.reading.cardStates.eventCardStatesUpdated, this.renderList, this);
+        },
+
+        renderList: function () {
             var that = this;
 
             if (this.reading.storyObject) {

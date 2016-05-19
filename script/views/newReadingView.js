@@ -38,18 +38,30 @@ define([
 
         render: function (reading) {
             if (!this.reading || this.reading.id != reading.id) {
-                this.setup(reading);
+                if (this.reading) {
+                    this.tearDown();
+                }
+
+                this.newReading(reading);
             }
 
-            //this.reading.updateCardStates();
+            this.listReadingView.render();
+            this.mapReadingView.render();
+
             $('.view').hide();
             this.$el.show();
         },
 
-        setup: function(reading) {
+        newReading: function(reading) {
             this.reading = reading;
-            this.listReadingView.setup(this.reading);
-            this.mapReadingView.setup(this.reading);
+            this.listReadingView.newReading(this.reading);
+            this.mapReadingView.newReading(this.reading);
+        },
+
+        tearDown: function() {
+            this.listReadingView.tearDown();
+            this.mapReadingView.tearDown();
+            this.reading = undefined;
         }
             
     });
