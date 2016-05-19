@@ -16,7 +16,7 @@ require.config({
         mapReadingView: 'views/mapReadingView',
         listReadingView: 'views/listReadingView',
         cardView: 'views/cardView',
-        newReadingView: 'views/newReadingView',
+        readingView: 'views/readingView',
         Card: 'models/card',
         CardState: 'models/cardState',
         Story: 'models/story',

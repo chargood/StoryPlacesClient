@@ -6,8 +6,7 @@
 
 define([
     'Reading',
-    'StoryRepository'
-], function (Reading, StoryRepository) {
+], function (Reading) {
     var ReadingRepository;
 
     ReadingRepository = {

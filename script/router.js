@@ -4,7 +4,7 @@ define([
 	'backbone',
 	'views/storyListView',
 	'views/storyView',
-	'newReadingView',
+	'readingView',
 	'cardView',
 	'views/debugView',
 	'models/user',
