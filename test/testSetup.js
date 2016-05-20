@@ -1,4 +1,7 @@
+"use strict";
+
 var requirejs = require('requirejs');
+var jsdom = require('node-jsdom');
 
 requirejs.config({
     baseUrl: 'script',
@@ -30,5 +33,12 @@ requirejs.config({
         CardStateCollection: 'collections/cardStateCollection',
         StoryCollection: 'collections/StoryCollection',
         MarkerCollection: 'collections/MarkerCollection'
+    }
+});
+
+jsdom.env({
+    html: '',
+    done: function (errors, window) {
+        global.window = window;
     }
 });
