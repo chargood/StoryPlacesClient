@@ -18,7 +18,7 @@ describe('Story model', function () {
         });
     });
 
-    describe('when getCard is called', function () {
+    describe('calling getCard', function () {
         it('should call get() once on the deck collection with the passed ID', function () {
 
             var story = new Story();
@@ -37,19 +37,48 @@ describe('Story model', function () {
         });
     });
 
-    describe('when a story is fetched', function () {
-
-        it("the parse function should change a deck into a CardCollection", function() {
+    describe('when a story is fetched the parse function', function () {
+        function parseAndTestStoryBasedOnDeck(deck) {
             var story = new Story()
-            var data = {_id: "1", id: "1", "deck": [{"id": 1, "content": "card 1"}, {"id": 2, "content": "card 2"}]};
+            var sourceData = {_id: "1", id: "1"};
 
-            var parsedData = story.parse(data);
+            if (deck) {
+                sourceData.deck = deck;
+            }
 
-            var expectedCardCollection = new CardCollection([{"id": 1, "content": "card 1"}, {"id": 2, "content": "card 2"}])
+            var parsedData = story.parse(sourceData);
+            var twiceParsedData = story.parse(parsedData);
 
-            expect(Utils.diffCollectionsOnAttributes(parsedData.deck, expectedCardCollection, 'content')).to.equal(true);
-            expect(parsedData.id).to.equal("1");
+            var expectedCardCollection = new CardCollection()
 
+            if (deck) {
+                if (expectedCardCollection.isArray) {
+                    expectedCardCollection.each(function(card) {
+                        expectedCardCollection.add(card);
+                    })
+                } else {
+                    expectedCardCollection.add(deck);
+                }
+            }
+
+            expect(Utils.collectionsAreEqualBasedOnIdsAndAttributes(twiceParsedData.deck, expectedCardCollection, 'content')).to.equal(true);
+            expect(twiceParsedData.id).to.equal("1");
+        }
+
+        it("should change a valid deck into a CardCollection", function() {
+            parseAndTestStoryBasedOnDeck([{"id": 1, "content": "card 1"}, {"id": 2, "content": "card 2"}]);
+        });
+
+        it("should change an empty deck into an empty CardCollection", function() {
+            parseAndTestStoryBasedOnDeck([]);
+        });
+
+        it("should change a single card into a CardCollection with one item", function() {
+            parseAndTestStoryBasedOnDeck({"id": 1, "content": "card 1"});
+        });
+
+        it("should create an empty CardCollection when no deck is passed", function() {
+            parseAndTestStoryBasedOnDeck();
 
         });
 

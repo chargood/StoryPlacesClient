@@ -11,6 +11,12 @@ define([
         urlRoot: '/storyplaces/story',
 
         parse: function (data) {
+
+            if (!data.deck) {
+                data.deck = new CardCollection();
+                return data;
+            }
+
             if (!data.deck.models) {
                 data.deck = new CardCollection(data.deck)
             }

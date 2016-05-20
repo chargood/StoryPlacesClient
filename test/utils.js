@@ -1,8 +1,8 @@
 "use strict";
 
-exports.diffCollectionsOnAttributes = diffCollectionsOnAttributes;
+exports.collectionsAreEqualBasedOnIdsAndAttributes = collectionsAreEqualBasedOnIdsAndAttributes;
 
-function diffCollectionsOnAttributes(collectionA, collectionB, testAttribute) {
+function collectionsAreEqualBasedOnIdsAndAttributes(collectionA, collectionB, testAttribute) {
     if (collectionA.length != collectionB.length) {
         return false;
     }
