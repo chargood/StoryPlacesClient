@@ -2,8 +2,10 @@
  * Created by kep1u13 on 05/05/2016.
  */
 
+"use strict";
+
 define([
-    'backbone',
+    'backbone'
 ], function (Backbone) {
     var Card;
 
@@ -22,26 +24,6 @@ define([
 
         getHintDirection: function () {
             return (this.get('hint').direction) ? this.get('hint').direction : "";
-        },
-
-        isVisible: function () {
-            return (this.get('visible')) ? this.get('visible') : false;
-        },
-
-        isSuitable: function () {
-            return (this.get('suitable')) ? this.get('suitable') : false;
-        },
-
-        hasChanged: function () {
-            return (this.get('changed')) ? this.get('changed') : false;
-        },
-
-        getMarker: function () {
-            return this.marker;
-        },
-
-        setMarker: function(marker) {
-            this.marker = marker;
         }
     });
 
