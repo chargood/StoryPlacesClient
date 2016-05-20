@@ -2,6 +2,7 @@ var requirejs = require('requirejs');
 var chai = require('chai');
 var expect = require('chai').expect;
 var sinon = require('sinon');
+var Utils = require('../utils');
 
 describe('Story model', function () {
     'use strict';
@@ -46,7 +47,7 @@ describe('Story model', function () {
 
             var expectedCardCollection = new CardCollection([{"id": 1, "content": "card 1"}, {"id": 2, "content": "card 2"}])
 
-            expect(diffCollectionsOnAttributes(parsedData.deck, expectedCardCollection, 'content')).to.equal(true);
+            expect(Utils.diffCollectionsOnAttributes(parsedData.deck, expectedCardCollection, 'content')).to.equal(true);
             expect(parsedData.id).to.equal("1");
 
 
@@ -56,22 +57,4 @@ describe('Story model', function () {
 
 });
 
-function diffCollectionsOnAttributes(collectionA, collectionB, testAttribute) {
-    if (collectionA.length != collectionB.length) {
-        return false;
-    }
 
-    var tempCollectionA = collectionA.clone();
-    var tempCollectionB = collectionB.clone();
-
-    collectionA.each(function(item) {
-        if (collectionB.findWhere({id: item.id})) {
-            if (!testAttribute || tempCollectionA.get(item.id).get(testAttribute) == tempCollectionB.get(item.id).get(testAttribute)) {
-                tempCollectionA.remove({id: item.id});
-                tempCollectionB.remove({id: item.id});
-            }
-        }
-    });
-
-    return (tempCollectionA.length == 0 && tempCollectionB.length == 0)
-}
