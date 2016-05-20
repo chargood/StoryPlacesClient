@@ -2,6 +2,7 @@ var requirejs = require('requirejs');
 var chai = require('chai');
 var expect = require('chai').expect;
 var sinon = require('sinon');
+var Utils = require('../utils');
 
 describe('Story model', function () {
     'use strict';
@@ -40,12 +41,14 @@ describe('Story model', function () {
 
         it("the parse function should change a deck into a CardCollection", function() {
             var story = new Story()
-            var data = {_id: 1, "deck": [{"content": "card 1"}, {"content": "card 2"}]};
+            var data = {_id: "1", id: "1", "deck": [{"id": 1, "content": "card 1"}, {"id": 2, "content": "card 2"}]};
 
             var parsedData = story.parse(data);
 
-            var expectedCollection = new CardCollection([{"content": "card 1"}, {"content": "card 2"}]);
+            var expectedCardCollection = new CardCollection([{"id": 1, "content": "card 1"}, {"id": 2, "content": "card 2"}])
 
+            expect(Utils.diffCollectionsOnAttributes(parsedData.deck, expectedCardCollection, 'content')).to.equal(true);
+            expect(parsedData.id).to.equal("1");
 
 
         });
@@ -53,3 +56,5 @@ describe('Story model', function () {
     });
 
 });
+
+
