@@ -23,7 +23,7 @@ define([
         },
 
         getHintDirection: function () {
-            return (this.get('hint').direction) ? this.get('hint').direction : "";
+            return (this.get('hint') && this.get('hint').direction) ? this.get('hint').direction : "";
         }
     });
 
