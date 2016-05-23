@@ -37,7 +37,7 @@ requirejs.config({
 });
 
 jsdom.env({
-    html: '',
+    html: '<!doctype html><html><body></body></html>',
     done: function (errors, window) {
         global.window = window;
     }
