@@ -16,10 +16,21 @@ gulp.task('js', function () {
 });
 
 gulp.task('css', function () {
-    return gulp.src(['css/*.css', 'script/libs/bootstrap-3.3.6-dist/css/bootstrap.min.css'])
+    return gulp.src(['css/**/*.css', 'script/libs/bootstrap-3.3.6-dist/css/bootstrap.min.css'])
         .pipe(concat('storyPlaces.css'))
         .pipe(cleanCSS({compatibility: 'ie8'}))
         .pipe(gulp.dest('dist'))
 });
 
 gulp.task('default', ['js', 'css']);
+
+gulp.task('watch', function () {
+    console.log(" ****************************************************************");
+    console.log(" * Setting up watch (ignore \"Finished 'watch'\" message below).");
+    console.log(" * Press ctrl-c to exit.");
+    console.log(" *");
+    console.log(" ");
+
+    gulp.watch('script/**/*.js', ['js']);
+    gulp.watch('css/**/*.css', ['css']);
+});
