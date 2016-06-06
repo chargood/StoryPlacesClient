@@ -33,12 +33,13 @@
     "requirejs": "^2.2.0"
   },
   "devDependencies": {
-    "chai": "^3.5.0",
-    "jquery": "^2.2.3",
+    "gulp": "^3.9.1",
+    "gulp-clean-css": "^2.0.8",
+    "gulp-concat": "^2.6.0",
+    "gulp-rename": "^1.2.2",
+    "gulp-requirejs-optimize": "^1.0.0",
     "jsdom": "^8.4.0",
-    "mocha": "^2.4.5",
     "node-jsdom": "^3.1.5",
-    "requirejs": "^2.2.0",
     "sinon": "^1.17.4"
   }
 }
