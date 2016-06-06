@@ -24,6 +24,9 @@ define([
             this.currentReading.fetch({
                 success: function() {
                     callback(that.currentReading);
+                },
+                failure: function() {
+                    console.log("####  Reading failed to load ####");
                 }
             });
             return false;
