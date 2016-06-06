@@ -7,6 +7,9 @@
 define([
     'leaflet'
 ], function (L) {
+    
+    var tileLayer;
+    
     var Map = {
         leafletMapObject: null,
         defaultLocation: [50.935360, -1.396226],
@@ -19,7 +22,8 @@ define([
             console.log("**  Initialising Map into ", mapDomElement);
 
             this.leafletMapObject = L.map(mapDomElement, {zoomControl: false}).setView(this.defaultLocation, this.defaultZoom);
-            L.tileLayer(this.tileUrl, { attribution: this.attributionText }).addTo(this.leafletMapObject);
+            tileLayer = L.tileLayer(this.tileUrl, { attribution: this.attributionText });
+            tileLayer.addTo(this.leafletMapObject);
 
             if (this.trackGPSLocation) {
                 this.setupGPSTracking();
@@ -78,6 +82,10 @@ define([
 
             marker.bindPopup(text, eventHandler);
             return marker;
+        },
+        
+        refresh: function() {
+            this.leafletMapObject.invalidateSize();
         }
     }
 

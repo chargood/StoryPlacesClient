@@ -37,7 +37,7 @@ define([
 		var that = this;
 
 		// run once
-		GPS.locate();
+		GPS.initiateLocator();
 		//GPS.addGpsUpdateListener(readingView);
 
 		// add handlers
