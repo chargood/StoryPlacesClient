@@ -23,11 +23,11 @@ define([
 
         initialize: function () {
             this.$el.append("<div id='" + this.mapDivId + "' class='mapContainer'></div>");
-            map.bindMapIntoDOM($('#' + this.mapDivId).get(0))
+            map.bindMapIntoDOM($('#' + this.mapDivId).get(0));
         },
 
         newReading: function (reading) {
-            this.markers = new MarkerCollection;
+            this.markers = new MarkerCollection();
             this.reading = reading;
             this.reading.cardStates.on(this.reading.cardStates.eventCardStatesModified, this.cardStatesModifiedEvent, this);
             this.renderAllMarkers();
@@ -77,6 +77,10 @@ define([
             if (marker) {
                 marker.updateMarkerFromCardState(cardState);
             }
+        }, 
+        
+        refresh: function() {
+            map.refresh();
         }
 
 

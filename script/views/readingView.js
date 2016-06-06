@@ -44,9 +44,13 @@ define([
 
             this.listReadingView.render();
             this.mapReadingView.render();
+            
 
             $('.view').hide();
             this.$el.show();
+            
+            
+            this.mapReadingView.refresh();
         },
 
         newReading: function(reading) {
