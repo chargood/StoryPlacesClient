@@ -6,7 +6,6 @@ require.config({
         underscore: 'libs/underscore-1.8.3.min',
         backbone: 'libs/backbone-1.3.3.min',
         backbone_dual: 'libs/Backbone.dualStorage-1.4.0/backbone.dualstorage.amd',
-        geolocator: 'libs/geolocator.amd',
         moment: 'libs/moment.min',
         leaflet: 'libs/leaflet',
         SPGPS: 'utils/SPGPS',
