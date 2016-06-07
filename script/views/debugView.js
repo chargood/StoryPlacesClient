@@ -34,6 +34,18 @@ define([
                 this.addDebugLocButton(50.934558, -1.397104, "susu");
                 this.addDebugLocButton(50.934707, -1.398295, "garden");
                 this.addDebugLocButton(50.935633, -1.399089, "health");
+				
+				/*this.addDebugLocButton(50.896933,-1.394094,"canute_chambers")
+				this.addDebugLocButton(50.900078,-1.405502,"simnel_street")
+				this.addDebugLocButton(50.900069,-1.405799,"the_undercroft")
+				this.addDebugLocButton(50.897006,-1.404603,"french_garden")
+				this.addDebugLocButton(50.897545,-1.392040,"frog_and_frigate")
+				this.addDebugLocButton(50.897545,-1.392040,"victoria_park_LOCUNKNOWN")
+				this.addDebugLocButton(50.898041,-1.396409,"Terminus_Terrace")
+				this.addDebugLocButton(50.897960,-1.392375,"emigrants_home")
+				this.addDebugLocButton(50.897479,-1.393536,"royalcrescent_albertroad")
+				this.addDebugLocButton(50.897454,-1.393620,"cafe")
+				this.addDebugLocButton(50.896843,-1.398811,"dockgate4")*/
 
             }
         },
