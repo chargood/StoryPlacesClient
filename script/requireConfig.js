@@ -23,10 +23,13 @@ require.config({
         Marker: 'models/marker',
         StoryRepository: 'repositories/storyRepository',
         ReadingRepository: 'repositories/readingRepository',
+        MediaCacheRepository: 'repositories/mediaCacheRepository',
         CardCollection: 'collections/cardCollection',
         CardStateCollection: 'collections/cardStateCollection',
         StoryCollection: 'collections/StoryCollection',
-        MarkerCollection: 'collections/MarkerCollection'
+        MarkerCollection: 'collections/MarkerCollection',
+        CacheManager: 'utils/cacheManager',
+        
     }
 });
 
