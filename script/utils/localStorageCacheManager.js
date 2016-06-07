@@ -7,7 +7,7 @@ define([], function(){
         localStorage.clear();
     };
     
-    var add = function(key, value) {
+    var set = function(key, value) {
         localStorage.setItem(key, value);
     };
     
@@ -16,7 +16,7 @@ define([], function(){
     };
     
     return {        
-        add: add,
+        set: set,
         clear: clear,
         get: get
     };

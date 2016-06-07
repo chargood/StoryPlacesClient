@@ -3,7 +3,7 @@ define(['CacheManager', 'underscore', 'jquery'], function (CacheManager, _, $) {
 
     var cacheFull = false;
 
-    var buildImageKey = function (storyId, imageId) {
+    var buildMediaKey = function (storyId, imageId) {
         return storyId + ':' + imageId;
     };
 
@@ -20,7 +20,7 @@ define(['CacheManager', 'underscore', 'jquery'], function (CacheManager, _, $) {
             }
         };
     };
-
+    
     var populateCache = function (images) {
 
         // clear any existing cache
@@ -29,40 +29,36 @@ define(['CacheManager', 'underscore', 'jquery'], function (CacheManager, _, $) {
 
         _.each(images, function (image) {
 
-            var key = buildImageKey(image.storyId, image.mediaId);
-            
-            // if not already in cache
-            if (CacheManager.get(key) === undefined) {
-                var settings = buildSettingsObject(image);
-                var url = buildUrl(image);
-                $.ajax(url, settings)
-                    .done(function (data) {
-                        if (!cacheFull) {
-                            try {
-                                CacheManager.set(key, data);
-                            } catch (exception) {
-                                if (exception.name === 'QuotaExceededError' ||
-                                    exception.name === 'NS_ERROR_DOM_QUOTA_REACHED') {
-                                    // Fallback code comes here.
-                                    cacheFull = true;
-                                }
+            var key = buildMediaKey(image.storyId, image.mediaId);
+
+            var settings = buildSettingsObject(image);
+            var url = buildUrl(image);
+            $.ajax(url, settings)
+                .done(function (data) {
+                    if (!cacheFull) {
+                        try {
+                            CacheManager.set(key, data);
+                        } catch (exception) {
+                            if (exception.name === 'QuotaExceededError' || exception.name === 'NS_ERROR_DOM_QUOTA_REACHED') {
+                                cacheFull = true;
                             }
                         }
-                    })
-                    .fail(function () {
-                        console.log("Failed to get media storyId:" + image.storyId + " mediaId:" + image.mediaId);                        
-                    });
-            }
+                    }
+                })
+                .fail(function (err) {
+                    console.log("Failed to get media storyId:" + image.storyId + " mediaId:" + image.mediaId);
+                });
+
         });
     };
 
     var getCacheItem = function (storyId, imageId) {
-        var key = buildImageKey(storyId, imageId);
+        var key = buildMediaKey(storyId, imageId);
         return CacheManager.get(key);
     };
 
     return {
-        populateCache: populateCache,
-        getCacheItem: getCacheItem
+        populate: populateCache,
+        getItem: getCacheItem
     };
 });

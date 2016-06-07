@@ -28,7 +28,7 @@ require.config({
         CardStateCollection: 'collections/cardStateCollection',
         StoryCollection: 'collections/StoryCollection',
         MarkerCollection: 'collections/MarkerCollection',
-        CacheManager: 'utils/cacheManager',
+        CacheManager: 'utils/localStorageCacheManager',
         
     }
 });
