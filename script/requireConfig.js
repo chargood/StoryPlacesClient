@@ -25,8 +25,8 @@ require.config({
         ReadingRepository: 'repositories/readingRepository',
         CardCollection: 'collections/cardCollection',
         CardStateCollection: 'collections/cardStateCollection',
-        StoryCollection: 'collections/StoryCollection',
-        MarkerCollection: 'collections/MarkerCollection'
+        StoryCollection: 'collections/storyCollection',
+        MarkerCollection: 'collections/markerCollection'
     }
 });
 

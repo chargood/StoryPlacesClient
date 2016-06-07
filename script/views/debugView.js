@@ -24,7 +24,7 @@ define([
 
             if (this.$el.find('#buttons').html() === '') {
 
-                this.addDebugLocButton(50.93679, -1.396202, "32north");
+                /*this.addDebugLocButton(50.93679, -1.396202, "32north");
                 this.addDebugLocButton(50.937385, -1.397039, "gower");
                 this.addDebugLocButton(50.936195, -1.396707, "interchange");
                 this.addDebugLocButton(50.936181, -1.397393, "nuffnorth");
@@ -33,9 +33,9 @@ define([
                 this.addDebugLocButton(50.935106, -1.395923, "library");
                 this.addDebugLocButton(50.934558, -1.397104, "susu");
                 this.addDebugLocButton(50.934707, -1.398295, "garden");
-                this.addDebugLocButton(50.935633, -1.399089, "health");
+                this.addDebugLocButton(50.935633, -1.399089, "health");*/
 				
-				/*this.addDebugLocButton(50.896933,-1.394094,"canute_chambers")
+				this.addDebugLocButton(50.896933,-1.394094,"canute_chambers")
 				this.addDebugLocButton(50.900078,-1.405502,"simnel_street")
 				this.addDebugLocButton(50.900069,-1.405799,"the_undercroft")
 				this.addDebugLocButton(50.897006,-1.404603,"french_garden")
@@ -45,7 +45,7 @@ define([
 				this.addDebugLocButton(50.897960,-1.392375,"emigrants_home")
 				this.addDebugLocButton(50.897479,-1.393536,"royalcrescent_albertroad")
 				this.addDebugLocButton(50.897454,-1.393620,"cafe")
-				this.addDebugLocButton(50.896843,-1.398811,"dockgate4")*/
+				this.addDebugLocButton(50.896843,-1.398811,"dockgate4")
 
             }
         },
