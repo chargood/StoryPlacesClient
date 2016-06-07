@@ -2,7 +2,8 @@ define([
     'jquery',
     'underscore',
     'backbone',
-], function ($, _, Backbone) {
+    'MediaCacheRepository'
+], function ($, _, Backbone, MediaCacheRepository) {
 
     var CardView;
 
@@ -30,18 +31,47 @@ define([
 
             this.reading.on(this.reading.eventStoryLoaded, function() {
                 that.renderCard();
-            })
+            });
+        },
+        
+        replaceImageTags: function(templateText, storyId) {
+            // find any image tags
+            var wrappedTemplateText = $(templateText);
+            var imageElements = wrappedTemplateText.find('img');
+            _.each(imageElements, function(imageElement){
+                // get the media id
+                var mediaId = $(imageElement).data("media-id");
+                var mediaData = MediaCacheRepository.getItem(storyId, mediaId);
+                var source;
+                
+                if (mediaData != undefined) {
+                    // media is available in cache - build source based on cache content
+                    var mediaObject = JSON.parse(mediaData);
+                    source = "data:" + mediaObject.contentType + ";base64," + mediaObject.content;
+                } else {
+                    // media is not available in cache - build source to download image
+                    source = "/storyplaces/story/" + storyId + "/media/" + mediaId;
+                }
+                
+                $(imageElement).attr("src", source);
+            });
+            
+            return wrappedTemplateText;
         },
 
         renderCard: function() {
             var story = this.reading.getStory();
             var card = story.getCard(this.cardId);
 
-            this.$el.html(this.template({
+            var compiledTemplate = this.template({
                 story: story,
                 reading: this.reading,
                 card: card
-            }));
+            });
+            
+            compiledTemplate = this.replaceImageTags(compiledTemplate, story.id);
+
+            this.$el.html(compiledTemplate).find();
         },
 
         template: _.template(

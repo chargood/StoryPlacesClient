@@ -42,10 +42,12 @@ define(['CacheManager', 'underscore', 'jquery'], function (CacheManager, _, $) {
                 var url = buildUrl(storyId, mediaId);
                 
                 $.ajax(url, settings)
+                    
                     .done(function (data) {
                         if (!cacheFull) {
                             try {
-                                CacheManager.set(key, data);
+                                var dataString = JSON.stringify(data);
+                                CacheManager.set(key, dataString);
                             } catch (exception) {
                                 if (exception.name === 'QuotaExceededError' || exception.name === 'NS_ERROR_DOM_QUOTA_REACHED') {
                                     cacheFull = true;
