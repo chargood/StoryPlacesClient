@@ -15,8 +15,7 @@ define(['CacheManager', 'underscore', 'jquery'], function (CacheManager, _, $) {
         return {
             method: 'GET',
             headers: {
-                Accept: "text/plain; charset=utf-8",
-                "Content-Type": "text/plain; charset=utf-8"
+                Accept: "application/json; charset=utf-8"
             }
         };
     };

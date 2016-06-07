@@ -1,4 +1,5 @@
 // provides configurations for require.js
+'use strict';
 
 require.config({
     paths: {
