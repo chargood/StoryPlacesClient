@@ -3,8 +3,9 @@
 define([
     'underscore',
     'backbone',
-    'CardCollection'
-], function (_, Backbone, CardCollection) {
+    'CardCollection',
+    'MediaCacheRepository'
+], function (_, Backbone, CardCollection, MediaCache) {
     var Story;
 
     Story = Backbone.Model.extend({
@@ -34,6 +35,14 @@ define([
 
         save: function () {
             console.log("Preventing saving of a story");
+        },
+
+        cacheMedia: function() {
+            // attempts to cache media related to this story
+            var storyId = this.get("id");
+            var mediaIds = this.get("cachedMediaIds");
+
+            MediaCache.populate(storyId, mediaIds);
         }
     });
 
