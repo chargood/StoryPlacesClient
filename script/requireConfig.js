@@ -16,6 +16,7 @@ require.config({
         mapReadingView: 'views/mapReadingView',
         listReadingView: 'views/listReadingView',
         cardView: 'views/cardView',
+        errorView: 'views/errorView',
         readingView: 'views/readingView',
         Card: 'models/card',
         CardState: 'models/cardState',
@@ -27,10 +28,9 @@ require.config({
         MediaCacheRepository: 'repositories/mediaCacheRepository',
         CardCollection: 'collections/cardCollection',
         CardStateCollection: 'collections/cardStateCollection',
-        StoryCollection: 'collections/StoryCollection',
-        MarkerCollection: 'collections/MarkerCollection',
-        CacheManager: 'utils/localStorageCacheManager',
-        
+        StoryCollection: 'collections/storyCollection',
+        MarkerCollection: 'collections/markerCollection',
+        CacheManager: 'utils/localStorageCacheManager'        
     }
 });
 
