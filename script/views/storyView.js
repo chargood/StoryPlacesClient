@@ -3,7 +3,7 @@ define([
     'underscore',
     'backbone',
     'Story',
-    'models/storyReadingList',
+    'storyReadingList',
     'Reading'
 ], function ($,_, Backbone, Story, StoryReadingList, Reading) {
     var StoryView;

@@ -2,17 +2,16 @@ define([
     'jquery',
     'underscore',
     'backbone',
-    'views/storyListView',
-    'views/storyView',
+    'storyListView',
+    'storyView',
     'readingView',
     'cardView',
-    'errorView',
-    'views/debugView',
-    'models/user',
-    'utils/SPGPS',
+    'networkErrorView',
+    'debugView',
+    'User',
     'StoryRepository',
     'ReadingRepository'
-], function ($, _, Backbone, StoryListView, StoryView, ReadingView, CardView, ErrorView, DebugView, User, GPS, StoryRepository, ReadingRepository) {
+], function ($, _, Backbone, StoryListView, StoryView, ReadingView, CardView, NetworkErrorView, DebugView, User, StoryRepository, ReadingRepository) {
 
     var Router = Backbone.Router.extend({
         routes: {
@@ -20,27 +19,21 @@ define([
             'story/:storyId': 'viewStory',
             'reading/:readingId': 'playReading',
             //'deck/:id': 'playReadingDeck',
-            'card/:readingId/:cardId': 'playReadingCard'
+            'card/:readingId/:cardId': 'playReadingCard',
+            'error/(:type)' : 'error',
+            'error/(:type)/(:subtype)' : 'error'
         }
     });
 
 
     var initialize = function () {
-
         var router = new Router();
         var debugView = DebugView.getDebug();
         var readingView = new ReadingView({el: document.getElementById('readingView')});
         var cardView = new CardView({el: document.getElementById('cardView')});
         var storyView = new StoryView({el: document.getElementById('storyView')});
         var storyListView = new StoryListView({el: document.getElementById('storyListView')});
-        var errorView = new ErrorView({el: document.getElementById('errorView')});
-
-
-        var that = this;
-
-        // run once
-        GPS.initiateLocator();
-        //GPS.addGpsUpdateListener(readingView);
+        var networkErrorView = new NetworkErrorView({el: document.getElementById('networkErrorView')});
 
         // add handlers
         router.on('route:home', function () {
@@ -55,9 +48,8 @@ define([
                     console.log('View Story Route');
                     storyView.render(story);
                 },
-                function (err) {
-                    console.log('Error!');
-                    errorView.render(err)
+                function () {
+                    router.navigate('/error/network/story', {trigger:true});
                 });
 
             debugView.render();
@@ -69,9 +61,8 @@ define([
                     console.log('Play Reading Route');
                     readingView.render(reading);
                 },
-                function (err) {
-                    console.log('Error!');
-                    errorView.render(err)
+                function () {
+                    router.navigate('/error/network/reading', {trigger:true});
                 }
             );
 
@@ -85,14 +76,23 @@ define([
             debugView.render();
         });
 
+        router.on('route:error', function (type, subtype) {
+            switch (type) {
+                case "network":
+                    networkErrorView.render(subtype);
+                    break;
+                default:
+                    // Default error handler
+            }
+        });
+
         router.on('route:playReadingCard', function (readingId, cardId) {
             ReadingRepository.getReading(readingId,
                 function (reading) {
                     cardView.render(reading, cardId);
                 },
-                function (err) {
-                    console.log('Error!');
-                    errorView.render(err)
+                function () {
+                    router.navigate('/error/network/card', {trigger:true});
                 });
 
             //readingView = new ReadingView({id:id});
@@ -111,6 +111,8 @@ define([
         }
 
         Backbone.history.start();
+
+        return router;
     };
 
     return {

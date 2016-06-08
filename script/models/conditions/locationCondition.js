@@ -1,8 +1,8 @@
 define([
     'underscore',
     'backbone',
-    'utils/SPGPS',
-    'views/debugView'
+    'SPGPS',
+    'debugView'
 ], function (_, Backbone, GPS, DebugView) {
 
     var LocationCondition = Backbone.Model.extend({
