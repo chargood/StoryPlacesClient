@@ -3,12 +3,12 @@ define([
     'backbone',
     'StoryRepository',
     'CardStateCollection',
-    'models/conditions/comparisonCondition',
-    'models/conditions/locationCondition',
-    'models/conditions/logicalCondition',
-    'models/conditions/timeRangeCondition',
-    'models/conditions/timePassedCondition',
-    'models/storyFunction'
+    'comparisonCondition',
+    'locationCondition',
+    'logicalCondition',
+    'timeRangeCondition',
+    'timePassedCondition',
+    'storyFunction'
 ], function (_,
              Backbone,
              StoryRepository,

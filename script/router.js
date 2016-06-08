@@ -2,13 +2,13 @@ define([
     'jquery',
     'underscore',
     'backbone',
-    'views/storyListView',
-    'views/storyView',
+    'storyListView',
+    'storyView',
     'readingView',
     'cardView',
     'networkErrorView',
-    'views/debugView',
-    'models/user',
+    'debugView',
+    'User',
     'StoryRepository',
     'ReadingRepository'
 ], function ($, _, Backbone, StoryListView, StoryView, ReadingView, CardView, NetworkErrorView, DebugView, User, StoryRepository, ReadingRepository) {
