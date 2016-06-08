@@ -41,7 +41,7 @@ define([
         replaceImageTags: function (templateText, storyId) {
             // find any image tags
             var wrappedTemplateText = $(templateText);
-            var imageElements = wrappedTemplateText.find('img');
+            var imageElements = wrappedTemplateText.find('img[data-media-id]');
             var that = this;
             _.each(imageElements, function (imageElement) {
                 // get the media id
@@ -66,7 +66,7 @@ define([
 
         replaceAudioTags: function (templateText, storyId) {
             var wrappedTemplateText = $(templateText);
-            var audioElements = wrappedTemplateText.find('audio');
+            var audioElements = wrappedTemplateText.find('audio[data-media-id]');
             var that = this;
 
             _.each(audioElements, function (audioElement) {
