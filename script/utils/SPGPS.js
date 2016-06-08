@@ -1,6 +1,6 @@
 define(['jquery'], function ($) {
 
-    var gpsOptions = {enableHighAccuracy: true, timeout: 10000, maximumAge: 10000};
+    var gpsOptions = {enableHighAccuracy: true, timeout: 20000, maximumAge: 10000};
 
     var onGeoSuccess = function (location) {
         var lat = location.coords.latitude;
@@ -15,8 +15,16 @@ define(['jquery'], function ($) {
 
         var event = document.createEvent('Event');
         event.initEvent('gpsupdate', true, true);
-        $('#gpsErrorBar').hide();
+        hideGPSWarning();
         document.dispatchEvent(event);
+    };
+
+    var showGPSWarning = function () {
+        $('#gpsErrorBar').show();
+    };
+
+    var hideGPSWarning = function () {
+        $('#gpsErrorBar').hide();
     };
 
     var deg2rad = function (deg) {
@@ -28,14 +36,14 @@ define(['jquery'], function ($) {
         var dLat = deg2rad(lat2 - lat1);  // deg2rad below
         var dLon = deg2rad(lon2 - lon1);
         var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-                Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
-                Math.sin(dLon / 2) * Math.sin(dLon / 2);
+            Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+            Math.sin(dLon / 2) * Math.sin(dLon / 2);
         var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
         var d = R * c; // Distance in km
         return d;
     };
 
-    var testLocator = function(successCallback, errorCallback) {
+    var testLocator = function (successCallback, errorCallback) {
 
         if (!navigator.geolocation) {
             errorCallback();
@@ -45,9 +53,8 @@ define(['jquery'], function ($) {
     };
 
     var initiateLocator = function () {
-        navigator.geolocation.watchPosition(onGeoSuccess, function() {
-            $('#gpsErrorBar').show();
-        }, gpsOptions);
+        navigator.geolocation.getCurrentPosition(onGeoSuccess, showGPSWarning, gpsOptions);
+        navigator.geolocation.watchPosition(onGeoSuccess, showGPSWarning, gpsOptions);
     };
 
     // return functions as an object
