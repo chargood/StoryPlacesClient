@@ -13,7 +13,7 @@ define(['CacheManager', 'underscore', 'jquery'], function (CacheManager, _, $) {
     };
 
     var buildUrl = function (storyId, mediaId) {
-        return 'storyplaces/story/' + storyId + '/media/' + mediaId;
+        return 'storyplaces/story/' + storyId + '/media/' + mediaId + '?data';
     };
 
     var buildSettingsObject = function () {
