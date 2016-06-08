@@ -3,11 +3,11 @@ define(['CacheManager', 'underscore', 'jquery'], function (CacheManager, _, $) {
 
     var cacheFull = false;
     var keyPrefix = "cache-manager:";
-    
-    var buildStoryKey = function(storyId) {
+
+    var buildStoryKey = function (storyId) {
         return keyPrefix + storyId;
     };
-    
+
     var buildMediaKey = function (storyId, mediaId) {
         return buildStoryKey(storyId) + ':' + mediaId;
     };
@@ -25,6 +25,30 @@ define(['CacheManager', 'underscore', 'jquery'], function (CacheManager, _, $) {
         };
     };
 
+    var populateCacheItem = function (storyId, mediaId, cacheKey) {
+        var settings = buildSettingsObject(mediaId);
+        var url = buildUrl(storyId, mediaId);
+
+        $.ajax(url, settings)
+
+            .done(function (data) {
+                if (!cacheFull) {
+                    try {
+                        var dataString = JSON.stringify(data);
+                        CacheManager.set(cacheKey, dataString);
+                    } catch (exception) {
+                        if (exception.name === 'QuotaExceededError' || exception.name === 'NS_ERROR_DOM_QUOTA_REACHED') {
+                            cacheFull = true;
+                        }
+                    }
+                }
+            })
+
+            .fail(function (err) {
+                console.log("Failed to get media storyId:" + storyId + " mediaId:" + mediaId);
+            });
+    };
+
     var populateCache = function (storyId, mediaIds) {
 
         // clear any existing cache for other stories
@@ -37,28 +61,7 @@ define(['CacheManager', 'underscore', 'jquery'], function (CacheManager, _, $) {
             var key = buildMediaKey(storyId, mediaId);
 
             if (CacheManager.get(key) == undefined) {
-                
-                var settings = buildSettingsObject(mediaId);
-                var url = buildUrl(storyId, mediaId);
-                
-                $.ajax(url, settings)
-                    
-                    .done(function (data) {
-                        if (!cacheFull) {
-                            try {
-                                var dataString = JSON.stringify(data);
-                                CacheManager.set(key, dataString);
-                            } catch (exception) {
-                                if (exception.name === 'QuotaExceededError' || exception.name === 'NS_ERROR_DOM_QUOTA_REACHED') {
-                                    cacheFull = true;
-                                }
-                            }
-                        }
-                    })
-                    
-                    .fail(function (err) {
-                        console.log("Failed to get media storyId:" + storyId + " mediaId:" + mediaId);
-                    });
+                populateCacheItem(storyId, mediaId, key);
             }
         });
     };
