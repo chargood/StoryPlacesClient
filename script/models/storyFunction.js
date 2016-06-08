@@ -43,6 +43,8 @@ define([
         incrementfunction: function (context, key, value) {
             if (!isNaN(parseInt(context.getVariable(key))) && !isNaN(parseInt(value)))
                 context.setVariable(key, (parseInt(context.getVariable(key)) + parseInt(value)));
+			if(context.getVariable(key)==undefined)
+				context.setVariable(key,parseInt(value))
         }
 
     });
