@@ -25,6 +25,7 @@ define([
                 success: function() {
                     that.currentStory = newStory;
                     successCallback(that.currentStory);
+                    that.currentStory.cacheMedia();
                 },
                 error: function(err, response) {
                     that.currentStory = undefined;
