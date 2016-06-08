@@ -7,12 +7,11 @@ define([
     'readingView',
     'cardView',
     'networkErrorView',
-    'gpsErrorView',
     'views/debugView',
     'models/user',
     'StoryRepository',
     'ReadingRepository'
-], function ($, _, Backbone, StoryListView, StoryView, ReadingView, CardView, NetworkErrorView, GPSErrorView, DebugView, User, StoryRepository, ReadingRepository) {
+], function ($, _, Backbone, StoryListView, StoryView, ReadingView, CardView, NetworkErrorView, DebugView, User, StoryRepository, ReadingRepository) {
 
     var Router = Backbone.Router.extend({
         routes: {
@@ -35,7 +34,6 @@ define([
         var storyView = new StoryView({el: document.getElementById('storyView')});
         var storyListView = new StoryListView({el: document.getElementById('storyListView')});
         var networkErrorView = new NetworkErrorView({el: document.getElementById('networkErrorView')});
-        var gpsErrorView = new GPSErrorView({el: document.getElementById('gpsErrorView')});
 
         // add handlers
         router.on('route:home', function () {
@@ -82,9 +80,6 @@ define([
             switch (type) {
                 case "network":
                     networkErrorView.render(subtype);
-                    break;
-                case "gps":
-                    gpsErrorView.render(subtype);
                     break;
                 default:
                     // Default error handler

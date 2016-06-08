@@ -1,4 +1,4 @@
-define([], function () {
+define(['jquery'], function ($) {
 
     var gpsOptions = {enableHighAccuracy: true, timeout: 10000, maximumAge: 10000};
 
@@ -15,6 +15,7 @@ define([], function () {
 
         var event = document.createEvent('Event');
         event.initEvent('gpsupdate', true, true);
+        $('#gpsErrorBar').hide();
         document.dispatchEvent(event);
     };
 
@@ -43,8 +44,10 @@ define([], function () {
         navigator.geolocation.getCurrentPosition(successCallback, errorCallback, gpsOptions);
     };
 
-    var initiateLocator = function (errorCallback) {
-        navigator.geolocation.watchPosition(onGeoSuccess, errorCallback, gpsOptions);
+    var initiateLocator = function () {
+        navigator.geolocation.watchPosition(onGeoSuccess, function() {
+            $('#gpsErrorBar').show();
+        }, gpsOptions);
     };
 
     // return functions as an object

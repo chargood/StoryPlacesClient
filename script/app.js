@@ -16,11 +16,7 @@ define([
     function startup() {
         var self = this;
         this.router = Router.initialize();
-
-        SPGPS.initiateLocator(function (error) {
-            console.log(error);
-            self.router.navigate('/error/gps', {trigger:true});
-        });
+        SPGPS.initiateLocator();
     }
 
     function noGPS(error) {

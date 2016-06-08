@@ -17,7 +17,6 @@ require.config({
         listReadingView: 'views/listReadingView',
         cardView: 'views/cardView',
         networkErrorView: 'views/networkErrorView',
-        gpsErrorView: 'views/gpsErrorView',
         readingView: 'views/readingView',
         Card: 'models/card',
         CardState: 'models/cardState',
