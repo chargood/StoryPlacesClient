@@ -1,7 +1,7 @@
 define([
     'underscore',
     'backbone',
-    'utils/SPGPS',
+    'SPGPS',
     'views/debugView'
 ], function (_, Backbone, GPS, DebugView) {
 
