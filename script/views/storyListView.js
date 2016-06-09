@@ -35,24 +35,15 @@ define([
         },
 
         template: _.template(
-            "<h2>Story List</h2>"
+            "<img src='images/logo/StoryPlaces_full_800x330.png' width='100%'><h2 class='text-center'><small>Please select from a story below</small></h2>"
             + "<table class='table table-hover'>"
-            + "<thead>"
-            + "<tr>"
-            + "<th>Story</th>"
-            + "<th></th>"
-            + "</tr>"
-            + "</thead>"
             + "<tbody>"
             + "<% storyList.each(function(story) { %>"
-            + "<tr>"
-            + "<td><%=story.get('name') %></td>"
-            + "<td><a href='#/story/<%= story.id %>'> load </a></td>"
-            + "</tr>"
+            + "<tr><td><a href='#/story/<%= story.id %>'><%=story.get('name') %></a></td></tr>"
             + "<%});%>"
             + "</tbody>"
             + "</table>"
-            + "<input class='updateList' type='button' class='btn btn-default' value='Update Story List'/>"
+            + "<button type='button' class='btn btn-default'><span class='glyphicon glyphicon-refresh'></span> Update Story List</button>"
         ),
     });
 

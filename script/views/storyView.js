@@ -18,7 +18,7 @@ define([
 
         story: undefined,
 
-        initialize: function() {
+        initialize: function () {
             this.ErrorView = ErrorView;
         },
 
@@ -54,9 +54,7 @@ define([
 
         template: _.template(
             "<h2><%= _.escape(story.get('name')) %></h2>"
-            + "<input id='newReadingBtn' type='button' class='btn btn-default' value='Start a new reading'/>"
-            + "<input id='refreshReadingsBtn' type='button' class='btn btn-default' value='Refresh readings'/>"
-            + "<h3>Readings</h3>"
+            + +"<h3>Readings</h3>"
             + "<table class='table table-hover'>"
             + "<% readingList.each(function(reading) { %>"
             + "<tr>"
@@ -67,6 +65,8 @@ define([
             + "<% if(readingList.size()==0) { %>"
             + "<p>no readings</p>"
             + "<% } %>"
+            + "<input id='newReadingBtn' type='button' class='btn btn-default' value='Start a new reading'/>"
+            + "<input id='refreshReadingsBtn' type='button' class='btn btn-default' value='Refresh readings'/>"
         ),
 
 
