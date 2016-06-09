@@ -48,6 +48,7 @@ define([
 
                 function () {
                     console.error("Can not fetch readinglist");
+                    ErrorView.render("Unable to load story, please check your internet connection and try again.");
                 }
             );
         },
