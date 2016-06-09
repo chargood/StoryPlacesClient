@@ -3,81 +3,86 @@ define([
     'underscore',
     'backbone',
     'Story',
-    'storyReadingList',
+    'StoryReadingCollectionRepository',
     'Reading'
-], function ($,_, Backbone, Story, StoryReadingList, Reading) {
+], function ($, _, Backbone, Story, StoryReadingCollectionRepository, Reading) {
     var StoryView;
 
     StoryView = Backbone.View.extend({
         events: {
-            'click .newReadingBtn': 'newReading',
-            'click .newCustomReadingBtn': 'newCustomReading',
+            'click #newReadingBtn': 'newReading',
+            'click #newCustomReadingBtn': 'newCustomReading',
+            'click #refreshReadingsBtn': 'redraw'
         },
 
-        storyId: undefined,
+        story: undefined,
 
-        initialize: function () {
-
+        redraw: function () {
+            if (this.story) {
+                this.render(this.story);
+            }
         },
 
         render: function (story) {
             var that = this;
 
-            this.storyId = story.id;
+            this.story = story;
 
-            var readingList = new StoryReadingList(story.id, localStorage.getItem("User-ID"));
-            readingList.fetch({
-                success: function (readingList) {
-                    var template = _.template($('#storytemplate').html());
 
+
+            StoryReadingCollectionRepository.getStoryReadingCollection(
+                this.story.id,
+                function (readingList) {
                     $('.view').hide();
 
-                    that.$el.html(template({
-                        story: story,
+                    that.$el.html(that.template({
+                        story: that.story,
                         readingList: readingList
-                    })).show();;
+                    })).show();
+
                 },
 
-                failure: function() {
+                function () {
                     console.error("Can not fetch readinglist");
                 }
-            });
+            );
         },
+
+        template: _.template(
+            "<h2><%= _.escape(story.get('name')) %></h2>"
+            + "<input id='newReadingBtn' type='button' class='btn btn-default' value='Start a new reading'/>"
+            + "<input id='refreshReadingsBtn' type='button' class='btn btn-default' value='Refresh readings'/>"
+            + "<h3>Readings</h3>"
+            + "<table class='table table-hover'>"
+            + "<% readingList.each(function(reading) { %>"
+            + "<tr>"
+            + "<td><%= _.escape(reading.get('name')) %></td>"
+            + "<td><a href='#/reading/<%= _.escape(reading.id) %>'><input class='openReadingBtn' type='button' class='btn btn-default' value='Open'/></a></td>"
+            + "<% }); %>"
+            + "</table>"
+            + "<% if(readingList.size()==0) { %>"
+            + "<p>no readings</p>"
+            + "<% } %>"
+        ),
+
 
         //TODO:  Move all the following to a reading collection
 
         newReading: function () {
             var that = this;
-            console.log("New Reading");
-            var readingDetails = {story: this.storyId, user: localStorage.getItem("User-ID")};
 
-            //var readinglist = new ReadingList();
-            var readinglist = new StoryReadingList(that.storyId, localStorage.getItem("User-ID"));
-
-            readinglist.fetch({
-                success: function (readinglist) {
-                    console.log("got reading list");
-                    /*var readingcount = 1
-                     readinglist.each(function(reading){
-                     if(reading.get("story")==that.storyId){
-                     readingcount++
-                     }
-                     });*/
-                    var readingcount = readinglist.length + 1;
-                    readingDetails.name = "Reading " + readingcount;
-                    var reading = new Reading();
-                    reading.save(readingDetails, {
-                        success: function (reading) {
-                            console.log("reading saved");
-                            Backbone.history.navigate('', {trigger: true});
+            StoryReadingCollectionRepository.getStoryReadingCollection(
+                this.story.id,
+                function(storyRC) {
+                    storyRC.newReading(
+                        function() {
+                            that.redraw()
                         },
-                        error: function (model, response) {
-                            console.log("reading error");
-                            console.log(response);
+                        function() {
+                            // Failure function
                         }
-                    });
-                }
-            });
+                    );
+        })
         },
         newCustomReading: function () {
             console.log("New Custom Reading");

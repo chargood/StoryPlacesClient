@@ -31,7 +31,6 @@ require.config({
         Reading: 'models/reading',
         Marker: 'models/marker',
         User: 'models/user',
-        storyReadingList: 'models/storyReadingList',
 
         comparisonCondition: 'models/conditions/comparisonCondition',
         locationCondition: 'models/conditions/locationCondition',
@@ -42,12 +41,15 @@ require.config({
 
         StoryRepository: 'repositories/storyRepository',
         ReadingRepository: 'repositories/readingRepository',
+        StoryReadingCollectionRepository: 'repositories/storyReadingCollectionRepository',
         MediaCacheRepository: 'repositories/mediaCacheRepository',
 
         CardCollection: 'collections/cardCollection',
         CardStateCollection: 'collections/cardStateCollection',
         StoryCollection: 'collections/storyCollection',
         MarkerCollection: 'collections/markerCollection',
+        StoryReadingCollection: 'collections/storyReadingCollection',
+
         CacheManager: 'utils/localStorageCacheManager'        
     }
 });
