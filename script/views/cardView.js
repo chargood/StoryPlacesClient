@@ -29,37 +29,61 @@ define([
                 this.renderCard();
             }
 
-            this.reading.on(this.reading.eventStoryLoaded, function() {
+            this.reading.on(this.reading.eventStoryLoaded, function () {
                 that.renderCard();
             });
         },
-        
-        replaceImageTags: function(templateText, storyId) {
+
+        buildMediaSource: function (storyId, mediaId) {
+            return "/storyplaces/story/" + storyId + "/media/" + mediaId;
+        },
+
+        replaceImageTags: function (templateText, storyId) {
             // find any image tags
             var wrappedTemplateText = $(templateText);
-            var imageElements = wrappedTemplateText.find('img');
-            _.each(imageElements, function(imageElement){
+            var imageElements = wrappedTemplateText.find('img[data-media-id]');
+            var that = this;
+            _.each(imageElements, function (imageElement) {
                 // get the media id
                 var mediaId = $(imageElement).data("media-id");
                 var mediaData = MediaCacheRepository.getItem(storyId, mediaId);
                 var source;
-                
+
                 if (mediaData != undefined) {
                     // media is available in cache - build source based on cache content
                     var mediaObject = JSON.parse(mediaData);
                     source = "data:" + mediaObject.contentType + ";base64," + mediaObject.content;
                 } else {
                     // media is not available in cache - build source to download image
-                    source = "/storyplaces/story/" + storyId + "/media/" + mediaId;
+                    source = that.buildMediaSource(storyId, mediaId);
                 }
-                
+
                 $(imageElement).attr("src", source);
             });
-            
+
             return wrappedTemplateText;
         },
 
-        renderCard: function() {
+        replaceAudioTags: function (templateText, storyId) {
+            var wrappedTemplateText = $(templateText);
+            var audioElements = wrappedTemplateText.find('audio[data-media-id]');
+            var that = this;
+
+            _.each(audioElements, function (audioElement) {
+                // get the media id and build the source path
+                var wrappedAudioElement = $(audioElement);
+                var mediaId = wrappedAudioElement.data("media-id");
+                var source = that.buildMediaSource(storyId, mediaId);
+
+                wrappedAudioElement.attr("controls", "");
+                var sourceElement = $('<source>').attr("src", source).attr("type", "audio/mpeg");
+                wrappedAudioElement.append(sourceElement);
+            });
+
+            return wrappedTemplateText;
+        },
+
+        renderCard: function () {
             var story = this.reading.getStory();
             var card = story.getCard(this.cardId);
 
@@ -68,8 +92,9 @@ define([
                 reading: this.reading,
                 card: card
             });
-            
+
             compiledTemplate = this.replaceImageTags(compiledTemplate, story.id);
+            compiledTemplate = this.replaceAudioTags(compiledTemplate, story.id);
 
             this.$el.html(compiledTemplate).find();
         },
@@ -93,10 +118,10 @@ define([
                     e.target.attributes.eventType.value = "repeat";
                     this.reading.executeCardFunctions(e.target.attributes.eventCardId.value);
                     //localStorage.setItem("GPSLat", "!");
-                    Backbone.history.navigate('/reading/' + this.reading.id, {trigger: true});
+                    Backbone.history.navigate('/reading/' + this.reading.id, { trigger: true });
                 }
                 else if (e.target.attributes.eventType.value == "endstory") {
-                    Backbone.history.navigate('', {trigger: true});
+                    Backbone.history.navigate('', { trigger: true });
                 }
                 else if (e.target.attributes.eventType.value == "repeat") {
                     //the repeat event is a horrible work around for the backbone stacking events problem. Without it every view created, destroyed or not, will pick up the events. Hopefully so long as we only create 1 reading object this won't return.
