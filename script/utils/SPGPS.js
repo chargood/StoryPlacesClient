@@ -7,24 +7,27 @@ define(['jquery'], function ($) {
         var lon = location.coords.longitude;
         var acc = location.coords.accuracy;
 
+        hideGPSWarning();
+
         localStorage.setItem("GPSLat", lat);
         localStorage.setItem("GPSLon", lon);
+
         localStorage.setItem("GPSAcc", acc);
 
         console.log("GPS " + lat + " " + lon + " " + acc);
-
         var event = document.createEvent('Event');
         event.initEvent('gpsupdate', true, true);
-        hideGPSWarning();
         document.dispatchEvent(event);
     };
 
     var showGPSWarning = function () {
         $('#gpsErrorBar').show();
+        $('body').css('padding-top', $('#gpsErrorBar').css('height'));
     };
 
     var hideGPSWarning = function () {
         $('#gpsErrorBar').hide();
+        $('body').css('padding-top', 0);
     };
 
     var deg2rad = function (deg) {
@@ -53,7 +56,6 @@ define(['jquery'], function ($) {
     };
 
     var initiateLocator = function () {
-        navigator.geolocation.getCurrentPosition(onGeoSuccess, showGPSWarning, gpsOptions);
         navigator.geolocation.watchPosition(onGeoSuccess, showGPSWarning, gpsOptions);
     };
 
