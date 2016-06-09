@@ -4,6 +4,7 @@
 require.config({
     paths: {
         jquery: 'libs/jquery-1.12.3.min',
+        bootstrap: 'libs/bootstrap-3.3.6-dist/js/bootstrap',
         underscore: 'libs/underscore-1.8.3.min',
         backbone: 'libs/backbone-1.3.3.min',
         backbone_dual: 'libs/Backbone.dualStorage-1.4.0/backbone.dualstorage.amd',
@@ -19,7 +20,7 @@ require.config({
         mapReadingView: 'views/mapReadingView',
         listReadingView: 'views/listReadingView',
         cardView: 'views/cardView',
-        networkErrorView: 'views/networkErrorView',
+        errorView: 'views/errorView',
         readingView: 'views/readingView',
         storyListView: 'views/storyListView',
         storyView: 'views/storyView',

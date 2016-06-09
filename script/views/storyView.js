@@ -4,8 +4,9 @@ define([
     'backbone',
     'Story',
     'StoryReadingCollectionRepository',
-    'Reading'
-], function ($, _, Backbone, Story, StoryReadingCollectionRepository, Reading) {
+    'Reading',
+    'errorView'
+], function ($, _, Backbone, Story, StoryReadingCollectionRepository, Reading, ErrorView) {
     var StoryView;
 
     StoryView = Backbone.View.extend({
@@ -17,6 +18,10 @@ define([
 
         story: undefined,
 
+        initialize: function() {
+            this.ErrorView = ErrorView;
+        },
+
         redraw: function () {
             if (this.story) {
                 this.render(this.story);
@@ -27,7 +32,6 @@ define([
             var that = this;
 
             this.story = story;
-
 
 
             StoryReadingCollectionRepository.getStoryReadingCollection(
@@ -73,16 +77,16 @@ define([
 
             StoryReadingCollectionRepository.getStoryReadingCollection(
                 this.story.id,
-                function(storyRC) {
+                function (storyRC) {
                     storyRC.newReading(
-                        function() {
-                            that.redraw()
+                        function () {
+                            that.redraw();
                         },
-                        function() {
-                            // Failure function
+                        function () {
+                            that.ErrorView.render("Unable to create reading, please check your internet connection and try again.");
                         }
                     );
-        })
+                })
         },
         newCustomReading: function () {
             console.log("New Custom Reading");

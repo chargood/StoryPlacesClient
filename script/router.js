@@ -6,12 +6,12 @@ define([
     'storyView',
     'readingView',
     'cardView',
-    'networkErrorView',
+    'errorView',
     'debugView',
     'User',
     'StoryRepository',
     'ReadingRepository'
-], function ($, _, Backbone, StoryListView, StoryView, ReadingView, CardView, NetworkErrorView, DebugView, User, StoryRepository, ReadingRepository) {
+], function ($, _, Backbone, StoryListView, StoryView, ReadingView, CardView, ErrorView, DebugView, User, StoryRepository, ReadingRepository) {
 
     var Router = Backbone.Router.extend({
         routes: {
@@ -20,8 +20,8 @@ define([
             'reading/:readingId': 'playReading',
             //'deck/:id': 'playReadingDeck',
             'card/:readingId/:cardId': 'playReadingCard',
-            'error/(:type)' : 'error',
-            'error/(:type)/(:subtype)' : 'error'
+            'error/(:type)': 'error',
+            'error/(:type)/(:subtype)': 'error'
         }
     });
 
@@ -33,7 +33,7 @@ define([
         var cardView = new CardView({el: document.getElementById('cardView')});
         var storyView = new StoryView({el: document.getElementById('storyView')});
         var storyListView = new StoryListView({el: document.getElementById('storyListView')});
-        var networkErrorView = new NetworkErrorView({el: document.getElementById('networkErrorView')});
+        var errorView = new ErrorView({el: document.getElementById('errorView')});
 
         // add handlers
         router.on('route:home', function () {
@@ -49,8 +49,10 @@ define([
                     storyView.render(story);
                 },
                 function () {
-                    router.navigate('/error/network/story', {trigger:true});
-                });
+                    window.history.back();
+                    errorView.render("Unable to load story, please check your internet connection and try again.");
+                }
+            );
 
             debugView.render();
         });
@@ -62,7 +64,8 @@ define([
                     readingView.render(reading);
                 },
                 function () {
-                    router.navigate('/error/network/reading', {trigger:true});
+                    window.history.back();
+                    errorView.render("Unable to load reading, please check your internet connection and try again.");
                 }
             );
 
@@ -76,24 +79,16 @@ define([
             debugView.render();
         });
 
-        router.on('route:error', function (type, subtype) {
-            switch (type) {
-                case "network":
-                    networkErrorView.render(subtype);
-                    break;
-                default:
-                    // Default error handler
-            }
-        });
-
         router.on('route:playReadingCard', function (readingId, cardId) {
             ReadingRepository.getReading(readingId,
                 function (reading) {
                     cardView.render(reading, cardId);
                 },
                 function () {
-                    router.navigate('/error/network/card', {trigger:true});
-                });
+                    window.history.back();
+                    errorView.render("Unable to load card, please check your internet connection and try again.");
+                }
+            );
 
             //readingView = new ReadingView({id:id});
             console.log('Play Reading Card Route');
@@ -106,6 +101,9 @@ define([
             user.save({}, {
                 success: function (user) {
                     localStorage.setItem("User-ID", user.id);
+                },
+                error: function () {
+                    errorView.render("Unable to create user, please check your internet connection and try again.");
                 }
             });
         }

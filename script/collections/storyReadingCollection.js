@@ -38,7 +38,9 @@ define([
                         that.add(reading);
                         successCallback();
                     },
-                    error: failureCallback,
+                    error: function () {
+                        failureCallback();
+                    },
                 })
 
         }
