@@ -19,7 +19,7 @@ define([
         story: undefined,
 
         initialize: function () {
-            this.errorView = new ErrorView({el: document.getElementById('errorView')});;
+            this.errorView = new ErrorView({el: document.getElementById('errorView')});
         },
 
         redraw: function () {
