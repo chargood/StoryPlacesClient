@@ -45,7 +45,7 @@
     </div><!-- /.container-fluid -->
 </nav>
 <div id="gpsErrorBar" class="alert alert-danger alert-fixed-top text-center" style="display: none;">GPS has been lost, please check your status before continuing</div>
-<div id="errorView" class="container">
+<div id="errorView">
     <div class="modal fade" tabindex="-1" role="dialog" id="errorModal">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -67,8 +67,24 @@
     <div id="pleaseWait" class="container view paddedContent"><h3>Please wait while the contents loads</h3></div>
     <div id="cardView" class="container view paddedContent" style="display: none;"></div>
     <div id="storyView" class="container view paddedContent" style="display: none;"></div>
-    <div id="storyListView" class="container view paddedContent" style="display: none;"></div>
-    <div id="readingView" class="view" style="display: none;"></div>
+    <div id="storyListContainer" class="container view defaultHidden">
+        <div class="paddedContent text-center">
+            <img src='images/logo/StoryPlaces_full_800x330.png' class="spLogo">
+        </div>
+        <div class='row paddedContent'>
+            <div class='col-xs-8'>
+                <h2 class='text-left inline'>
+                    <small>Available stories:</small>
+                </h2>
+            </div>
+            <div class='col-xs-4 text-right'>
+                <button type='button' class='btn btn-default'><span class='glyphicon glyphicon-refresh'></span></button>
+            </div>
+        </div>
+        <div id='storyListView'></div>
+
+    </div>
+    <div id='readingView' class="view" style="display: none;"></div>
 </div>
 
 <script data-main="script/requireConfig" src="script/libs/require.js"></script>

@@ -54,19 +54,21 @@ define([
 
         template: _.template(
             "<h2><%= _.escape(story.get('name')) %></h2>"
-            + +"<h3>Readings</h3>"
+                + "<div class='storyReadingList'>"
             + "<table class='table table-hover'>"
             + "<% readingList.each(function(reading) { %>"
             + "<tr>"
-            + "<td><%= _.escape(reading.get('name')) %></td>"
-            + "<td><a href='#/reading/<%= _.escape(reading.id) %>'><input class='openReadingBtn' type='button' class='btn btn-default' value='Open'/></a></td>"
+            + "<td><a href='#/reading/<%= _.escape(reading.id) %>'><%= _.escape(reading.get('name')) %></a></td>"
             + "<% }); %>"
             + "</table>"
             + "<% if(readingList.size()==0) { %>"
-            + "<p>no readings</p>"
+            + "<p>No readings, please create one</p>"
             + "<% } %>"
+                +"</div>"
++"<div class='storyReadingButtons'>"
             + "<input id='newReadingBtn' type='button' class='btn btn-default' value='Start a new reading'/>"
             + "<input id='refreshReadingsBtn' type='button' class='btn btn-default' value='Refresh readings'/>"
+    +"</div>"
         ),
 
 

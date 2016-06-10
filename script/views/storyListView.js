@@ -23,7 +23,7 @@ define([
             storyList.fetch({
                 success: function (storyList) {
                     $('.view').hide();
-                    that.$el.show();
+                    that.$el.closest('.view').show();
 
                     that.$el.html(that.template({
                         storyList: storyList
@@ -35,15 +35,13 @@ define([
         },
 
         template: _.template(
-            "<img src='images/logo/StoryPlaces_full_800x330.png' width='100%'><h2 class='text-center'><small>Please select from a story below</small></h2>"
-            + "<table class='table table-hover'>"
+            "<table class='table table-hover'>"
             + "<tbody>"
             + "<% storyList.each(function(story) { %>"
             + "<tr><td><a href='#/story/<%= story.id %>'><%=story.get('name') %></a></td></tr>"
             + "<%});%>"
             + "</tbody>"
             + "</table>"
-            + "<button type='button' class='btn btn-default'><span class='glyphicon glyphicon-refresh'></span> Update Story List</button>"
         ),
     });
 
