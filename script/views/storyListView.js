@@ -2,14 +2,15 @@ define([
     'jquery',
     'underscore',
     'backbone',
-    'StoryCollection'
-], function ($, _, Backbone, StoryCollection) {
+    'StoryCollection',
+    'errorView'
+], function ($, _, Backbone, StoryCollection, ErrorView) {
 
     var StoryListView = Backbone.View.extend({
         events: {},
 
         initialize: function () {
-            //console.log("Create new story list view");
+            this.errorView = new ErrorView({el: document.getElementById('errorView')});
         },
 
         render: function (storyList) {
@@ -30,6 +31,9 @@ define([
                     }));
 
                     console.log("story list view rendered");
+                },
+                error: function() {
+                    that.errorView.render("Unable to load story list, please check your internet connection and try again.");
                 }
             });
         },

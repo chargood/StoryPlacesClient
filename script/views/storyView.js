@@ -21,7 +21,7 @@ define([
         story: undefined,
 
         initialize: function () {
-            this.errorView = new ErrorView({el: document.getElementById('errorView')});;
+            this.errorView = new ErrorView({el: document.getElementById('errorView')});
         },
 
         redraw: function () {
@@ -106,9 +106,13 @@ define([
 
         //TODO:  Move all the following to a reading collection
 
-        newReading: function () {
+        newReading: function () {            
+            if (!navigator.onLine) {
+                this.errorView.render("Cannot create new reading whilst offline, please check your internet connection and try again.");
+                return;
+            }
+            
             var that = this;
-
             StoryReadingCollectionRepository.getStoryReadingCollection(
                 this.story.id,
                 function (storyRC) {
