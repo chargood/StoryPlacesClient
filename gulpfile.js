@@ -3,6 +3,7 @@ var requirejsOptimize = require('gulp-requirejs-optimize');
 var rename = require('gulp-rename');
 var concat = require('gulp-concat');
 var cleanCSS = require('gulp-clean-css');
+var htmlreplace = require('gulp-html-replace');
 
 
 gulp.task('js', function () {
@@ -11,23 +12,50 @@ gulp.task('js', function () {
             baseUrl: "script",
             mainConfigFile: "script/requireConfig.js",
         }))
-        .pipe(rename({basename: "storyPlaces"}))
-        .pipe(gulp.dest('dist'));
+        .pipe(rename({basename: "storyPlaces.min"}))
+        .pipe(gulp.dest('dist/js'));
 });
 
 gulp.task('css', function () {
     return gulp.src(['script/libs/bootstrap-3.3.6-dist/css/bootstrap.min.css', 'css/**/*.css'])
-        .pipe(concat('storyPlaces.css'))
+        .pipe(concat('storyPlaces.min.css'))
         .pipe(cleanCSS({compatibility: 'ie8'}))
+        .pipe(gulp.dest('dist/css'));
+});
+
+gulp.task('fonts', function () {
+    return gulp.src('script/libs/bootstrap-3.3.6-dist/fonts/glyphicons-halflings-regular.*')
+        .pipe(gulp.dest('dist/fonts'));
+});
+
+gulp.task('copyRequire', function () {
+    return gulp.src('script/libs/require.js')
+        .pipe(gulp.dest('dist/js'));
+});
+
+gulp.task('copyImages', function () {
+    return gulp.src('images/**/*')
+        .pipe(gulp.dest('dist/images'));
+});
+
+gulp.task('copyNoGps', function () {
+    return gulp.src('nogps.html')
         .pipe(gulp.dest('dist'));
 });
 
-gulp.task('fonts', function() {
-    return gulp.src('script/libs/bootstrap-3.3.6-dist/fonts/glyphicons-halflings-regular.*')
-        .pipe(gulp.dest('fonts'));
+gulp.task('copyIndex', function () {
+    return gulp.src('index.html')
+        .pipe(htmlreplace({
+            'css': 'css/storyPlaces.min.css',
+            'js': {
+                src: null,
+                tpl: '<script data-main="js/storyPlaces.min" src="js/require.js"></script>'
+            }
+        }))
+        .pipe(gulp.dest('dist/'));
 });
 
-gulp.task('default', ['js', 'css', 'fonts']);
+gulp.task('default', ['js', 'css', 'fonts', 'copyRequire', 'copyImages', 'copyIndex', 'copyNoGps']);
 
 gulp.task('watch', function () {
     console.log(" ****************************************************************");

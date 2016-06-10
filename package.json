@@ -36,6 +36,7 @@
     "gulp": "^3.9.1",
     "gulp-clean-css": "^2.0.8",
     "gulp-concat": "^2.6.0",
+    "gulp-html-replace": "^1.6.0",
     "gulp-rename": "^1.2.2",
     "gulp-requirejs-optimize": "^1.0.0",
     "jsdom": "^8.4.0",
