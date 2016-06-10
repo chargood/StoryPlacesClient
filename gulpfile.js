@@ -16,13 +16,18 @@ gulp.task('js', function () {
 });
 
 gulp.task('css', function () {
-    return gulp.src(['css/**/*.css', 'script/libs/bootstrap-3.3.6-dist/css/bootstrap.min.css'])
+    return gulp.src(['script/libs/bootstrap-3.3.6-dist/css/bootstrap.min.css', 'css/**/*.css'])
         .pipe(concat('storyPlaces.css'))
         .pipe(cleanCSS({compatibility: 'ie8'}))
-        .pipe(gulp.dest('dist'))
+        .pipe(gulp.dest('dist'));
 });
 
-gulp.task('default', ['js', 'css']);
+gulp.task('fonts', function() {
+    return gulp.src('script/libs/bootstrap-3.3.6-dist/fonts/glyphicons-halflings-regular.*')
+        .pipe(gulp.dest('fonts'));
+});
+
+gulp.task('default', ['js', 'css', 'fonts']);
 
 gulp.task('watch', function () {
     console.log(" ****************************************************************");
