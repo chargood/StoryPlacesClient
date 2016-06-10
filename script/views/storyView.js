@@ -13,7 +13,9 @@ define([
         events: {
             'click #newReadingBtn': 'newReading',
             'click #newCustomReadingBtn': 'newCustomReading',
-            'click #refreshReadingsBtn': 'redraw'
+            'click #refreshReadingsBtn': 'redraw',
+            'click #showDescription': 'showDescription',
+            'click #hideDescription': 'hideDescription'
         },
 
         story: undefined,
@@ -26,6 +28,18 @@ define([
             if (this.story) {
                 this.render(this.story);
             }
+        },
+
+        showDescription: function() {
+            this.$el.find("[role='description']").show();
+            this.$el.find("#hideDescription").show();
+            this.$el.find("#showDescription").hide();
+        },
+
+        hideDescription: function() {
+            this.$el.find("[role='description']").hide();
+            this.$el.find("#hideDescription").hide();
+            this.$el.find("#showDescription").show();
         },
 
         render: function (story) {
@@ -43,6 +57,19 @@ define([
                         story: that.story
                     }));
 
+                    that.$el.find("[role='author']").html(that.authorTemplate({
+                        story: that.story
+                    }));
+
+                    if (that.story.get('description')) {
+                        that.$el.find("[role='descriptionWrapper']").show();
+                        that.$el.find("[role='description']").html(that.descriptionTemplate({
+                            story: that.story
+                        }));
+                    } else {
+                        that.$el.find("[role='descriptionWrapper']").hide();
+                    }
+
                     that.$el.find("[role='list']").html(that.template({
                         story: that.story,
                         readingList: readingList
@@ -53,7 +80,7 @@ define([
                 },
 
                 function () {
-                    console.error("Can not fetch readinglist");
+                    console.log("Can not fetch readinglist");
                     window.history.back();
                     that.errorView.render("Unable to load story, please check your internet connection and try again.");
                 }
@@ -61,16 +88,18 @@ define([
         },
 
         headingTemplate: _.template("<%= _.escape(story.get('name')) %>"),
+        authorTemplate: _.template("<%= story.get('author') %>"),
+        descriptionTemplate: _.template("<%= story.get('description') %>"),
 
         template: _.template(
-            + "<table class='table table-hover'>"
+            "<table class='table table-hover'>"
             + "<% readingList.each(function(reading) { %>"
             + "<tr>"
             + "<td><a href='#/reading/<%= _.escape(reading.id) %>'><%= _.escape(reading.get('name')) %></a></td>"
             + "<% }); %>"
             + "</table>"
             + "<% if(readingList.size()==0) { %>"
-            + "<p>No readings, please create one</p>"
+            + "<p>You have not created a reading, please click the plus sign above to do so.</p>"
             + "<% } %>"
         ),
 
