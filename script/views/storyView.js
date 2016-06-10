@@ -19,7 +19,7 @@ define([
         story: undefined,
 
         initialize: function () {
-            this.ErrorView = ErrorView;
+            this.errorView = new ErrorView({el: document.getElementById('errorView')});;
         },
 
         redraw: function () {
@@ -39,23 +39,30 @@ define([
                 function (readingList) {
                     $('.view').hide();
 
-                    that.$el.html(that.template({
+                    that.$el.find("[role='title']").html(that.headingTemplate({
+                        story: that.story
+                    }));
+
+                    that.$el.find("[role='list']").html(that.template({
                         story: that.story,
                         readingList: readingList
-                    })).show();
+                    }));
+
+                    that.$el.show();
 
                 },
 
                 function () {
                     console.error("Can not fetch readinglist");
-                    ErrorView.render("Unable to load story, please check your internet connection and try again.");
+                    window.history.back();
+                    that.errorView.render("Unable to load story, please check your internet connection and try again.");
                 }
             );
         },
 
+        headingTemplate: _.template("<%= _.escape(story.get('name')) %>"),
+
         template: _.template(
-            "<h2><%= _.escape(story.get('name')) %></h2>"
-                + "<div class='storyReadingList'>"
             + "<table class='table table-hover'>"
             + "<% readingList.each(function(reading) { %>"
             + "<tr>"
@@ -65,11 +72,6 @@ define([
             + "<% if(readingList.size()==0) { %>"
             + "<p>No readings, please create one</p>"
             + "<% } %>"
-                +"</div>"
-+"<div class='storyReadingButtons'>"
-            + "<input id='newReadingBtn' type='button' class='btn btn-default' value='Start a new reading'/>"
-            + "<input id='refreshReadingsBtn' type='button' class='btn btn-default' value='Refresh readings'/>"
-    +"</div>"
         ),
 
 
@@ -86,10 +88,10 @@ define([
                             that.redraw();
                         },
                         function () {
-                            that.ErrorView.render("Unable to create reading, please check your internet connection and try again.");
+                            that.errorView.render("Unable to create reading, please check your internet connection and try again.");
                         }
                     );
-                })
+                });
         },
         newCustomReading: function () {
             console.log("New Custom Reading");

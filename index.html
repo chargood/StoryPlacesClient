@@ -66,7 +66,22 @@
 <div id="content" class="content">
     <div id="pleaseWait" class="container view paddedContent"><h3>Please wait while the contents loads</h3></div>
     <div id="cardView" class="container view paddedContent" style="display: none;"></div>
-    <div id="storyView" class="container view paddedContent" style="display: none;"></div>
+    <div id="storyView" class="container view defaultHidden">
+        <div class="paddedContent text-center" role="title"></div>
+        <div class="paddedContent text-center" role="introduction"></div>
+        <div class='row paddedContent'>
+            <div class='col-xs-8'>
+                <h2 class='text-left inline'>
+                    <small>Available readings:</small>
+                </h2>
+            </div>
+            <div class='col-xs-4 text-right'>
+                <button type='button' class='btn btn-default' id='newReadingBtn'><span class='glyphicon glyphicon-plus'></span></button>
+                <button type='button' class='btn btn-default' id='refreshReadingsBtn'><span class='glyphicon glyphicon-refresh'></span></button>
+            </div>
+        </div>
+        <div class="paddedContent" role="list"></div>
+    </div>
     <div id="storyListContainer" class="container view defaultHidden">
         <div class="paddedContent text-center">
             <img src='images/logo/StoryPlaces_full_800x330.png' class="spLogo">
