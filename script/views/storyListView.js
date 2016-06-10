@@ -2,14 +2,15 @@ define([
     'jquery',
     'underscore',
     'backbone',
-    'StoryCollection'
-], function ($, _, Backbone, StoryCollection) {
+    'StoryCollection',
+    'errorView'
+], function ($, _, Backbone, StoryCollection, ErrorView) {
 
     var StoryListView = Backbone.View.extend({
         events: {},
 
         initialize: function () {
-            //console.log("Create new story list view");
+            this.errorView = new ErrorView({el: document.getElementById('errorView')});
         },
 
         render: function (storyList) {
@@ -23,27 +24,28 @@ define([
             storyList.fetch({
                 success: function (storyList) {
                     $('.view').hide();
-                    that.$el.show();
+                    that.$el.closest('.view').show();
 
                     that.$el.html(that.template({
                         storyList: storyList
                     }));
 
                     console.log("story list view rendered");
+                },
+                error: function() {
+                    that.errorView.render("Unable to load story list, please check your internet connection and try again.");
                 }
             });
         },
 
         template: _.template(
-            "<img src='images/logo/StoryPlaces_full_800x330.png' width='100%'><h2 class='text-center'><small>Please select from a story below</small></h2>"
-            + "<table class='table table-hover'>"
+            "<table class='table table-hover'>"
             + "<tbody>"
             + "<% storyList.each(function(story) { %>"
             + "<tr><td><a href='#/story/<%= story.id %>'><%=story.get('name') %></a></td></tr>"
             + "<%});%>"
             + "</tbody>"
             + "</table>"
-            + "<button type='button' class='btn btn-default'><span class='glyphicon glyphicon-refresh'></span> Update Story List</button>"
         ),
     });
 

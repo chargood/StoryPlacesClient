@@ -13,19 +13,33 @@ define([
         events: {
             'click #newReadingBtn': 'newReading',
             'click #newCustomReadingBtn': 'newCustomReading',
-            'click #refreshReadingsBtn': 'redraw'
+            'click #refreshReadingsBtn': 'redraw',
+            'click #showDescription': 'showDescription',
+            'click #hideDescription': 'hideDescription'
         },
 
         story: undefined,
 
         initialize: function () {
-            this.ErrorView = ErrorView;
+            this.errorView = new ErrorView({el: document.getElementById('errorView')});
         },
 
         redraw: function () {
             if (this.story) {
                 this.render(this.story);
             }
+        },
+
+        showDescription: function() {
+            this.$el.find("[role='description']").show();
+            this.$el.find("#hideDescription").show();
+            this.$el.find("#showDescription").hide();
+        },
+
+        hideDescription: function() {
+            this.$el.find("[role='description']").hide();
+            this.$el.find("#hideDescription").hide();
+            this.$el.find("#showDescription").show();
         },
 
         render: function (story) {
@@ -39,42 +53,66 @@ define([
                 function (readingList) {
                     $('.view').hide();
 
-                    that.$el.html(that.template({
+                    that.$el.find("[role='title']").html(that.headingTemplate({
+                        story: that.story
+                    }));
+
+                    that.$el.find("[role='author']").html(that.authorTemplate({
+                        story: that.story
+                    }));
+
+                    if (that.story.get('description')) {
+                        that.$el.find("[role='descriptionWrapper']").show();
+                        that.$el.find("[role='description']").html(that.descriptionTemplate({
+                            story: that.story
+                        }));
+                    } else {
+                        that.$el.find("[role='descriptionWrapper']").hide();
+                    }
+
+                    that.$el.find("[role='list']").html(that.template({
                         story: that.story,
                         readingList: readingList
-                    })).show();
+                    }));
+
+                    that.$el.show();
 
                 },
 
                 function () {
-                    console.error("Can not fetch readinglist");
+                    console.log("Can not fetch readinglist");
+                    window.history.back();
+                    that.errorView.render("Unable to load story, please check your internet connection and try again.");
                 }
             );
         },
 
+        headingTemplate: _.template("<%= _.escape(story.get('name')) %>"),
+        authorTemplate: _.template("<%= story.get('author') %>"),
+        descriptionTemplate: _.template("<%= story.get('description') %>"),
+
         template: _.template(
-            "<h2><%= _.escape(story.get('name')) %></h2>"
-            + +"<h3>Readings</h3>"
-            + "<table class='table table-hover'>"
+            "<table class='table table-hover'>"
             + "<% readingList.each(function(reading) { %>"
             + "<tr>"
-            + "<td><%= _.escape(reading.get('name')) %></td>"
-            + "<td><a href='#/reading/<%= _.escape(reading.id) %>'><input class='openReadingBtn' type='button' class='btn btn-default' value='Open'/></a></td>"
+            + "<td><a href='#/reading/<%= _.escape(reading.id) %>'><%= _.escape(reading.get('name')) %></a></td>"
             + "<% }); %>"
             + "</table>"
             + "<% if(readingList.size()==0) { %>"
-            + "<p>no readings</p>"
+            + "<p>You have not created a reading, please click the plus sign above to do so.</p>"
             + "<% } %>"
-            + "<input id='newReadingBtn' type='button' class='btn btn-default' value='Start a new reading'/>"
-            + "<input id='refreshReadingsBtn' type='button' class='btn btn-default' value='Refresh readings'/>"
         ),
 
 
         //TODO:  Move all the following to a reading collection
 
-        newReading: function () {
+        newReading: function () {            
+            if (!navigator.onLine) {
+                this.errorView.render("Cannot create new reading whilst offline, please check your internet connection and try again.");
+                return;
+            }
+            
             var that = this;
-
             StoryReadingCollectionRepository.getStoryReadingCollection(
                 this.story.id,
                 function (storyRC) {
@@ -83,10 +121,10 @@ define([
                             that.redraw();
                         },
                         function () {
-                            that.ErrorView.render("Unable to create reading, please check your internet connection and try again.");
+                            that.errorView.render("Unable to create reading, please check your internet connection and try again.");
                         }
                     );
-                })
+                });
         },
         newCustomReading: function () {
             console.log("New Custom Reading");

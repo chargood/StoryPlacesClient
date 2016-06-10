@@ -43,7 +43,7 @@
     </div><!-- /.container-fluid -->
 </nav>
 <div id="gpsErrorBar" class="alert alert-danger alert-fixed-top text-center" style="display: none;">GPS has been lost, please check your status before continuing</div>
-<div id="errorView" class="container">
+<div id="errorView">
     <div class="modal fade" tabindex="-1" role="dialog" id="errorModal">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -64,9 +64,53 @@
 <div id="content" class="content">
     <div id="pleaseWait" class="container view paddedContent"><h3>Please wait while the contents loads</h3></div>
     <div id="cardView" class="container view paddedContent" style="display: none;"></div>
-    <div id="storyView" class="container view paddedContent" style="display: none;"></div>
-    <div id="storyListView" class="container view paddedContent" style="display: none;"></div>
-    <div id="readingView" class="view" style="display: none;"></div>
+    <div id="storyView" class="container view defaultHidden">
+        <div>
+            <div class="paddedContent text-center"><h2 role="title"></h2></div>
+            <div class="text-center">
+                <h2 class="inline">
+                    <small role="author"></small>
+                </h2>
+            </div>
+        </div>
+        <div role="descriptionWrapper" class="defaultHidden">
+            <div class="text-center">
+                <button id="showDescription" class="btn btn-default">Show Description <span class='glyphicon glyphicon-menu-down'></span></button>
+                <button id="hideDescription" class="btn btn-default defaultHidden">Hide Description <span class='glyphicon glyphicon-menu-up'></span></button>
+            </div>
+            <div class="well defaultHidden" role="description"></div>
+        </div>
+        <div class='row paddedContent'>
+            <div class='col-xs-8'>
+                <h2 class='text-left inline'>
+                    <small>Available readings:</small>
+                </h2>
+            </div>
+            <div class='col-xs-4 text-right'>
+                <button type='button' class='btn btn-default' id='newReadingBtn'><span class='glyphicon glyphicon-plus'></span></button>
+                <button type='button' class='btn btn-default' id='refreshReadingsBtn'><span class='glyphicon glyphicon-refresh'></span></button>
+            </div>
+        </div>
+        <div role="list"></div>
+    </div>
+    <div id="storyListContainer" class="container view defaultHidden">
+        <div class="paddedContent text-center">
+            <img src='images/logo/StoryPlaces_full_800x330.png' class="spLogo">
+        </div>
+        <div class='row paddedContent'>
+            <div class='col-xs-8'>
+                <h2 class='text-left inline'>
+                    <small>Available stories:</small>
+                </h2>
+            </div>
+            <div class='col-xs-4 text-right'>
+                <button type='button' class='btn btn-default'><span class='glyphicon glyphicon-refresh'></span></button>
+            </div>
+        </div>
+        <div id='storyListView'></div>
+
+    </div>
+    <div id='readingView' class="view" style="display: none;"></div>
 </div>
 
 <script data-main="script/requireConfig" src="script/libs/require.js"></script>
