@@ -43,6 +43,11 @@ gulp.task('copyNoGps', function () {
         .pipe(gulp.dest('dist'));
 });
 
+gulp.task('copyHelp', function () {
+    return gulp.src('help.html')
+        .pipe(gulp.dest('dist'));
+});
+
 gulp.task('copyEarly', function () {
     return gulp.src('earlyfinish.html')
         .pipe(gulp.dest('dist'));
@@ -60,7 +65,7 @@ gulp.task('copyIndex', function () {
         .pipe(gulp.dest('dist/'));
 });
 
-gulp.task('default', ['js', 'css', 'fonts', 'copyRequire', 'copyImages', 'copyIndex', 'copyNoGps','copyEarly']);
+gulp.task('default', ['js', 'css', 'fonts', 'copyRequire', 'copyImages', 'copyIndex', 'copyNoGps','copyHelp','copyEarly']);
 
 gulp.task('watch', function () {
     console.log(" ****************************************************************");
