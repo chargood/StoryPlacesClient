@@ -39,6 +39,9 @@ define([
         // add handlers
         router.on('route:home', function () {
             console.log('Home Route');
+			
+			logEvent("viewstorylist",{})
+			
             storyListView.render();
             debugView.render();
         });

@@ -1,8 +1,9 @@
 define([
     'underscore',
     'backbone',
+	'backbone_dual',
     'LogEvent',
-], function (_, Backbone, LogEvent) {
+], function (_, Backbone, BackbonedualStorage, LogEvent) {
 
     var LogEventCollection = Backbone.Collection.extend({
         urlRoot: '/storyplaces/logevent',
@@ -39,6 +40,8 @@ define([
                         failureCallback();
                     },
                 })
+			
+			this.syncDirtyAndDestroyed()
 
         }
 
