@@ -53,6 +53,11 @@ gulp.task('copyEarly', function () {
         .pipe(gulp.dest('dist'));
 });
 
+gulp.task('copyAbout', function () {
+    return gulp.src('about.html')
+        .pipe(gulp.dest('dist'));
+});
+
 gulp.task('copyIndex', function () {
     return gulp.src('index.html')
         .pipe(htmlreplace({
@@ -65,7 +70,7 @@ gulp.task('copyIndex', function () {
         .pipe(gulp.dest('dist/'));
 });
 
-gulp.task('default', ['js', 'css', 'fonts', 'copyRequire', 'copyImages', 'copyIndex', 'copyNoGps','copyHelp','copyEarly']);
+gulp.task('default', ['js', 'css', 'fonts', 'copyRequire', 'copyImages', 'copyIndex', 'copyNoGps','copyHelp','copyEarly','copyAbout']);
 
 gulp.task('watch', function () {
     console.log(" ****************************************************************");
