@@ -14,7 +14,7 @@ define([
             
             var that = this;
             var newLEC = new LogEventCollection();
-
+						
             newLEC.fetch({
                 success: function() {
                     that.currentLogEventCollection = newLEC;
