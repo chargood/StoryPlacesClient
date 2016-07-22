@@ -38,12 +38,16 @@ define([
             });
         },
 
+		//console.log('story publish state')
+		
         template: _.template(
             "<table class='table table-hover'>"
             + "<tbody>"
             + "<% storyList.each(function(story) { %>"
+			+ "<% if(story.get('publishState')!='unpublished'){ %>"
             + "<tr><td><a href='#/story/<%= story.id %>'><%=story.get('name') %></a></td></tr>"
-            + "<%});%>"
+            + "<%}%>"
+			+ "<%});%>"
             + "</tbody>"
             + "</table>"
         ),

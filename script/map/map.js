@@ -28,6 +28,7 @@ define([
             if (this.trackGPSLocation) {
                 this.setupGPSTracking();
             }
+			
         },
 
         setupGPSTracking: function () {
@@ -65,6 +66,12 @@ define([
             }
         },
 
+		updateMarkerLatLon: function(marker, lat,lon) {
+            if (marker && lat&&lon) {
+                marker.setLatLng([lat,lon]);
+            }
+        },
+		
         createMarker: function(lat, long, icon) {
             if (lat && long && icon) {
                 return L.marker([lat, long], {icon: icon})

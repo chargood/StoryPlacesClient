@@ -10,8 +10,9 @@ define([
     'iconFactory',
     'underscore',
     'jquery',
-    'MarkerCollection'
-], function (Backbone, map, iconFactory, _, $, MarkerCollection) {
+    'MarkerCollection',
+	'iconRepository'
+], function (Backbone, map, iconFactory, _, $, MarkerCollection,iconRepository) {
     var MapReadingView;
 
     MapReadingView = Backbone.View.extend({
@@ -29,11 +30,11 @@ define([
         newReading: function (reading) {
             this.markers = new MarkerCollection();
             this.reading = reading;
-            this.reading.cardStates.on(this.reading.cardStates.eventCardStatesModified, this.cardStatesModifiedEvent, this);
+			this.reading.cardStates.on(this.reading.cardStates.eventCardStatesModified, this.cardStatesModifiedEvent, this);
             this.renderAllMarkers();
         },
-
-        tearDown: function () {
+		
+		tearDown: function () {
             this.reading.cardStates.off(this.reading.cardStates.eventCardStatesModified, this.renderAllMarkers, this);
             this.markers.destroy();
         },
@@ -42,7 +43,7 @@ define([
             var that = this;
             this.reading.cardStates.each(function (cardState) {
                 that.updateMarkerFromCardState(cardState);
-            });
+            });			
         },
 
         cardStatesModifiedEvent: function (modifiedCardStates) {
