@@ -12,6 +12,8 @@ require.config({
         leaflet: 'libs/leaflet',
 
         SPGPS: 'utils/SPGPS',
+		
+		geolocate: 'libs/geolocate',
 
         iconRepository: 'map/icons/iconRepository',
         iconFactory: 'map/icons/iconFactory',

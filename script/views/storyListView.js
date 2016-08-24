@@ -13,7 +13,7 @@ define([
             this.errorView = new ErrorView({el: document.getElementById('errorView')});
         },
 
-        render: function (storyList) {
+        render: function (storyList,tag) {
             var that = this;
 
             // storyList is now injected to enable testing, so hasn't been injected then create it.
@@ -27,7 +27,8 @@ define([
                     that.$el.closest('.view').show();
 
                     that.$el.html(that.template({
-                        storyList: storyList
+                        storyList: storyList,
+						tag: tag
                     }));
 
                     console.log("story list view rendered");
@@ -41,10 +42,13 @@ define([
 		//console.log('story publish state')
 		
         template: _.template(
-            "<table class='table table-hover'>"
+            "<% if(tag!=undefined){%>"
+			+ "<p><b>List for: </b><%=tag%></p>"
+			+ "<%}%>"
+			+ "<table class='table table-hover'>"
             + "<tbody>"
             + "<% storyList.each(function(story) { %>"
-			+ "<% if(story.get('publishState')!='unpublished'){ %>"
+			+ "<% if(story.get('publishState')!='unpublished'&&(tag==undefined||story.get('tags').indexOf(tag)!=-1)){ %>"
             + "<tr><td><a href='#/story/<%= story.id %>'><%=story.get('name') %></a></td></tr>"
             + "<%}%>"
 			+ "<%});%>"

@@ -17,9 +17,9 @@ define([
     var Router = Backbone.Router.extend({
         routes: {
             '': 'home',
+			'storylist/:tag': 'taglist',
             'story/:storyId': 'viewStory',
             'reading/:readingId': 'playReading',
-            //'deck/:id': 'playReadingDeck',
             'card/:readingId/:cardId': 'playReadingCard',
             'error/(:type)': 'error',
             'error/(:type)/(:subtype)': 'error'
@@ -43,6 +43,15 @@ define([
 			logEvent("viewstorylist",{})
 			
             storyListView.render();
+            debugView.render();
+        });
+		
+		router.on('route:taglist', function (tag) {
+            console.log('Tag List Route');
+			
+			logEvent("viewstorylist",{tag:tag})
+			
+            storyListView.render(undefined,tag);
             debugView.render();
         });
 

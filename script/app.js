@@ -6,8 +6,9 @@ define([
     'backbone',
     'router',
     'SPGPS',
-    'backbone_dual'
-], function ($, _, Backbone, Router, SPGPS, BackBone_Dual) {
+    'backbone_dual',
+	'geolocate'
+], function ($, _, Backbone, Router, SPGPS, BackBone_Dual, geolocate) {
 
     var initialize = function () {
         SPGPS.testLocator(startup, noGPS);

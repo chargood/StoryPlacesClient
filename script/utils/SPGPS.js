@@ -1,4 +1,6 @@
-define(['jquery'], function ($) {
+define(['jquery','geolocate'], function ($,geolocate) {
+
+	var watcher;
 
     var gpsOptions = {enableHighAccuracy: true, timeout: 20000, maximumAge: 10000};
 
@@ -54,15 +56,34 @@ define(['jquery'], function ($) {
 
         navigator.geolocation.getCurrentPosition(successCallback, errorCallback, gpsOptions);
     };
-
+	
     var initiateLocator = function () {
-        navigator.geolocation.watchPosition(onGeoSuccess, showGPSWarning, gpsOptions);
+        watcher=navigator.geolocation.watchPosition(onGeoSuccess, showGPSWarning, gpsOptions);
     };
+	
+	var fakerOn = function () {
+		navigator.geolocation.clearWatch(watcher)
+		geolocate.use()
+		watcher=navigator.geolocation.watchPosition(onGeoSuccess, showGPSWarning, gpsOptions);
+	}
+	
+	var fake = function (la,lo) {
+		geolocate.change({lat: la, lng: lo});
+	}
+	
+	var fakerOff = function () {
+		navigator.geolocation.clearWatch(watcher)
+		geolocate.restore()
+		watcher=navigator.geolocation.watchPosition(onGeoSuccess, showGPSWarning, gpsOptions);
+	}
 
     // return functions as an object
     return {
         getDistanceFromLatLonInKm: getDistanceFromLatLonInKm,
         initiateLocator: initiateLocator,
-        testLocator: testLocator
+        testLocator: testLocator,
+		fakerOn: fakerOn,
+		fakerOff: fakerOff,
+		fake: fake,
     };
 });
