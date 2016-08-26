@@ -100,7 +100,8 @@ define([
 			this.sim = sim
 			if(sim){
 				this.el.style.float="left"
-				this.el.style.width="70%"
+				this.el.style.width="65%"
+				this.el.style.height="100%"
 			}
 		}
 

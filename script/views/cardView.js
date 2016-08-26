@@ -129,10 +129,20 @@ define([
                     e.target.attributes.eventType.value = "repeat";
                     this.reading.executeCardFunctions(e.target.attributes.eventCardId.value);
                     //localStorage.setItem("GPSLat", "!");
-                    Backbone.history.navigate('/reading/' + this.reading.id, { trigger: true });
+                    if(document.simmode){
+						this.$el.hide();					
+					}
+					else{
+						Backbone.history.navigate('/reading/' + this.reading.id, { trigger: true });
+					}
+					
+					
                 }
                 else if (e.target.attributes.eventType.value == "endstory") {
-                    Backbone.history.navigate('', { trigger: true });
+                    if(document.simmode){
+						this.$el.hide();					
+					}
+					Backbone.history.navigate('', { trigger: true });					
                 }
                 else if (e.target.attributes.eventType.value == "repeat") {
                     //the repeat event is a horrible work around for the backbone stacking events problem. Without it every view created, destroyed or not, will pick up the events. Hopefully so long as we only create 1 reading object this won't return.

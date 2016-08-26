@@ -29,10 +29,11 @@ define([
 
         buildDom: function() {
             if (this.$el.children().length == 0) {
+				this.$el.append("<div id='" + this.listComponent + "' class='listComponent'></div>");
                 this.$el.append("<div id='" + this.mapComponent + "' class='mapComponent'></div>");
-                this.$el.append("<div id='" + this.listComponent + "' class='listComponent'></div>");
-                this.$el.append("<div id='" + this.compassComponent + "' class='container'></div>");
 				this.$el.append("<div id='" + this.cardComponent + "' class='container'></div>");
+                this.$el.append("<div id='" + this.compassComponent + "' class='container'></div>");
+				
 				
             }
         },

@@ -44,15 +44,10 @@ define([
 			
 			if(document.simmode){
 				this.el.style.float="right"
-				this.el.style.width="30%"
-
+				this.el.style.width="33%"
+				this.el.style.height="auto"
 				
-				//////
-				/*var cardView = new CardView({el: document.getElementById('cardComponent')})
-				cardView.render(this.reading);		
-				cardView.el.style.float="right"
-				cardView.el.style.width="30%"*/
-				
+			
 			}
 			
         },
@@ -66,8 +61,8 @@ define([
 			cardView.render(this.reading,e.target.attributes.cardid.value);		
 			
 			
-			//cardView.el.style.float="right"
-			//cardView.el.style.width="30%"
+			cardView.el.style.float="right"
+			cardView.el.style.width="33%"
 			
 		},
 
