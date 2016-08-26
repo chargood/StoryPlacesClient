@@ -29,13 +29,19 @@ define([
 
         buildDom: function() {
             if (this.$el.children().length == 0) {
-				this.$el.append("<div id='" + this.listComponent + "' class='listComponent'></div>");
-                this.$el.append("<div id='" + this.mapComponent + "' class='mapComponent'></div>");
-				this.$el.append("<div id='" + this.cardComponent + "' class='container'></div>");
-                this.$el.append("<div id='" + this.compassComponent + "' class='container'></div>");
-				
-				
-            }
+				if(document.simmode){
+					this.$el.append("<div id='" + this.listComponent + "' class='listComponent'></div>");
+					this.$el.append("<div id='" + this.mapComponent + "' class='mapComponent'></div>");
+					this.$el.append("<div id='" + this.cardComponent + "' class='container'></div>");
+					this.$el.append("<div id='" + this.compassComponent + "' class='container'></div>");
+				}
+				else{
+					this.$el.append("<div id='" + this.mapComponent + "' class='mapComponent'></div>");
+					this.$el.append("<div id='" + this.listComponent + "' class='listComponent'></div>");					
+					this.$el.append("<div id='" + this.cardComponent + "' class='container'></div>");
+					this.$el.append("<div id='" + this.compassComponent + "' class='container'></div>");				
+				}
+			}
         },
 
         render: function (reading,sim) {
