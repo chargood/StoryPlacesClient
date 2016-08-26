@@ -29,6 +29,12 @@ define([
                 this.setupGPSTracking();
             }
 			
+			
+			this.leafletMapObject.on('click', function(e){
+				document.mclat = e.latlng.lat
+				document.mclng = e.latlng.lng	
+			});			
+			
         },
 
         setupGPSTracking: function () {

@@ -5,7 +5,7 @@ define([
     'storyListView',
     'storyView',
     'readingView',
-    'cardView',
+	'cardView',
     'errorView',
     'debugView',
     'User',
@@ -31,7 +31,7 @@ define([
         var router = new Router();
         var debugView = DebugView.getDebug();
         var readingView = new ReadingView({el: document.getElementById('readingView')});
-        var cardView = new CardView({el: document.getElementById('cardView')});
+		var cardView = new CardView({el: document.getElementById('cardView')});
         var storyView = new StoryView({el: document.getElementById('storyView')});
         var storyListView = new StoryListView({el: document.getElementById('storyListView')});
         var errorView = new ErrorView({el: document.getElementById('errorView')});
@@ -76,7 +76,7 @@ define([
             ReadingRepository.getReading(readingId,
                 function (reading) {
                     console.log('Play Reading Route');
-                    readingView.render(reading);
+                    readingView.render(reading,document.simmode);
                 },
                 function () {
                     window.history.back();

@@ -33,6 +33,11 @@ define([
                 type: type,
 				data: data
             };
+			
+			if(document.simmode){
+				values.data.simmode=true				
+			}
+			
             logEvent.save(
                 values,
                 {

@@ -3,8 +3,9 @@ define([
     'underscore',
     'backbone',
     'mapReadingView',
-    'listReadingView'
-], function ($, _, Backbone, MapReadingView, ListReadingView) {
+    'listReadingView',
+	'SPGPS'
+], function ($, _, Backbone, MapReadingView, ListReadingView,SPGPS) {
 
     var ReadingView = Backbone.View.extend({
         events: {
@@ -16,6 +17,7 @@ define([
         mapComponent: 'mapComponent',
         listComponent: 'listComponent',
         compassComponent: 'compassComponent',
+		cardComponent: 'cardComponent',
 
         reading: undefined,
 
@@ -30,10 +32,12 @@ define([
                 this.$el.append("<div id='" + this.mapComponent + "' class='mapComponent'></div>");
                 this.$el.append("<div id='" + this.listComponent + "' class='listComponent'></div>");
                 this.$el.append("<div id='" + this.compassComponent + "' class='container'></div>");
+				this.$el.append("<div id='" + this.cardComponent + "' class='container'></div>");
+				
             }
         },
 
-        render: function (reading) {
+        render: function (reading,sim) {
             if (!this.reading || this.reading.id != reading.id) {
                 if (this.reading) {
                     this.tearDown();
@@ -41,10 +45,15 @@ define([
 
                 this.newReading(reading);
             }
-
+			
+			if(sim){
+				SPGPS.fakerOn()				
+			}
+			
             this.listReadingView.render();
-            this.mapReadingView.render();
-            
+			this.sim = sim
+            this.mapReadingView.render(sim);
+			            
 
             $('.view').hide();
             this.$el.show();
@@ -60,9 +69,12 @@ define([
         },
 
         tearDown: function() {
-            this.listReadingView.tearDown();
+			this.listReadingView.tearDown();
             this.mapReadingView.tearDown();
             this.reading = undefined;
+			if(this.sim){
+				SPGPS.fakerOff()
+			}
         }
             
     });

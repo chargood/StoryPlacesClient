@@ -2,8 +2,9 @@ define([
     'jquery',
     'underscore',
     'backbone',
-    'MediaCacheRepository'
-], function ($, _, Backbone, MediaCacheRepository) {
+    'MediaCacheRepository',
+	'Card'
+], function ($, _, Backbone, MediaCacheRepository, Card) {
 
     var CardView;
 
@@ -22,7 +23,10 @@ define([
 
             var that = this;
 
-            $('.view').hide();
+			if(!document.simmode){
+				$('.view').hide();
+			}
+			
             this.$el.show();
 
             if (this.reading.getStory()) {
@@ -85,18 +89,25 @@ define([
 
         renderCard: function () {
             var story = this.reading.getStory();
-            var card = story.getCard(this.cardId);
+			var card = new Card();
+			if(this.cardId){
+				card = story.getCard(this.cardId);
+			}
+			
+			console.log("!!!",card,this.cardId)			
 
-            var compiledTemplate = this.template({
-                story: story,
-                reading: this.reading,
-                card: card
-            });
+			var compiledTemplate = this.template({
+				story: story,
+				reading: this.reading,
+				card: card
+			});
+			
+			compiledTemplate = this.replaceImageTags(compiledTemplate, story.id);
+			compiledTemplate = this.replaceAudioTags(compiledTemplate, story.id);
+		
 
-            compiledTemplate = this.replaceImageTags(compiledTemplate, story.id);
-            compiledTemplate = this.replaceAudioTags(compiledTemplate, story.id);
+			this.$el.html(compiledTemplate).find();
 
-            this.$el.html(compiledTemplate).find();
         },
 
         template: _.template(

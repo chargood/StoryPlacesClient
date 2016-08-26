@@ -11,19 +11,25 @@ define([
     'underscore',
     'jquery',
     'MarkerCollection',
-	'iconRepository'
-], function (Backbone, map, iconFactory, _, $, MarkerCollection,iconRepository) {
+	'iconRepository',
+	'SPGPS'
+], function (Backbone, map, iconFactory, _, $, MarkerCollection,iconRepository,SPGPS) {
     var MapReadingView;
 
     MapReadingView = Backbone.View.extend({
-        mapDivId: 'mapDiv',
+        
+		events: {
+			'click #mapDiv': 'mapclick',			
+		},
+		
+		mapDivId: 'mapDiv',
         templateId: '#deckMapTemplate',
 
         reading: undefined,
         markers: undefined,
 
         initialize: function () {
-            this.$el.append("<div id='" + this.mapDivId + "' class='mapContainer'></div>");
+			this.$el.append("<div id='" + this.mapDivId + "' class='mapContainer'></div>");
             map.bindMapIntoDOM($('#' + this.mapDivId).get(0));
         },
 
@@ -82,7 +88,21 @@ define([
         
         refresh: function() {
             map.refresh();
-        }
+        },
+		
+		mapclick: function(e){
+			if(this.sim){
+				SPGPS.fake(document.mclat,document.mclng)
+			}
+		},
+		
+		render: function (sim) {
+			this.sim = sim
+			if(sim){
+				this.el.style.float="left"
+				this.el.style.width="70%"
+			}
+		}
 
 
     });
