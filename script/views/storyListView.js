@@ -43,7 +43,9 @@ define([
 		
         template: _.template(
             "<% if(tag!=undefined){%>"
-			+ "<p><b>List for: </b><%=tag%></p>"
+			+ "<p><b>List for: </b><%=tag%> - <a href='#'>Cancel Filter</a></p>"
+			+ "<%} else {%>"
+			+ "<p><b>Filter List for: </b><a href='#/storylist/Bournemouth'>Bournemouth</a>, <a href='#/storylist/Southampton'>Southampton</a></p>"
 			+ "<%}%>"
 			+ "<table class='table table-hover'>"
             + "<tbody>"
