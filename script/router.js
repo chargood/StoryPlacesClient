@@ -50,14 +50,14 @@ define([
     'debugView',
     'User',
     'StoryRepository',
-	'ReadingRepository',
-	'LogEventCollectionRepository'
+  'ReadingRepository',
+  'LogEventCollectionRepository'
 ], function ($, _, Backbone, StoryListView, StoryView, ReadingView, CardView, ErrorView, DebugView, User, StoryRepository, ReadingRepository,LogEventCollectionRepository) {
 
     var Router = Backbone.Router.extend({
         routes: {
             '': 'home',
-			'storylist/:tag': 'taglist',
+      'storylist/:tag': 'taglist',
             'story/:storyId': 'viewStory',
             'reading/:readingId': 'playReading',
             'card/:readingId/:cardId': 'playReadingCard',
@@ -79,18 +79,18 @@ define([
         // add handlers
         router.on('route:home', function () {
             console.log('Home Route');
-			
-			logEvent("viewstorylist",{})
-			
+      
+            logEvent("viewstorylist",{})
+      
             storyListView.render();
             debugView.render();
         });
-		
-		router.on('route:taglist', function (tag) {
+    
+        router.on('route:taglist', function (tag) {
             console.log('Tag List Route');
-			
-			logEvent("viewstorylist",{tag:tag})
-			
+      
+            logEvent("viewstorylist",{tag:tag})
+      
             storyListView.render(undefined,tag);
             debugView.render();
         });
@@ -107,9 +107,9 @@ define([
                 }
             );
 
-			logEvent("viewstory",{storyId:storyId})
-			
-            debugView.render();			
+            logEvent("viewstory",{storyId:storyId})
+      
+            debugView.render();      
         });
 
         router.on('route:playReading', function (readingId) {
@@ -123,8 +123,8 @@ define([
                     errorView.render("Unable to load reading, please check your internet connection and try again.");
                 }
             );
-			
-			logEvent("playreading",{readingId:readingId})
+      
+            logEvent("playreading",{readingId:readingId})
 
             debugView.render();
         });
@@ -133,18 +133,18 @@ define([
             //readingView = new ReadingView({id:id});
             console.log('Play Reading Deck Route');
             //readingView.renderDeck({ id: id });
-			logEvent("playreadingdeck",{readingId:readingId})
+            logEvent("playreadingdeck",{readingId:readingId})
             debugView.render();
         });
 
         router.on('route:playReadingCard', function (readingId, cardId) {
             ReadingRepository.getReading(readingId,
                 function (reading) {
-					
-					var story = reading.getStory();
-					var card = story.getCard(cardId);					
-					logEvent("playreadingcard",{readingId:readingId,storyId:story.id,cardId:cardId,cardLabel:card.getLabel()})
-					
+          
+                    var story = reading.getStory();
+                    var card = story.getCard(cardId);          
+                    logEvent("playreadingcard",{readingId:readingId,storyId:story.id,cardId:cardId,cardLabel:card.getLabel()})
+          
                     cardView.render(reading, cardId);
                 },
                 function () {
@@ -156,7 +156,7 @@ define([
             //readingView = new ReadingView({id:id});
             console.log('Play Reading Card Route');
             //readingView.renderCard({ id: id, card: card });
-			
+      
             debugView.render();
         });
 
@@ -176,25 +176,25 @@ define([
 
         return router;
     };
-	
-	var logEvent = function (type, data) {
-	
-		LogEventCollectionRepository.getLogEventCollection(
-			function (logEventC) {
-				logEventC.newLogEvent(
-					function () {
-						console.log("Event Logged.");
-					},
-					function () {
-						console.log("LogEventError.");
-					},
-					type,
-					data
-				);
-			}
-		);
-	
-	}
+  
+  var logEvent = function (type, data) {
+  
+    LogEventCollectionRepository.getLogEventCollection(
+      function (logEventC) {
+        logEventC.newLogEvent(
+          function () {
+            console.log("Event Logged.");
+          },
+          function () {
+            console.log("LogEventError.");
+          },
+          type,
+          data
+        );
+      }
+    );
+  
+  }
 
     return {
         initialize: initialize
