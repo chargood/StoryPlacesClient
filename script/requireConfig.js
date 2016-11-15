@@ -10,7 +10,7 @@ Copyright (c) 2016
   University of Southampton
     Charlie Hargood, cah07r.ecs.soton.ac.uk
     Kevin Puplett, k.e.puplett.soton.ac.uk
-	David Pepper, d.pepper.soton.ac.uk
+    David Pepper, d.pepper.soton.ac.uk
 
 All rights reserved.
 
@@ -22,8 +22,8 @@ modification, are permitted provided that the following conditions are met:
       notice, this list of conditions and the following disclaimer in the
       documentation and/or other materials provided with the distribution.
     * The name of the Universities of Southampton nor the name of its 
-	  contributors may be used to endorse or promote products derived from 
-	  this software without specific prior written permission.
+      contributors may be used to endorse or promote products derived from 
+      this software without specific prior written permission.
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -52,8 +52,8 @@ require.config({
         leaflet: 'libs/leaflet',
 
         SPGPS: 'utils/SPGPS',
-		
-		geolocate: 'libs/geolocate',
+        
+        geolocate: 'libs/geolocate',
 
         iconRepository: 'map/icons/iconRepository',
         iconFactory: 'map/icons/iconFactory',
@@ -74,7 +74,7 @@ require.config({
         Reading: 'models/reading',
         Marker: 'models/marker',
         User: 'models/user',
-		LogEvent: 'models/logEvent',
+        LogEvent: 'models/logEvent',
 
         comparisonCondition: 'models/conditions/comparisonCondition',
         locationCondition: 'models/conditions/locationCondition',
@@ -87,14 +87,14 @@ require.config({
         ReadingRepository: 'repositories/readingRepository',
         StoryReadingCollectionRepository: 'repositories/storyReadingCollectionRepository',
         MediaCacheRepository: 'repositories/mediaCacheRepository',
-		LogEventCollectionRepository: 'repositories/logEventCollectionRepository',
+        LogEventCollectionRepository: 'repositories/logEventCollectionRepository',
 
         CardCollection: 'collections/cardCollection',
         CardStateCollection: 'collections/cardStateCollection',
         StoryCollection: 'collections/storyCollection',
         MarkerCollection: 'collections/markerCollection',
         StoryReadingCollection: 'collections/storyReadingCollection',
-		LogEventCollection: 'collections/logEventCollection',
+        LogEventCollection: 'collections/logEventCollection',
 
         CacheManager: 'utils/localStorageCacheManager'        
     }

@@ -10,7 +10,7 @@ Copyright (c) 2016
   University of Southampton
     Charlie Hargood, cah07r.ecs.soton.ac.uk
     Kevin Puplett, k.e.puplett.soton.ac.uk
-	David Pepper, d.pepper.soton.ac.uk
+    David Pepper, d.pepper.soton.ac.uk
 
 All rights reserved.
 
@@ -22,8 +22,8 @@ modification, are permitted provided that the following conditions are met:
       notice, this list of conditions and the following disclaimer in the
       documentation and/or other materials provided with the distribution.
     * The name of the Universities of Southampton nor the name of its 
-	  contributors may be used to endorse or promote products derived from 
-	  this software without specific prior written permission.
+      contributors may be used to endorse or promote products derived from 
+      this software without specific prior written permission.
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -41,43 +41,43 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 define([
     'underscore',
     'backbone',
-	'backbone_dual',
+    'backbone_dual',
     'LogEvent',
 ], function (_, Backbone, BackbonedualStorage, LogEvent) {
 
     var LogEventCollection = Backbone.Collection.extend({
-		urlRoot: '/storyplaces/logevent',
+        urlRoot: '/storyplaces/logevent',
         url: '/storyplaces/logevent',
 
-        model: LogEvent,		
+        model: LogEvent,        
 
         userId: undefined,
 
         initialize: function () {
-			this.userId = localStorage.getItem("User-ID");
-			
+            this.userId = localStorage.getItem("User-ID");
+            
             this.urlRoot = '/storyplaces/logevent/user/' + this.userId;
             this.url = '/storyplaces/logevent/user/' + this.userId;            
         },
 
         newLogEvent: function (successCallback, failureCallback,type,data) {
             var that = this;
-			
-			var date = Date();
-			
+            
+            var date = Date();
+            
             var logEvent = new LogEvent();
 
             var values = {
                 user: this.userId,
-				date: date,
+                date: date,
                 type: type,
-				data: data
+                data: data
             };
-			
-			if(document.simmode){
-				values.data.simmode=true				
-			}
-			
+            
+            if(document.simmode){
+                values.data.simmode=true                
+            }
+            
             logEvent.save(
                 values,
                 {
@@ -89,8 +89,8 @@ define([
                         failureCallback();
                     },
                 })
-			
-			this.syncDirtyAndDestroyed()
+            
+            this.syncDirtyAndDestroyed()
 
         }
 

@@ -10,7 +10,7 @@ Copyright (c) 2016
   University of Southampton
     Charlie Hargood, cah07r.ecs.soton.ac.uk
     Kevin Puplett, k.e.puplett.soton.ac.uk
-	David Pepper, d.pepper.soton.ac.uk
+    David Pepper, d.pepper.soton.ac.uk
 
 All rights reserved.
 
@@ -22,8 +22,8 @@ modification, are permitted provided that the following conditions are met:
       notice, this list of conditions and the following disclaimer in the
       documentation and/or other materials provided with the distribution.
     * The name of the Universities of Southampton nor the name of its 
-	  contributors may be used to endorse or promote products derived from 
-	  this software without specific prior written permission.
+      contributors may be used to endorse or promote products derived from 
+      this software without specific prior written permission.
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -47,36 +47,36 @@ define([
     'underscore',
     'jquery',
     'MarkerCollection',
-	'iconRepository',
-	'SPGPS'
+    'iconRepository',
+    'SPGPS'
 ], function (Backbone, map, iconFactory, _, $, MarkerCollection,iconRepository,SPGPS) {
     var MapReadingView;
 
     MapReadingView = Backbone.View.extend({
         
-		events: {
-			'click #mapDiv': 'mapclick',			
-		},
-		
-		mapDivId: 'mapDiv',
+        events: {
+            'click #mapDiv': 'mapclick',            
+        },
+        
+        mapDivId: 'mapDiv',
         templateId: '#deckMapTemplate',
 
         reading: undefined,
         markers: undefined,
 
         initialize: function () {
-			this.$el.append("<div id='" + this.mapDivId + "' class='mapContainer'></div>");
+            this.$el.append("<div id='" + this.mapDivId + "' class='mapContainer'></div>");
             map.bindMapIntoDOM($('#' + this.mapDivId).get(0));
         },
 
         newReading: function (reading) {
             this.markers = new MarkerCollection();
             this.reading = reading;
-			this.reading.cardStates.on(this.reading.cardStates.eventCardStatesModified, this.cardStatesModifiedEvent, this);
+            this.reading.cardStates.on(this.reading.cardStates.eventCardStatesModified, this.cardStatesModifiedEvent, this);
             this.renderAllMarkers();
         },
-		
-		tearDown: function () {
+        
+        tearDown: function () {
             this.reading.cardStates.off(this.reading.cardStates.eventCardStatesModified, this.renderAllMarkers, this);
             this.markers.destroy();
         },
@@ -85,7 +85,7 @@ define([
             var that = this;
             this.reading.cardStates.each(function (cardState) {
                 that.updateMarkerFromCardState(cardState);
-            });			
+            });            
         },
 
         cardStatesModifiedEvent: function (modifiedCardStates) {
@@ -125,21 +125,21 @@ define([
         refresh: function() {
             map.refresh();
         },
-		
-		mapclick: function(e){
-			if(this.sim){
-				SPGPS.fake(document.mclat,document.mclng)
-			}
-		},
-		
-		render: function (sim) {
-			this.sim = sim
-			if(sim){
-				this.el.style.float="left"
-				this.el.style.width="65%"
-				this.el.style.height="100%"
-			}
-		}
+        
+        mapclick: function(e){
+            if(this.sim){
+                SPGPS.fake(document.mclat,document.mclng)
+            }
+        },
+        
+        render: function (sim) {
+            this.sim = sim
+            if(sim){
+                this.el.style.float="left"
+                this.el.style.width="65%"
+                this.el.style.height="100%"
+            }
+        }
 
 
     });

@@ -10,7 +10,7 @@ Copyright (c) 2016
   University of Southampton
     Charlie Hargood, cah07r.ecs.soton.ac.uk
     Kevin Puplett, k.e.puplett.soton.ac.uk
-	David Pepper, d.pepper.soton.ac.uk
+    David Pepper, d.pepper.soton.ac.uk
 
 All rights reserved.
 
@@ -22,8 +22,8 @@ modification, are permitted provided that the following conditions are met:
       notice, this list of conditions and the following disclaimer in the
       documentation and/or other materials provided with the distribution.
     * The name of the Universities of Southampton nor the name of its 
-	  contributors may be used to endorse or promote products derived from 
-	  this software without specific prior written permission.
+      contributors may be used to endorse or promote products derived from 
+      this software without specific prior written permission.
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -64,13 +64,13 @@ define([
             if (this.trackGPSLocation) {
                 this.setupGPSTracking();
             }
-			
-			
-			this.leafletMapObject.on('click', function(e){
-				document.mclat = e.latlng.lat
-				document.mclng = e.latlng.lng	
-			});			
-			
+            
+            
+            this.leafletMapObject.on('click', function(e){
+                document.mclat = e.latlng.lat
+                document.mclng = e.latlng.lng    
+            });            
+            
         },
 
         setupGPSTracking: function () {
@@ -108,12 +108,12 @@ define([
             }
         },
 
-		updateMarkerLatLon: function(marker, lat,lon) {
+        updateMarkerLatLon: function(marker, lat,lon) {
             if (marker && lat&&lon) {
                 marker.setLatLng([lat,lon]);
             }
         },
-		
+        
         createMarker: function(lat, long, icon) {
             if (lat && long && icon) {
                 return L.marker([lat, long], {icon: icon})
