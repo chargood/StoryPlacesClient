@@ -65,8 +65,9 @@ define([
         markers: undefined,
 
         initialize: function () {
-            this.$el.append("<div id='" + this.mapDivId + "' class='mapContainer'></div>");
-            map.bindMapIntoDOM($('#' + this.mapDivId).get(0));
+            var mapElement = this.$el.append("<div id='" + this.mapDivId + "' class='mapContainer'></div>");
+            //Extract the DOMElement from the JQuery object returned by append.
+            map.bindMapIntoDOM(mapElement.get(0));
         },
 
         newReading: function (reading) {
