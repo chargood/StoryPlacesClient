@@ -50,7 +50,7 @@ define([
         leafletMapObject: null,
         defaultLocation: [50.935360, -1.396226],
         defaultZoom: 16,
-        trackGPSLocation: true,
+        trackGPSLocation: false,
         attributionText: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
         tileUrl: 'http://{s}.tile.osm.org/{z}/{x}/{y}.png?',
 
@@ -75,6 +75,10 @@ define([
 
         setupGPSTracking: function () {
             this.leafletMapObject.locate({setView: true, maxZoom: 16, watch: true, maximumAge: 10000});
+        },
+
+        centerOn: function(latlng) {
+            this.leafletMapObject.setView(latlng);
         },
 
         reattachMapObject: function (mapDomElement) {

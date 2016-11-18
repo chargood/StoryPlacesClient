@@ -53,21 +53,18 @@ define([
     var MapReadingView;
 
     MapReadingView = Backbone.View.extend({
-        
-        events: {
-            'click #mapDiv': 'mapclick',            
-        },
-        
         mapDivId: 'mapDiv',
         templateId: '#deckMapTemplate',
+        mapElement: undefined,
 
         reading: undefined,
         markers: undefined,
 
         initialize: function () {
-            var mapElement = this.$el.append("<div id='" + this.mapDivId + "' class='mapContainer'></div>");
+            this.mapElement = this.$el.append("<div id='" + this.mapDivId + "' class='mapContainer'></div>");
+            this.mapElement.on("click", this.mapclick.bind(this));
             //Extract the DOMElement from the JQuery object returned by append.
-            map.bindMapIntoDOM(mapElement.get(0));
+            map.bindMapIntoDOM(this.mapElement.get(0));
         },
 
         newReading: function (reading) {
