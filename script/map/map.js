@@ -45,64 +45,59 @@ define([
 ], function (L) {
     
     var tileLayer;
+    var map;
     
-    var Map = {
-        leafletMapObject: null,
+    var StoryMap = L.Map.extend({
         defaultLocation: [50.935360, -1.396226],
         defaultZoom: 16,
         trackGPSLocation: false,
         attributionText: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
         tileUrl: 'http://{s}.tile.osm.org/{z}/{x}/{y}.png?',
 
-        createMapObject: function (mapDomElement) {
-            console.log("**  Initialising Map into ", mapDomElement);
+        initialize: function(mapDomElement) {
+          console.log("**  Initialising Map into ", mapDomElement);
+          L.Map.prototype.initialize.call(this, mapDomElement, {zoomControl: false});
 
-            this.leafletMapObject = L.map(mapDomElement, {zoomControl: false}).setView(this.defaultLocation, this.defaultZoom);
-            tileLayer = L.tileLayer(this.tileUrl, { attribution: this.attributionText });
-            tileLayer.addTo(this.leafletMapObject);
+          this.setView(this.defaultLocation, this.defaultZoom);
 
-            if (this.trackGPSLocation) {
-                this.setupGPSTracking();
-            }
-            
-            
-            this.leafletMapObject.on('click', function(e){
-                document.mclat = e.latlng.lat
-                document.mclng = e.latlng.lng    
-            });            
-            
+          tileLayer = L.tileLayer(this.tileUrl, { attribution: this.attributionText });
+          tileLayer.addTo(this);
+
+          if (this.trackGPSLocation) {
+              this.setupGPSTracking();
+          }
+
+          this.on('click', function(e){
+              document.mclat = e.latlng.lat
+              document.mclng = e.latlng.lng    
+          });            
+
         },
 
         setupGPSTracking: function () {
-            this.leafletMapObject.locate({setView: true, maxZoom: 16, watch: true, maximumAge: 10000});
+            this.locate({setView: true, maxZoom: 16, watch: true, maximumAge: 10000});
         },
 
         centerOn: function(latlng) {
-            this.leafletMapObject.setView(latlng);
+            this.setView(latlng);
         },
 
         reattachMapObject: function (mapDomElement) {
             console.log("** Reattaching Map into ", mapDomElement);
-            mapDomElement.parentElement.replaceChild(this.leafletMapObject.getContainer(), mapDomElement);
+            mapDomElement.parentElement.replaceChild(this.getContainer(), mapDomElement);
         },
 
-        bindMapIntoDOM: function (mapDomElement) {
-            if (!this.leafletMapObject) {
-                this.createMapObject(mapDomElement);
-            } else {
-                this.reattachMapObject(mapDomElement);
-            }
-        },
+        
 
         addMarkerToMap: function (marker) {
-            if (marker && this.leafletMapObject) {
-                marker.addTo(this.leafletMapObject);
+            if (marker) {
+                marker.addTo(this);
             }
         },
 
         removeMarkerFromMap: function (marker) {
-            if (marker && this.leafletMapObject) {
-                this.leafletMapObject.removeLayer(marker);
+            if (marker) {
+                this.removeLayer(marker);
             }
         },
 
@@ -138,9 +133,17 @@ define([
         },
         
         refresh: function() {
-            this.leafletMapObject.invalidateSize();
+            this.invalidateSize();
         }
-    }
+    });
 
-    return Map;
+    StoryMap.bindMapIntoDOM = function (mapDomElement) {
+        if (!map) {
+            map = new StoryMap(mapDomElement);
+        } else {
+            this.reattachMapObject(mapDomElement);
+        }
+    };
+
+    return StoryMap;
 });

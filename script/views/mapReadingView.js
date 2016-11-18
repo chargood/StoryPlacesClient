@@ -61,10 +61,11 @@ define([
         markers: undefined,
 
         initialize: function () {
-            this.mapElement = this.$el.append("<div id='" + this.mapDivId + "' class='mapContainer'></div>");
-            this.mapElement.on("click", this.mapclick.bind(this));
+            var mapParent = this.$el.append("<div id='" + this.mapDivId + "' class='mapContainer'></div>");
+            mapParent.on("click", this.mapclick.bind(this));
+
             //Extract the DOMElement from the JQuery object returned by append.
-            map.bindMapIntoDOM(this.mapElement.get(0));
+            this.mapElement = new map(mapParent.get(0));
         },
 
         newReading: function (reading) {
@@ -106,6 +107,7 @@ define([
         createMarkerFromCardState: function (cardState) {
             var card = this.reading.getStory().deck().get(cardState.id);
             var marker = this.markers.add({id: card.id});
+            marker.setMap(this.mapElement);
             marker.buildMakerFromCard(card);
 
             return marker;
@@ -121,7 +123,7 @@ define([
         }, 
         
         refresh: function() {
-            map.refresh();
+            this.mapElement.refresh();
         },
         
         mapclick: function(e){

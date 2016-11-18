@@ -40,10 +40,9 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 define([
     'backbone',
-    'map',
     'iconFactory',
     'iconRepository'
-], function (Backbone, map, iconFactory, iconRepository) {
+], function (Backbone, iconFactory, iconRepository) {
     var Marker;
 
     Marker = Backbone.Model.extend({
@@ -55,8 +54,14 @@ define([
         initialize: function () {
             this.set({
                 marker: undefined,
-                type: undefined
+                type: undefined,
+                lat: undefined,
+                lon: undefined
             });
+        },
+
+        setMap: function(map) {
+          this.map = map;
         },
 
         buildMakerFromCard: function (card) {
@@ -94,7 +99,7 @@ define([
                 return undefined;
             }
 
-            return map.createMarkerWithPopUp(lat, long, iconRepository.redIcon, this.getPopUpTextFromCard(card), null);
+            return this.map.createMarkerWithPopUp(lat, long, iconRepository.redIcon, this.getPopUpTextFromCard(card), null);
         },
 
         getPopUpTextFromCard: function (card) {
@@ -127,15 +132,15 @@ define([
                 return;
             }
 
-            map.updateMarkerIcon(this.get('marker'), iconFactory.getIconForCardState(cardState))
+            this.map.updateMarkerIcon(this.get('marker'), iconFactory.getIconForCardState(cardState))
 
             if (!cardState.get('previousVisible')) {
-                map.addMarkerToMap(this.get('marker'));
+                this.map.addMarkerToMap(this.get('marker'));
             }
         },
 
         removeFromMap: function () {
-            map.removeMarkerFromMap(this.get('marker'));
+            this.map.removeMarkerFromMap(this.get('marker'));
         },
 
         destroy: function() {
