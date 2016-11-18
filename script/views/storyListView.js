@@ -10,7 +10,7 @@ Copyright (c) 2016
   University of Southampton
     Charlie Hargood, cah07r.ecs.soton.ac.uk
     Kevin Puplett, k.e.puplett.soton.ac.uk
-	David Pepper, d.pepper.soton.ac.uk
+    David Pepper, d.pepper.soton.ac.uk
 
 All rights reserved.
 
@@ -22,8 +22,8 @@ modification, are permitted provided that the following conditions are met:
       notice, this list of conditions and the following disclaimer in the
       documentation and/or other materials provided with the distribution.
     * The name of the Universities of Southampton nor the name of its 
-	  contributors may be used to endorse or promote products derived from 
-	  this software without specific prior written permission.
+      contributors may be used to endorse or promote products derived from 
+      this software without specific prior written permission.
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -68,7 +68,7 @@ define([
 
                     that.$el.html(that.template({
                         storyList: storyList,
-						tag: tag
+                        tag: tag
                     }));
 
                     console.log("story list view rendered");
@@ -79,21 +79,21 @@ define([
             });
         },
 
-		//console.log('story publish state')
-		
+        //console.log('story publish state')
+        
         template: _.template(
             "<% if(tag!=undefined){%>"
-			+ "<p><b>List for: </b><%=tag%> - <a href='#'>Cancel Filter</a></p>"
-			+ "<%} else {%>"
-			+ "<p><b>Filter List for: </b><a href='#/storylist/Bournemouth'>Bournemouth</a>, <a href='#/storylist/Southampton'>Southampton</a></p>"
-			+ "<%}%>"
-			+ "<table class='table table-hover'>"
+            + "<p><b>List for: </b><%=tag%> - <a href='#'>Cancel Filter</a></p>"
+            + "<%} else {%>"
+            + "<p><b>Filter List for: </b><a href='#/storylist/Bournemouth'>Bournemouth</a>, <a href='#/storylist/Southampton'>Southampton</a></p>"
+            + "<%}%>"
+            + "<table class='table table-hover'>"
             + "<tbody>"
             + "<% storyList.each(function(story) { %>"
-			+ "<% if(story.get('publishState')!='unpublished'&&(tag==undefined||story.get('tags').indexOf(tag)!=-1)){ %>"
+            + "<% if(story.get('publishState')!='unpublished'&&(tag==undefined||story.get('tags').indexOf(tag)!=-1)){ %>"
             + "<tr><td><a href='#/story/<%= story.id %>'><%=story.get('name') %></a></td></tr>"
             + "<%}%>"
-			+ "<%});%>"
+            + "<%});%>"
             + "</tbody>"
             + "</table>"
         ),

@@ -10,7 +10,7 @@ Copyright (c) 2016
   University of Southampton
     Charlie Hargood, cah07r.ecs.soton.ac.uk
     Kevin Puplett, k.e.puplett.soton.ac.uk
-	David Pepper, d.pepper.soton.ac.uk
+    David Pepper, d.pepper.soton.ac.uk
 
 All rights reserved.
 
@@ -22,8 +22,8 @@ modification, are permitted provided that the following conditions are met:
       notice, this list of conditions and the following disclaimer in the
       documentation and/or other materials provided with the distribution.
     * The name of the Universities of Southampton nor the name of its 
-	  contributors may be used to endorse or promote products derived from 
-	  this software without specific prior written permission.
+      contributors may be used to endorse or promote products derived from 
+      this software without specific prior written permission.
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -40,7 +40,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 define(['jquery','geolocate'], function ($,geolocate) {
 
-	var watcher;
+    var watcher;
 
     var gpsOptions = {enableHighAccuracy: true, timeout: 20000, maximumAge: 10000};
 
@@ -96,34 +96,34 @@ define(['jquery','geolocate'], function ($,geolocate) {
 
         navigator.geolocation.getCurrentPosition(successCallback, errorCallback, gpsOptions);
     };
-	
+    
     var initiateLocator = function () {
         watcher=navigator.geolocation.watchPosition(onGeoSuccess, showGPSWarning, gpsOptions);
     };
-	
-	var fakerOn = function () {
-		navigator.geolocation.clearWatch(watcher)
-		geolocate.use()
-		watcher=navigator.geolocation.watchPosition(onGeoSuccess, showGPSWarning, gpsOptions);
-	}
-	
-	var fake = function (la,lo) {
-		geolocate.change({lat: la, lng: lo});
-	}
-	
-	var fakerOff = function () {
-		navigator.geolocation.clearWatch(watcher)
-		geolocate.restore()
-		watcher=navigator.geolocation.watchPosition(onGeoSuccess, showGPSWarning, gpsOptions);
-	}
+    
+    var fakerOn = function () {
+        navigator.geolocation.clearWatch(watcher)
+        geolocate.use()
+        watcher=navigator.geolocation.watchPosition(onGeoSuccess, showGPSWarning, gpsOptions);
+    }
+    
+    var fake = function (la,lo) {
+        geolocate.change({lat: la, lng: lo});
+    }
+    
+    var fakerOff = function () {
+        navigator.geolocation.clearWatch(watcher)
+        geolocate.restore()
+        watcher=navigator.geolocation.watchPosition(onGeoSuccess, showGPSWarning, gpsOptions);
+    }
 
     // return functions as an object
     return {
         getDistanceFromLatLonInKm: getDistanceFromLatLonInKm,
         initiateLocator: initiateLocator,
         testLocator: testLocator,
-		fakerOn: fakerOn,
-		fakerOff: fakerOff,
-		fake: fake,
+        fakerOn: fakerOn,
+        fakerOff: fakerOff,
+        fake: fake,
     };
 });

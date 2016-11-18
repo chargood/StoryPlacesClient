@@ -10,7 +10,7 @@ Copyright (c) 2016
   University of Southampton
     Charlie Hargood, cah07r.ecs.soton.ac.uk
     Kevin Puplett, k.e.puplett.soton.ac.uk
-	David Pepper, d.pepper.soton.ac.uk
+    David Pepper, d.pepper.soton.ac.uk
 
 All rights reserved.
 
@@ -22,8 +22,8 @@ modification, are permitted provided that the following conditions are met:
       notice, this list of conditions and the following disclaimer in the
       documentation and/or other materials provided with the distribution.
     * The name of the Universities of Southampton nor the name of its 
-	  contributors may be used to endorse or promote products derived from 
-	  this software without specific prior written permission.
+      contributors may be used to endorse or promote products derived from 
+      this software without specific prior written permission.
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -47,7 +47,7 @@ define([
     'router',
     'SPGPS',
     'backbone_dual',
-	'geolocate'
+    'geolocate'
 ], function ($, _, Backbone, Router, SPGPS, BackBone_Dual, geolocate) {
 
     var initialize = function () {

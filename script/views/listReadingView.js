@@ -10,7 +10,7 @@ Copyright (c) 2016
   University of Southampton
     Charlie Hargood, cah07r.ecs.soton.ac.uk
     Kevin Puplett, k.e.puplett.soton.ac.uk
-	David Pepper, d.pepper.soton.ac.uk
+    David Pepper, d.pepper.soton.ac.uk
 
 All rights reserved.
 
@@ -22,8 +22,8 @@ modification, are permitted provided that the following conditions are met:
       notice, this list of conditions and the following disclaimer in the
       documentation and/or other materials provided with the distribution.
     * The name of the Universities of Southampton nor the name of its 
-	  contributors may be used to endorse or promote products derived from 
-	  this software without specific prior written permission.
+      contributors may be used to endorse or promote products derived from 
+      this software without specific prior written permission.
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -43,15 +43,15 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 define([
     'backbone',
     'underscore',
-	'cardView'
+    'cardView'
 ], function (Backbone, _, CardView) {
     var ListReadingView;
 
     ListReadingView = Backbone.View.extend({
-		
-		events: {
-			'click #card': 'clickcard',			
-		},
+        
+        events: {
+            'click #card': 'clickcard',            
+        },
 
         reading: undefined,
 
@@ -67,65 +67,65 @@ define([
 
         renderList: function () {
             var that = this;
-			
+            
             if(this.reading.storyObject){
                 this.$el.html(this.template({
                     visibleCards: that.reading.cardStates.visibleCards(),
                     deck: that.reading.storyObject.deck(),
                     readingId: that.reading.id,
                     storyName: that.reading.storyObject.name,
-					sim: document.simmode
+                    sim: document.simmode
                 }));
             }
-			
-			if(document.simmode){
-				this.el.style.float="right"
-				this.el.style.width="33%"
-				this.el.style.height="auto"
-				
-			
-			}
-			
+            
+            if(document.simmode){
+                this.el.style.float="right"
+                this.el.style.width="33%"
+                this.el.style.height="auto"
+                
+            
+            }
+            
         },
-		
-		clickcard: function(e){
-			
-			//console.log("test",e.target.attributes.cardid,e)
-			
-			
-			var cardView = new CardView({el: document.getElementById('cardComponent')})
-			cardView.render(this.reading,e.target.attributes.cardid.value);		
-			
-			
-			cardView.el.style.float="right"
-			cardView.el.style.width="33%"
-			
-		},
+        
+        clickcard: function(e){
+            
+            //console.log("test",e.target.attributes.cardid,e)
+            
+            
+            var cardView = new CardView({el: document.getElementById('cardComponent')})
+            cardView.render(this.reading,e.target.attributes.cardid.value);        
+            
+            
+            cardView.el.style.float="right"
+            cardView.el.style.width="33%"
+            
+        },
 
         template: _.template(
             "<ul class='list-group'>"
             + "<% _.each(visibleCards, function(cardState) { %>"
             + "<% var card = deck.get(cardState.id) %>"
             + "<% if (cardState.isSuitable()) { %>"
-				+ "<% if (sim) { %>"
-					+ "<a class='list-group-item list-group-item-success' id='card' cardid='<%=_.escape(card.id) %>'><%= _.escape(card.getLabel()) %></a>"
-				+ "<% } else{ %>"
-					+ "<a class='list-group-item list-group-item-success' href='#/card/<%= _.escape(readingId) %>/<%=_.escape(card.id) %>'><%= _.escape(card.getLabel()) %></a>"
-				+ "<% } %>"
-		    + "<% } else{ %>"
+                + "<% if (sim) { %>"
+                    + "<a class='list-group-item list-group-item-success' id='card' cardid='<%=_.escape(card.id) %>'><%= _.escape(card.getLabel()) %></a>"
+                + "<% } else{ %>"
+                    + "<a class='list-group-item list-group-item-success' href='#/card/<%= _.escape(readingId) %>/<%=_.escape(card.id) %>'><%= _.escape(card.getLabel()) %></a>"
+                + "<% } %>"
+            + "<% } else{ %>"
             + "<ul class='list-group-item list-group-item-danger'><%= _.escape(card.getLabel()) %> - <i><%= _.escape(card.getHintDirection()) %></i></ul>"
             + "<% } %>"
             + "<%});%>"
             + "</ul>"
         )
-		
-		/*template: _.template(
+        
+        /*template: _.template(
             "<ul class='list-group'>"
             + "<% _.each(visibleCards, function(cardState) { %>"
             + "<% var card = deck.get(cardState.id) %>"
             + "<% if (cardState.isSuitable()) { %>"
-			+ "<a class='list-group-item list-group-item-success' href='#/card/<%= _.escape(readingId) %>/<%=_.escape(card.id) %>'><%= _.escape(card.getLabel()) %></a>"
-		    + "<% } else{ %>"
+            + "<a class='list-group-item list-group-item-success' href='#/card/<%= _.escape(readingId) %>/<%=_.escape(card.id) %>'><%= _.escape(card.getLabel()) %></a>"
+            + "<% } else{ %>"
             + "<ul class='list-group-item list-group-item-danger'><%= _.escape(card.getLabel()) %> - <i><%= _.escape(card.getHintDirection()) %></i></ul>"
             + "<% } %>"
             + "<%});%>"

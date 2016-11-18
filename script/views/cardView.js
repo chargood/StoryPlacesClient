@@ -10,7 +10,7 @@ Copyright (c) 2016
   University of Southampton
     Charlie Hargood, cah07r.ecs.soton.ac.uk
     Kevin Puplett, k.e.puplett.soton.ac.uk
-	David Pepper, d.pepper.soton.ac.uk
+    David Pepper, d.pepper.soton.ac.uk
 
 All rights reserved.
 
@@ -22,8 +22,8 @@ modification, are permitted provided that the following conditions are met:
       notice, this list of conditions and the following disclaimer in the
       documentation and/or other materials provided with the distribution.
     * The name of the Universities of Southampton nor the name of its 
-	  contributors may be used to endorse or promote products derived from 
-	  this software without specific prior written permission.
+      contributors may be used to endorse or promote products derived from 
+      this software without specific prior written permission.
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -43,7 +43,7 @@ define([
     'underscore',
     'backbone',
     'MediaCacheRepository',
-	'Card'
+    'Card'
 ], function ($, _, Backbone, MediaCacheRepository, Card) {
 
     var CardView;
@@ -63,10 +63,10 @@ define([
 
             var that = this;
 
-			if(!document.simmode){
-				$('.view').hide();
-			}
-			
+            if(!document.simmode){
+                $('.view').hide();
+            }
+            
             this.$el.show();
 
             if (this.reading.getStory()) {
@@ -129,24 +129,24 @@ define([
 
         renderCard: function () {
             var story = this.reading.getStory();
-			var card = new Card();
-			if(this.cardId){
-				card = story.getCard(this.cardId);
-			}
-			
-			console.log("!!!",card,this.cardId)			
+            var card = new Card();
+            if(this.cardId){
+                card = story.getCard(this.cardId);
+            }
+            
+            console.log("!!!",card,this.cardId)            
 
-			var compiledTemplate = this.template({
-				story: story,
-				reading: this.reading,
-				card: card
-			});
-			
-			compiledTemplate = this.replaceImageTags(compiledTemplate, story.id);
-			compiledTemplate = this.replaceAudioTags(compiledTemplate, story.id);
-		
+            var compiledTemplate = this.template({
+                story: story,
+                reading: this.reading,
+                card: card
+            });
+            
+            compiledTemplate = this.replaceImageTags(compiledTemplate, story.id);
+            compiledTemplate = this.replaceAudioTags(compiledTemplate, story.id);
+        
 
-			this.$el.html(compiledTemplate).find();
+            this.$el.html(compiledTemplate).find();
 
         },
 
@@ -170,19 +170,19 @@ define([
                     this.reading.executeCardFunctions(e.target.attributes.eventCardId.value);
                     //localStorage.setItem("GPSLat", "!");
                     if(document.simmode){
-						this.$el.hide();					
-					}
-					else{
-						Backbone.history.navigate('/reading/' + this.reading.id, { trigger: true });
-					}
-					
-					
+                        this.$el.hide();                    
+                    }
+                    else{
+                        Backbone.history.navigate('/reading/' + this.reading.id, { trigger: true });
+                    }
+                    
+                    
                 }
                 else if (e.target.attributes.eventType.value == "endstory") {
                     if(document.simmode){
-						this.$el.hide();					
-					}
-					Backbone.history.navigate('', { trigger: true });					
+                        this.$el.hide();                    
+                    }
+                    Backbone.history.navigate('', { trigger: true });                    
                 }
                 else if (e.target.attributes.eventType.value == "repeat") {
                     //the repeat event is a horrible work around for the backbone stacking events problem. Without it every view created, destroyed or not, will pick up the events. Hopefully so long as we only create 1 reading object this won't return.

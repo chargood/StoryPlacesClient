@@ -10,7 +10,7 @@ Copyright (c) 2016
   University of Southampton
     Charlie Hargood, cah07r.ecs.soton.ac.uk
     Kevin Puplett, k.e.puplett.soton.ac.uk
-	David Pepper, d.pepper.soton.ac.uk
+    David Pepper, d.pepper.soton.ac.uk
 
 All rights reserved.
 
@@ -22,8 +22,8 @@ modification, are permitted provided that the following conditions are met:
       notice, this list of conditions and the following disclaimer in the
       documentation and/or other materials provided with the distribution.
     * The name of the Universities of Southampton nor the name of its 
-	  contributors may be used to endorse or promote products derived from 
-	  this software without specific prior written permission.
+      contributors may be used to endorse or promote products derived from 
+      this software without specific prior written permission.
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -40,10 +40,9 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 define([
     'backbone',
-    'map',
     'iconFactory',
     'iconRepository'
-], function (Backbone, map, iconFactory, iconRepository) {
+], function (Backbone, iconFactory, iconRepository) {
     var Marker;
 
     Marker = Backbone.Model.extend({
@@ -55,8 +54,14 @@ define([
         initialize: function () {
             this.set({
                 marker: undefined,
-                type: undefined
+                type: undefined,
+                lat: undefined,
+                lon: undefined
             });
+        },
+
+        setMap: function(map) {
+          this.map = map;
         },
 
         buildMakerFromCard: function (card) {
@@ -94,7 +99,7 @@ define([
                 return undefined;
             }
 
-            return map.createMarkerWithPopUp(lat, long, iconRepository.redIcon, this.getPopUpTextFromCard(card), null);
+            return this.map.createMarkerWithPopUp(lat, long, iconRepository.redIcon, this.getPopUpTextFromCard(card), null);
         },
 
         getPopUpTextFromCard: function (card) {
@@ -127,15 +132,15 @@ define([
                 return;
             }
 
-            map.updateMarkerIcon(this.get('marker'), iconFactory.getIconForCardState(cardState))
+            this.map.updateMarkerIcon(this.get('marker'), iconFactory.getIconForCardState(cardState))
 
             if (!cardState.get('previousVisible')) {
-                map.addMarkerToMap(this.get('marker'));
+                this.map.addMarkerToMap(this.get('marker'));
             }
         },
 
         removeFromMap: function () {
-            map.removeMarkerFromMap(this.get('marker'));
+            this.map.removeMarkerFromMap(this.get('marker'));
         },
 
         destroy: function() {
